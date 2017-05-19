@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.dsaengine.config;
 
+import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 import java.net.UnknownHostException;
@@ -95,6 +96,11 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
 		return new RepositoryManager(mongoTemplate, defaultLang);
+	}
+	
+	@Bean
+	ElasticManger getElasticManager() {
+		return new ElasticManger();
 	}
 	
 	@Override
