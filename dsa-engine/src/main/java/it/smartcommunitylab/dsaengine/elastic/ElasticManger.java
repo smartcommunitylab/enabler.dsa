@@ -1,5 +1,6 @@
 package it.smartcommunitylab.dsaengine.elastic;
 
+import it.smartcommunitylab.dsaengine.common.Const;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.utils.HTTPUtils;
@@ -29,7 +30,8 @@ public class ElasticManger {
 	@Value("${elastic.password}")
 	private String adminPassword;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY.MM");
+	private SimpleDateFormat sdfMonthly = new SimpleDateFormat("YYYY-MM");
+	private SimpleDateFormat sdfWeekly = new SimpleDateFormat("YYYY-MM-ww");
 	
 	private ObjectMapper fullMapper;
 	
@@ -40,6 +42,17 @@ public class ElasticManger {
 		fullMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
 		fullMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		fullMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
+	}
+	
+	private String getDate(DataSetConf conf) {
+		String result = "";
+		Date now = new Date();
+		if(conf.getIndexFormat().equals(Const.IDX_MONTHLY)) {
+			result = sdfMonthly.format(now);
+		} else if(conf.getIndexFormat().equals(Const.IDX_WEEKLY)) {
+			result = sdfWeekly.format(now);
+		}
+		return result;
 	}
 
 	
@@ -59,10 +72,10 @@ public class ElasticManger {
 		return searchData(domain, null, params);
 	}
 	
-	public Map<String, Object> indexData(String domain, String dataset, String type, 
+	public Map<String, Object> indexData(DataSetConf conf, String type, 
 			Map<String, Object> content) throws Exception {
-		String address = endpoint + domain.toLowerCase() + "-" + dataset.toLowerCase() 
-				+ "-" + sdf.format(new Date()) + "/" + type;
+		String address = endpoint + conf.getDomain().toLowerCase() + "-" 
+			+ conf.getDataset().toLowerCase() + "-" + getDate(conf) + "/" + type;
 		return HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
 	}
 	
@@ -75,5 +88,11 @@ public class ElasticManger {
 		String address = endpoint + "_template/" + conf.getDomain().toLowerCase() 
 				+ "-" + conf.getDataset().toLowerCase() + "-template";
 		return HTTPUtils.send(address, "PUT", null, content, adminUser, adminPassword);
+	}
+	
+	public Map<String, Object> deleteIndex(String domain, String dataset) throws Exception {
+		String address = endpoint + domain.toLowerCase() 
+				+ "-" + dataset.toLowerCase() + "-*";
+		return HTTPUtils.send(address, "DELETE", null, null, adminUser, adminPassword);
 	}
 }

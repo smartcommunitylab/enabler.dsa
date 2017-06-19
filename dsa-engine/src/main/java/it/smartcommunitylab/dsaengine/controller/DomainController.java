@@ -58,6 +58,7 @@ public class DomainController {
 		conf.setDomain(domain);
 		conf.setDataset(dataset);
 		DataSetConf result = dataManager.updateDataSetConf(conf);
+		elasticManager.addIndex(conf);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("updateDataSetConf: %s", result.toString()));
 		}
@@ -70,6 +71,7 @@ public class DomainController {
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
 		DataSetConf result = dataManager.removeDataSetConf(domain, dataset);
+		elasticManager.deleteIndex(domain, dataset);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteDataSetConf: %s", result.toString()));
 		}

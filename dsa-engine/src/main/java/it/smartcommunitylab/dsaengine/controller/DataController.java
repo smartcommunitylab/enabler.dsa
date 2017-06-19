@@ -5,6 +5,7 @@ import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 import java.util.Map;
@@ -56,7 +57,8 @@ public class DataController {
 			@PathVariable String type,
 			@RequestBody Map<String, Object> content,
 			HttpServletRequest request) throws Exception {
-		return elasticManager.indexData(domain, dataset, type, content);
+		DataSetConf conf = dataManager.getDataSetConf(domain, dataset);
+		return elasticManager.indexData(conf, type, content);
 	}
 	
 	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})

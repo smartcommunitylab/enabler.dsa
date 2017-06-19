@@ -17,7 +17,7 @@ public class RepositoryManager {
 	
 	private MongoTemplate mongoTemplate;
 	private String defaultLang;
-
+	
 	public RepositoryManager(MongoTemplate mongoTemplate, String defaultLang) {
 		this.mongoTemplate = mongoTemplate;
 		this.defaultLang = defaultLang;
@@ -57,6 +57,14 @@ public class RepositoryManager {
 			throw new EntityNotFoundException("entity not found");
 		}
 		dataSetConfRepository.delete(confDb);
+		return confDb;
+	}
+
+	public DataSetConf getDataSetConf(String domain, String dataset) throws EntityNotFoundException {
+		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
+		if(confDb == null) {
+			throw new EntityNotFoundException("entity not found");
+		}
 		return confDb;
 	}
 
