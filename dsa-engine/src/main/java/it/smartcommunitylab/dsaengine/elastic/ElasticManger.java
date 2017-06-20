@@ -6,8 +6,11 @@ import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.utils.HTTPUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,11 @@ public class ElasticManger {
 	@Value("${elastic.password}")
 	private String adminPassword;
 	
-	private SimpleDateFormat sdfMonthly = new SimpleDateFormat("YYYY-MM");
-	private SimpleDateFormat sdfWeekly = new SimpleDateFormat("YYYY-MM-ww");
+	public final String indexDateMonthly = "yyyy-MM";
+	public final String indexDateWeekly = "yyyy-MM-ww";
+	
+	public final SimpleDateFormat sdfMonthly = new SimpleDateFormat(indexDateMonthly);
+	public final SimpleDateFormat sdfWeekly = new SimpleDateFormat(indexDateWeekly);
 	
 	private ObjectMapper fullMapper;
 	
@@ -94,5 +100,16 @@ public class ElasticManger {
 		String address = endpoint + domain.toLowerCase() 
 				+ "-" + dataset.toLowerCase() + "-*";
 		return HTTPUtils.send(address, "DELETE", null, null, adminUser, adminPassword);
+	}
+
+	public List<String> getIndexes(String domain, String dataset) throws Exception {
+		String address = endpoint + domain.toLowerCase() + "-" + dataset.toLowerCase() + "-*";
+		Map<String, Object> response = HTTPUtils.send(address, "GET", null, null, adminUser, adminPassword);
+		return new ArrayList<String>(response.keySet());
+	}
+
+	public Map<String, Object> closeIndex(String indexName) throws Exception {
+		String address = endpoint + indexName.toLowerCase() + "/_close";
+		return HTTPUtils.send(address, "POST", null, null, adminUser, adminPassword);
 	}
 }

@@ -1,6 +1,7 @@
 package it.smartcommunitylab.dsaengine.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class DataSetConf extends BaseObject {
 	private List<String> users = new ArrayList<String>();
 	private List<String> clients = new ArrayList<String>();
 	private Map<String, Object> dataMapping;
+	private Date lastCheck;
 	
 	public String getDomain() {
 		return domain;
@@ -59,5 +61,11 @@ public class DataSetConf extends BaseObject {
 	@Override
 	public String toString() {
 		return domain + "/" + dataset + "/" + getId();
+	}
+	public Date getLastCheck() {
+		return lastCheck;
+	}
+	public void setLastCheck(Date lastCheck) {
+		this.lastCheck = lastCheck;
 	}
 }

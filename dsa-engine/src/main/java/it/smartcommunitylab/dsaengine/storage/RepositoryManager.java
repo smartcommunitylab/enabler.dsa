@@ -6,6 +6,7 @@ import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -66,6 +67,21 @@ public class RepositoryManager {
 			throw new EntityNotFoundException("entity not found");
 		}
 		return confDb;
+	}
+
+	public List<DataSetConf> getAllDataSetConf() {
+		return dataSetConfRepository.findAll();
+	}
+
+	public void updateLastCheck(String id, Date lastCheck) throws EntityNotFoundException {
+		DataSetConf confDb = dataSetConfRepository.findOne(id);
+		if(confDb == null) {
+			throw new EntityNotFoundException("entity not found");
+		}
+		Date now = new Date();
+		confDb.setLastUpdate(now);
+		confDb.setLastCheck(lastCheck);
+		dataSetConfRepository.save(confDb);
 	}
 
 }
