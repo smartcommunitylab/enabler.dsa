@@ -26,8 +26,8 @@ public class CheckIndex {
 	@Autowired
 	private ElasticManger elasticManager;
 
-	//@Scheduled(cron = "0 0 1 * * *") // second, minute, hour, day, month, weekday
-	@Scheduled(cron = "0 */2 * * * *") // second, minute, hour, day, month, weekday
+	@Scheduled(cron = "0 0 1 * * *") // second, minute, hour, day, month, weekday
+	//@Scheduled(cron = "0 */2 * * * *") // second, minute, hour, day, month, weekday
 	public void ckeckIndexToClose() {
 		if(logger.isInfoEnabled()) {
 			logger.info("ckeckIndexToClose");
