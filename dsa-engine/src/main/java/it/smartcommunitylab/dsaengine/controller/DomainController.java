@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class DomainController {
+public class DomainController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(DomainController.class);
 	
 	@Autowired
@@ -40,6 +40,9 @@ public class DomainController {
 			@PathVariable String domain,
 			@RequestBody DataSetConf conf,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		conf.setDomain(domain);
 		DataSetConf result = dataManager.addDataSetConf(conf);
 		elasticManager.addIndex(conf);
@@ -55,6 +58,9 @@ public class DomainController {
 			@PathVariable String dataset,
 			@RequestBody DataSetConf conf,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		conf.setDomain(domain);
 		conf.setDataset(dataset);
 		DataSetConf result = dataManager.updateDataSetConf(conf);
@@ -70,6 +76,9 @@ public class DomainController {
 			@PathVariable String domain,
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		DataSetConf result = dataManager.removeDataSetConf(domain, dataset);
 		elasticManager.deleteIndex(domain, dataset);
 		if(logger.isInfoEnabled()) {

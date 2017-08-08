@@ -9,21 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class RepositoryManager {
 	
 	@Autowired
 	private DataSetConfRepository dataSetConfRepository;
 	
-	private MongoTemplate mongoTemplate;
-	private String defaultLang;
-	
-	public RepositoryManager(MongoTemplate mongoTemplate, String defaultLang) {
-		this.mongoTemplate = mongoTemplate;
-		this.defaultLang = defaultLang;
-	}
-
 	public DataSetConf addDataSetConf(DataSetConf conf) throws StorageException {
 		DataSetConf dataSetConfDb = dataSetConfRepository.findByDataset(conf.getDomain(), conf.getDataset());
 		if(dataSetConfDb != null) {

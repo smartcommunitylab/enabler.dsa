@@ -20,16 +20,13 @@ import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -38,12 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -54,10 +46,6 @@ import com.mongodb.MongoException;
 @EnableScheduling
 @EnableSwagger2
 public class AppConfig extends WebMvcConfigurerAdapter {
-
-	@Autowired
-	@Value("${defaultLang}")
-	private String defaultLang;
 
 	@Autowired
 	@Value("${swagger.title}")
@@ -87,15 +75,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	@Value("${swagger.license.url}")
 	private String swaggerLicenseUrl;
 	
-	@Autowired
-	private MongoTemplate mongoTemplate;
-
 	public AppConfig() {
 	}
 
 	@Bean
 	RepositoryManager getRepositoryManager() throws UnknownHostException, MongoException {
-		return new RepositoryManager(mongoTemplate, defaultLang);
+		return new RepositoryManager();
 	}
 	
 	@Bean
@@ -126,8 +111,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
      		.build()
         .apiInfo(apiInfo)
         .produces(getContentTypes());
-//        .securitySchemes(getSecuritySchemes())
-//        .securityContexts(securityContexts());
   }
 	
 	private Set<String> getContentTypes() {
@@ -136,32 +119,4 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     return result;
   }
 	
-	@SuppressWarnings("unused")
-	private List<SecurityScheme> getSecuritySchemes() {
-		List<SecurityScheme> result = new ArrayList<SecurityScheme>();
-		ApiKey apiKey = new ApiKey("X-ACCESS-TOKEN", "X-ACCESS-TOKEN", "header");
-		result.add(apiKey);
-		return result;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<SecurityContext> securityContexts() {
-		List<SecurityContext> result = new ArrayList<SecurityContext>();
-		SecurityContext sc = SecurityContext.builder()
-		.securityReferences(defaultAuth())
-		.forPaths(PathSelectors.regex("/api/.*"))
-		.build();
-		result.add(sc);
-		return result;
-	}	
-	
-	private List<SecurityReference> defaultAuth() {
-		List<SecurityReference> result = new ArrayList<SecurityReference>();
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-	  AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-	  authorizationScopes[0] = authorizationScope;
-	  result.add(new SecurityReference("X-ACCESS-TOKEN", authorizationScopes));
-	  return result;
-	}
-
 }

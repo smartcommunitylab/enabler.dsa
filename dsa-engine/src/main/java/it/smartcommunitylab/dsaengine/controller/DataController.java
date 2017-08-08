@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class DataController {
+public class DataController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(DataController.class);
 	
 	@Autowired
@@ -40,6 +40,9 @@ public class DataController {
 			@PathVariable String domain,
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		return elasticManager.searchData(domain, dataset, request.getParameterMap());
 	}
 	
@@ -47,6 +50,9 @@ public class DataController {
 	public @ResponseBody Map<String, Object> searchDataByDomain(
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		return elasticManager.searchData(domain, request.getParameterMap());
 	}
 	
@@ -57,6 +63,9 @@ public class DataController {
 			@PathVariable String type,
 			@RequestBody Map<String, Object> content,
 			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase())) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
 		DataSetConf conf = dataManager.getDataSetConf(domain, dataset);
 		return elasticManager.indexData(conf, type, content);
 	}
