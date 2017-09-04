@@ -5,6 +5,7 @@ import it.smartcommunitylab.aac.AACRoleService;
 import it.smartcommunitylab.aac.AACService;
 import it.smartcommunitylab.aac.model.Role;
 import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 public class AuthController {
+	@SuppressWarnings("unused")
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
@@ -74,6 +77,7 @@ public class AuthController {
 		if(isTokenExpired()) {
 			refreshToken();
 		}
+		//TODO check right API for client roles
 		Set<Role> roles = roleService.getClientRoles(tokenData.getAccess_token());
 		List<String> result = new ArrayList<String>();
 		for(Role role : roles) {
@@ -91,4 +95,11 @@ public class AuthController {
 		return result;
 	}
 	
+	protected String getAuthToken(HttpServletRequest request) {
+		String token = request.getHeader("Authorization");
+		if(Utils.isNotEmpty(token)) {
+			token = token.replace("Bearer ", "");
+		}
+		return token;
+	}
 }
