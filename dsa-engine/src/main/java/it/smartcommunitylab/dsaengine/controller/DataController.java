@@ -40,7 +40,7 @@ public class DataController extends AuthController {
 			@PathVariable String domain,
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return elasticManager.searchData(domain, dataset, request.getParameterMap());
@@ -50,7 +50,7 @@ public class DataController extends AuthController {
 	public @ResponseBody Map<String, Object> searchDataByDomain(
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		return elasticManager.searchData(domain, request.getParameterMap());
@@ -63,7 +63,7 @@ public class DataController extends AuthController {
 			@PathVariable String type,
 			@RequestBody Map<String, Object> content,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		DataSetConf conf = dataManager.getDataSetConf(domain, dataset);

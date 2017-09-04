@@ -40,7 +40,7 @@ public class DomainController extends AuthController {
 			@PathVariable String domain,
 			@RequestBody DataSetConf conf,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		conf.setDomain(domain);
@@ -58,7 +58,7 @@ public class DomainController extends AuthController {
 			@PathVariable String dataset,
 			@RequestBody DataSetConf conf,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		conf.setDomain(domain);
@@ -76,7 +76,7 @@ public class DomainController extends AuthController {
 			@PathVariable String domain,
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase())) {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		DataSetConf result = dataManager.removeDataSetConf(domain, dataset);
