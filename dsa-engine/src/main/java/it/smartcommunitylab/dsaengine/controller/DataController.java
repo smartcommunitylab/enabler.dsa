@@ -43,6 +43,9 @@ public class DataController extends AuthController {
 		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchDataByDataset: %s %s", domain, dataset));
+		}
 		return elasticManager.searchData(domain, dataset, request.getParameterMap());
 	}
 	
@@ -52,6 +55,9 @@ public class DataController extends AuthController {
 			HttpServletRequest request) throws Exception {
 		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("searchDataByDomain: %s", domain));
 		}
 		return elasticManager.searchData(domain, request.getParameterMap());
 	}
@@ -67,6 +73,9 @@ public class DataController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		DataSetConf conf = dataManager.getDataSetConf(domain, dataset);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("indexData: %s %s", domain, dataset));
+		}
 		return elasticManager.indexData(conf, type, content);
 	}
 	
