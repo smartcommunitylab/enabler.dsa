@@ -111,4 +111,41 @@ public class ElasticManger {
 		String address = endpoint + indexName.toLowerCase() + "/_close";
 		return HTTPUtils.send(address, "POST", null, null, adminUser, adminPassword);
 	}
+	
+	public Map<String, Object> addRole(DataSetConf conf) throws Exception {
+		Map<String, Object> content = new HashMap<String, Object>();
+		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
+		Map<String, Object> role = new HashMap<String, Object>();
+		String index = conf.getDomain().toLowerCase() + "-" + conf.getDataset().toLowerCase() + "-*";
+		role.put("names", new String[] {index});
+		role.put("privileges", new String[] {"read", "write"});
+		indices.add(role);
+		content.put("indices", indices);
+		String address = endpoint + "_xpack/security/role/" 
+				+ conf.getElasticUser().toLowerCase();
+		return HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
+	}
+	
+	public Map<String, Object> deleteRole(DataSetConf conf) throws Exception {
+		String address = endpoint + "_xpack/security/role/" 
+				+ conf.getElasticUser().toLowerCase();
+		return HTTPUtils.send(address, "DELETE", null, null, adminUser, adminPassword);
+	}
+	
+	public Map<String, Object> addUser(DataSetConf conf) throws Exception {
+		Map<String, Object> content = new HashMap<String, Object>();
+		content.put("password", conf.getElasticPassword());
+		content.put("roles", new String[] {"transport_client", conf.getElasticUser().toLowerCase()});
+		content.put("enabled", Boolean.TRUE);
+		String address = endpoint + "_xpack/security/user/" 
+				+ conf.getElasticUser().toLowerCase();
+		return HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
+	}
+
+	public Map<String, Object> deleteUser(DataSetConf conf) throws Exception {
+		String address = endpoint + "_xpack/security/user/" 
+				+ conf.getElasticUser().toLowerCase();
+		return HTTPUtils.send(address, "DELETE", null, null, adminUser, adminPassword);
+	}
+
 }

@@ -1,5 +1,8 @@
 package it.smartcommunitylab.dsa.test;
 
+import it.smartcommunitylab.dsa.client.common.IndexArchivePeriod;
+import it.smartcommunitylab.dsa.client.common.IndexFormat;
+import it.smartcommunitylab.dsa.client.common.model.DataSetConf;
 import it.smartcommunitylab.dsa.client.service.DSAService;
 
 import java.util.Date;
@@ -9,6 +12,9 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DSATest {
 	private String dsaURL = "http://localhost:6030/dsa-engine/";
@@ -28,7 +34,6 @@ public class DSATest {
 		content.put("routeId", "1");
 		content.put("timestamp", new Date());
 		content.put("eventType", "CHECKIN");
-		content.put("payload", "payload_test");
 		Map<String, Object> result = dsaService.indexData("climb", "VELA", "event", content, token);
 		System.out.println(result);
 		Assert.assertNotNull(result);
@@ -41,6 +46,22 @@ public class DSATest {
 		Map<String, Object> result = dsaService.searchDataByDataset("climb", "VELA", params, token);
 		System.out.println(result);
 		Assert.assertNotNull(result);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddConf() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode root = mapper.createObjectNode();
+		ObjectNode props = root.putObject("_default_").putObject("properties");
+		props.putObject("logLevel").put("type", "string");
+		props.putObject("routeId").put("type", "string");
+		props.putObject("timestamp").put("type", "date");
+		props.putObject("eventType").put("type", "string");
+		Map<String, Object> map = mapper.convertValue(root, Map.class);
+		DataSetConf conf = dsaService.buildDataSetConf("climb", "VELA", 
+				IndexFormat.MONTHLY, IndexArchivePeriod.DAYS, 10, map);
+		dsaService.addDataSetConf(conf, token);
 	}
 
 }

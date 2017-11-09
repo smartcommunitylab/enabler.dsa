@@ -35,6 +35,21 @@ public class DomainController extends AuthController {
 	@Autowired
 	private ElasticManger elasticManager;
 
+	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf", method = RequestMethod.GET)
+	public @ResponseBody DataSetConf getDataSetConf (
+			@PathVariable String domain,
+			@PathVariable String dataset,
+			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getDataSetConf: %s ", result.toString()));
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/api/domain/{domain}/conf", method = RequestMethod.POST)
 	public @ResponseBody DataSetConf addDataSetConf (
 			@PathVariable String domain,
@@ -45,7 +60,9 @@ public class DomainController extends AuthController {
 		}
 		conf.setDomain(domain);
 		DataSetConf result = dataManager.addDataSetConf(conf);
-		elasticManager.addIndex(conf);
+		elasticManager.addIndex(result);
+		elasticManager.addRole(result);
+		elasticManager.addUser(result);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addDataSetConf: %s", result.toString()));
 		}
@@ -81,6 +98,8 @@ public class DomainController extends AuthController {
 		}
 		DataSetConf result = dataManager.removeDataSetConf(domain, dataset);
 		elasticManager.deleteIndex(domain, dataset);
+		elasticManager.deleteUser(result);
+		elasticManager.deleteRole(result);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("deleteDataSetConf: %s", result.toString()));
 		}

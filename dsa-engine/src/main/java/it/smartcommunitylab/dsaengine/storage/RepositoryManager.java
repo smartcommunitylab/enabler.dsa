@@ -8,6 +8,7 @@ import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class RepositoryManager {
@@ -22,6 +23,8 @@ public class RepositoryManager {
 		}
 		Date now = new Date();
 		conf.setId(Utils.getUUID());
+		conf.setElasticUser("dsa_" + conf.getDomain() + "_" + conf.getDataset());
+		conf.setElasticPassword(RandomStringUtils.randomAlphanumeric(12));
 		conf.setCreationDate(now);
 		conf.setLastUpdate(now);
 		dataSetConfRepository.save(conf);
