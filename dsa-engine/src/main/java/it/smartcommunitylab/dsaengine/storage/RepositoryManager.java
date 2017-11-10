@@ -23,7 +23,8 @@ public class RepositoryManager {
 		}
 		Date now = new Date();
 		conf.setId(Utils.getUUID());
-		conf.setElasticUser("dsa_" + conf.getDomain() + "_" + conf.getDataset());
+		String elasticUser = "dsa_" + conf.getDomain() + "_" + conf.getDataset(); 
+		conf.setElasticUser(elasticUser.toLowerCase());
 		conf.setElasticPassword(RandomStringUtils.randomAlphanumeric(12));
 		conf.setCreationDate(now);
 		conf.setLastUpdate(now);
