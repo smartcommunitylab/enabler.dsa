@@ -35,6 +35,21 @@ public class DomainController extends AuthController {
 	@Autowired
 	private ElasticManger elasticManager;
 
+	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf/user", method = RequestMethod.GET)
+	public @ResponseBody DataSetConf getDataSetConfByUser (
+			@PathVariable String domain,
+			@PathVariable String dataset,
+			HttpServletRequest request) throws Exception {
+		if(!checkUserRole("dsa_" + domain.toLowerCase(), request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getDataSetConfByUser: %s ", result.toString()));
+		}
+		return result;
+	}
+	
 	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf", method = RequestMethod.GET)
 	public @ResponseBody DataSetConf getDataSetConf (
 			@PathVariable String domain,

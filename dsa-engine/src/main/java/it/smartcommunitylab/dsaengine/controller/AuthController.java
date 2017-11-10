@@ -86,12 +86,38 @@ public class AuthController {
 		return result;
 	}
 	
+	protected List<String> getUserRoles(String userToken) 
+			throws UnauthorizedException, SecurityException, AACException {
+		if(isTokenExpired()) {
+			refreshToken();
+		}
+		Set<Role> roles = roleService.getRoles(userToken);
+		List<String> result = new ArrayList<String>();
+		for(Role role : roles) {
+			result.add(role.getRole());
+		}
+		return result;
+	}
+	
 	protected boolean checkRole(String role, HttpServletRequest request) 
 			throws SecurityException, UnauthorizedException, AACException {
 		boolean result = false;
 		String clientToken = getAuthToken(request);
 		if(Utils.isNotEmpty(clientToken)) {
 			List<String> roles = getRoles(clientToken);
+			if(roles != null) {
+				result = roles.contains(role);
+			}
+		}
+		return result;
+	}
+	
+	protected boolean checkUserRole(String role, HttpServletRequest request) 
+			throws SecurityException, UnauthorizedException, AACException {
+		boolean result = false;
+		String userToken = getAuthToken(request);
+		if(Utils.isNotEmpty(userToken)) {
+			List<String> roles = getUserRoles(userToken);
 			if(roles != null) {
 				result = roles.contains(role);
 			}

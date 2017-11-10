@@ -55,6 +55,29 @@ public class DSAService {
 		return conf;
 	}
 	
+	public DataSetConf getUserDataSetConf(String domain, String dataset, 
+			String token) throws ServiceException {
+		try {
+			final HttpResponse resp;
+	    String url = dsaURL + "api/domain/" + domain + "/" + dataset + "/conf/user";
+	    final HttpGet post = new HttpGet(url);
+	    post.setHeader("Accept", "application/json");
+	    post.setHeader("Content-Type", "application/json");
+	    post.setHeader("Authorization", "Bearer " + token);
+	    resp = getHttpClient().execute(post);
+	    if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+	    	final String responseJson = EntityUtils.toString(resp.getEntity());
+	    	DataSetConf data = mapper.readValue(responseJson, DataSetConf.class);
+	    	return data;
+	    } else {
+	    	throw new ServiceException("Error in service invocation:" 
+	    			+ resp.getStatusLine());
+	    }
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}		
+	}
+	
 	public DataSetConf getDataSetConf(String domain, String dataset, 
 			String token) throws ServiceException {
 		try {
