@@ -14,6 +14,8 @@ public class DataSetConf extends BaseObject {
 	private List<String> clients = new ArrayList<String>();
 	private Map<String, Object> dataMapping;
 	private Date lastCheck;
+	private String elasticUser;
+	private String elasticPassword;
 	
 	public String getDomain() {
 		return domain;
@@ -67,5 +69,17 @@ public class DataSetConf extends BaseObject {
 	}
 	public void setLastCheck(Date lastCheck) {
 		this.lastCheck = lastCheck;
+	}
+	public String getElasticUser() {
+		return elasticUser;
+	}
+	public void setElasticUser(String elasticUser) {
+		this.elasticUser = elasticUser;
+	}
+	public String getElasticPassword() {
+		return elasticPassword;
+	}
+	public void setElasticPassword(String elasticPassword) {
+		this.elasticPassword = elasticPassword;
 	}
 }
