@@ -7,4 +7,6 @@ public class Const {
 	public static final String IDX_WEEKLY = "weekly";
 	public static final String IDX_MONTHLY = "monthly";
 	
+	public static final String DOMAIN_DATASET = "all";
+	
 }

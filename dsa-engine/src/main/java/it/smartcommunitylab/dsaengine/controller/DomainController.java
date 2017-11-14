@@ -1,5 +1,6 @@
 package it.smartcommunitylab.dsaengine.controller;
 
+import it.smartcommunitylab.dsaengine.common.Const;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
@@ -45,7 +46,7 @@ public class DomainController extends AuthController {
 		}
 		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getDataSetConfByUser: %s ", result.toString()));
+			logger.info(String.format("getDataSetConfByUser: %s ", result));
 		}
 		return result;
 	}
@@ -60,7 +61,7 @@ public class DomainController extends AuthController {
 		}
 		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getDataSetConf: %s ", result.toString()));
+			logger.info(String.format("getDataSetConf: %s ", result));
 		}
 		return result;
 	}
@@ -73,11 +74,25 @@ public class DomainController extends AuthController {
 		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
+		if(Utils.isEmpty(conf.getDataset()) || 
+				Const.DOMAIN_DATASET.equals(conf.getDataset())) {
+			throw new StorageException("dataset not valid");
+		}
 		conf.setDomain(domain);
 		DataSetConf result = dataManager.addDataSetConf(conf);
 		elasticManager.addIndex(result);
 		elasticManager.addRole(result);
 		elasticManager.addUser(result);
+		//check elastic domain user
+		DataSetConf dataSetConf = dataManager.getDataSetConf(domain, Const.DOMAIN_DATASET);
+		if(dataSetConf == null) {
+			dataSetConf = new DataSetConf();
+			dataSetConf.setDomain(domain);
+			dataSetConf.setDataset(Const.DOMAIN_DATASET);
+			dataManager.addDataSetConf(dataSetConf);
+			elasticManager.addDomainRole(dataSetConf);
+			elasticManager.addDomainUser(dataSetConf);
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addDataSetConf: %s", result.toString()));
 		}

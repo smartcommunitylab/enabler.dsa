@@ -56,11 +56,8 @@ public class RepositoryManager {
 		return confDb;
 	}
 
-	public DataSetConf getDataSetConf(String domain, String dataset) throws EntityNotFoundException {
+	public DataSetConf getDataSetConf(String domain, String dataset) {
 		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
-		if(confDb == null) {
-			throw new EntityNotFoundException("entity not found");
-		}
 		return confDb;
 	}
 
