@@ -118,11 +118,11 @@ public class ElasticManger {
 		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
 		Map<String, Object> roleIndex = new HashMap<String, Object>();
 		roleIndex.put("names", new String[] {index});
-		roleIndex.put("privileges", new String[] {"read", "write"});
+		roleIndex.put("privileges", new String[] {"read", "write", "view_index_metadata"});
 		indices.add(roleIndex);
 		Map<String, Object> roleKibana = new HashMap<String, Object>();
 		roleKibana.put("names", new String[] {".kibana*"});
-		roleKibana.put("privileges", new String[] {"read"});
+		roleKibana.put("privileges", new String[] {"read", "view_index_metadata"});
 		indices.add(roleKibana);
 		content.put("indices", indices);
 		String address = endpoint + "_xpack/security/role/" + conf.getElasticUser();
