@@ -137,7 +137,7 @@ public class ElasticManger {
 	public Map<String, Object> addUser(DataSetConf conf) throws Exception {
 		Map<String, Object> content = new HashMap<String, Object>();
 		content.put("password", conf.getElasticPassword());
-		content.put("roles", new String[] {"transport_client", conf.getElasticUser()});
+		content.put("roles", new String[] {conf.getElasticUser()});
 		content.put("enabled", Boolean.TRUE);
 		String address = endpoint + "_xpack/security/user/" + conf.getElasticUser();
 		return HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
@@ -154,11 +154,11 @@ public class ElasticManger {
 		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
 		Map<String, Object> roleIndex = new HashMap<String, Object>();
 		roleIndex.put("names", new String[] {index});
-		roleIndex.put("privileges", new String[] {"read", "write"});
+		roleIndex.put("privileges", new String[] {"read", "write", "view_index_metadata"});
 		indices.add(roleIndex);
 		Map<String, Object> roleKibana = new HashMap<String, Object>();
 		roleKibana.put("names", new String[] {".kibana*"});
-		roleKibana.put("privileges", new String[] {"read"});
+		roleKibana.put("privileges", new String[] {"read", "view_index_metadata"});
 		indices.add(roleKibana);
 		content.put("indices", indices);
 		String address = endpoint + "_xpack/security/role/" + conf.getElasticUser();
@@ -168,7 +168,7 @@ public class ElasticManger {
 	public void addDomainUser(DataSetConf conf) throws Exception {
 		Map<String, Object> content = new HashMap<String, Object>();
 		content.put("password", conf.getElasticPassword());
-		content.put("roles", new String[] {"transport_client", conf.getElasticUser()});
+		content.put("roles", new String[] {conf.getElasticUser()});
 		content.put("enabled", Boolean.TRUE);
 		String address = endpoint + "_xpack/security/user/" + conf.getElasticUser();
 		HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
