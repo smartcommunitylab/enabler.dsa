@@ -3,10 +3,13 @@ package it.smartcommunitylab.dsa.test;
 import it.smartcommunitylab.dsa.client.common.IndexArchivePeriod;
 import it.smartcommunitylab.dsa.client.common.IndexFormat;
 import it.smartcommunitylab.dsa.client.common.model.DataSetConf;
+import it.smartcommunitylab.dsa.client.common.model.ExternalUser;
 import it.smartcommunitylab.dsa.client.service.DSAService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -18,7 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DSATest {
 	private String dsaURL = "http://localhost:6030/dsa-engine/";
-	private String token = "cc0b96e9-53f9-471a-b080-feae831efe1a";
+	private String token = "xxxxxxxxxxxxxxxxxxx";
 	
 	private DSAService dsaService;
 	
@@ -30,8 +33,8 @@ public class DSATest {
 	@Test
 	public void testIndex() throws Exception {
 		Map<String, Object> content = new HashMap<String, Object>();
-		content.put("logLevel", "INFO");
-		content.put("routeId", "1");
+		content.put("logLevel", "ERROR");
+		content.put("routeId", "2");
 		content.put("timestamp", new Date());
 		content.put("eventType", "CHECKIN");
 		Map<String, Object> result = dsaService.indexData("climb", "VELA", "event", content, token);
@@ -63,5 +66,20 @@ public class DSATest {
 				IndexFormat.MONTHLY, IndexArchivePeriod.DAYS, 10, map);
 		dsaService.addDataSetConf(conf, token);
 	}
-
+	
+	@Test
+	public void deleteConf() throws Exception {
+		dsaService.deleteDataSetConf("climb", "VELA", token);
+		dsaService.deleteDataSetConf("climb", "all", token);
+	}
+	
+	@Test
+	public void testAddUser() throws Exception {
+		List<ExternalUser> users = new ArrayList<ExternalUser>();
+		ExternalUser user = new ExternalUser();
+		user.setEmail("test@test.com");
+		users.add(user);
+		dsaService.setDataSetConfUsers("climb", "VELA", users, token);
+	}
+	
 }

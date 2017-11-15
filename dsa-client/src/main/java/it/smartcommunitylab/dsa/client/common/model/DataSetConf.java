@@ -16,6 +16,7 @@ public class DataSetConf extends BaseObject {
 	private Date lastCheck;
 	private String elasticUser;
 	private String elasticPassword;
+	private Boolean elasticDomainUser = Boolean.FALSE;
 	
 	public String getDomain() {
 		return domain;
@@ -81,5 +82,11 @@ public class DataSetConf extends BaseObject {
 	}
 	public void setElasticPassword(String elasticPassword) {
 		this.elasticPassword = elasticPassword;
+	}
+	public Boolean getElasticDomainUser() {
+		return elasticDomainUser;
+	}
+	public void setElasticDomainUser(Boolean elasticDomainUser) {
+		this.elasticDomainUser = elasticDomainUser;
 	}
 }

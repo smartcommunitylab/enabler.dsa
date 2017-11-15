@@ -1,5 +1,6 @@
 package it.smartcommunitylab.dsaengine.storage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,11 +70,23 @@ public class RepositoryManager {
 		return confDb;
 	}
 
-	public DataSetConf getDataSetConf(String domain, String dataset) {
-		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
-		return confDb;
+	public List<DataSetConf> getDataSetConf(String domain, String token, String email) {
+		if(Utils.isNotEmpty(email)) {
+			List<DataSetConf> result = dataSetConfRepository.findByUserEmail(domain, email);
+			return result;
+		}
+		return new ArrayList<DataSetConf>();
 	}
 
+	public List<DataSetConf> getDataSetConf(String domain) {
+		List<DataSetConf> result = dataSetConfRepository.findByDomain(domain);
+		return result;
+	}
+	
+	public DataSetConf getDataSetConf(String domain, String dataset) {
+		return dataSetConfRepository.findByDataset(domain, dataset);
+	}
+	
 	public List<DataSetConf> getAllDataSetConf() {
 		return dataSetConfRepository.findAll();
 	}

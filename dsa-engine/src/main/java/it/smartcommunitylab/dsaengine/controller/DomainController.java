@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -38,30 +39,38 @@ public class DomainController extends AuthController {
 	@Autowired
 	private ElasticManger elasticManager;
 
-	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf/user", method = RequestMethod.GET)
-	public @ResponseBody DataSetConf getDataSetConfByUser (
+	@RequestMapping(value = "/api/domain/{domain}/conf/user", method = RequestMethod.GET)
+	public @ResponseBody List<DataSetConf> getDataSetConfByUser (
 			@PathVariable String domain,
-			@PathVariable String dataset,
+			@RequestParam(required=false) String email,
 			HttpServletRequest request) throws Exception {
-		if(!checkUserRole("dsa_" + domain.toLowerCase(), request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		String token = getAuthToken(request);
+		List<DataSetConf> result = dataManager.getDataSetConf(domain, token, email);
+		List<String> userRoles = getUserRoles(token);
+		if((userRoles != null) && (userRoles.contains("dsa_" + domain.toLowerCase()))) {
+			DataSetConf dataSetConf = dataManager.getDataSetConf(domain, Const.DOMAIN_DATASET);
+			if(dataSetConf != null) {
+				result.add(dataSetConf);
+			}
 		}
-		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getDataSetConfByUser: %s ", result));
 		}
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf", method = RequestMethod.GET)
-	public @ResponseBody DataSetConf getDataSetConf (
+	@RequestMapping(value = "/api/domain/{domain}/conf", method = RequestMethod.GET)
+	public @ResponseBody List<DataSetConf> getDataSetConf (
 			@PathVariable String domain,
-			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
 		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
-		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
+		List<DataSetConf> result = dataManager.getDataSetConf(domain);
+		DataSetConf dataSetConf = dataManager.getDataSetConf(domain, Const.DOMAIN_DATASET);
+		if(dataSetConf != null) {
+			result.add(dataSetConf);
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getDataSetConf: %s ", result));
 		}
@@ -91,6 +100,7 @@ public class DomainController extends AuthController {
 			dataSetConf = new DataSetConf();
 			dataSetConf.setDomain(domain);
 			dataSetConf.setDataset(Const.DOMAIN_DATASET);
+			dataSetConf.setElasticDomainUser(true);
 			dataManager.addDataSetConf(dataSetConf);
 			elasticManager.addDomainRole(dataSetConf);
 			elasticManager.addDomainUser(dataSetConf);
