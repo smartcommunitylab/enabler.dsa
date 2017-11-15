@@ -1,14 +1,6 @@
 package it.smartcommunitylab.dsaengine.controller;
 
-import it.smartcommunitylab.dsaengine.common.Const;
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
-import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
-import it.smartcommunitylab.dsaengine.exception.StorageException;
-import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
-
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import it.smartcommunitylab.dsaengine.common.Const;
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
+import it.smartcommunitylab.dsaengine.exception.StorageException;
+import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.model.ExternalUser;
+import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
 public class DomainController extends AuthController {
@@ -136,6 +138,22 @@ public class DomainController extends AuthController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/api/domain/{domain}/{dataset}/users", method = RequestMethod.PUT)
+	public @ResponseBody DataSetConf setDataSetConfUsers (
+			@PathVariable String domain,
+			@PathVariable String dataset,
+			@RequestBody List<ExternalUser> users,
+			HttpServletRequest request) throws Exception {
+		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
+			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+		}
+
+		DataSetConf result = dataManager.setDataSetConfUsers(domain, dataset, users);
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("setDataSetConfUsers: %s", result.toString()));
+		}
+		return result;
+	}		
 	
 	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)

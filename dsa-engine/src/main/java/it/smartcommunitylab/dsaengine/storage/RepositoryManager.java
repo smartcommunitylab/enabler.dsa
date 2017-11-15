@@ -1,15 +1,16 @@
 package it.smartcommunitylab.dsaengine.storage;
 
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
-import it.smartcommunitylab.dsaengine.exception.StorageException;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
+import it.smartcommunitylab.dsaengine.exception.StorageException;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.model.ExternalUser;
 
 public class RepositoryManager {
 	
@@ -46,6 +47,18 @@ public class RepositoryManager {
 		dataSetConfRepository.save(confDb);
 		return confDb;
 	}
+	
+	public DataSetConf setDataSetConfUsers(String domain, String dataset, List<ExternalUser> users) throws StorageException, EntityNotFoundException {
+		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
+		if(confDb == null) {
+			throw new EntityNotFoundException("entity not found");
+		}
+		Date now = new Date();
+		confDb.setLastUpdate(now);
+		confDb.setUsers(users);
+		dataSetConfRepository.save(confDb);
+		return confDb;
+	}		
 	
 	public DataSetConf removeDataSetConf(String domain, String dataset) throws StorageException, EntityNotFoundException {
 		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
