@@ -1,8 +1,10 @@
 package it.smartcommunitylab.dsaengine.controller;
 
 import it.smartcommunitylab.aac.AACException;
+import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.AACRoleService;
 import it.smartcommunitylab.aac.AACService;
+import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.aac.model.Role;
 import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.dsaengine.common.Utils;
@@ -21,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 public class AuthController {
-	@SuppressWarnings("unused")
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
@@ -36,15 +37,22 @@ public class AuthController {
 	@Value("${aac.serverUrl}")	
 	private String aacURL;
 	
+	@Autowired
+	@Value("${profile.serverUrl}")
+	private String profileServerUrl;
+	
 	private AACRoleService roleService;
 	
 	private AACService aacService;
+	
+	private AACProfileService profileConnector;
 	
 	private TokenData tokenData = null;
 
 	@PostConstruct
 	public void init() throws Exception {
 		roleService = new AACRoleService(aacURL);
+		profileConnector = new AACProfileService(profileServerUrl);
 		aacService = new AACService(aacURL, clientId, clientSecret);
 	}
 	
@@ -132,4 +140,42 @@ public class AuthController {
 		}
 		return token;
 	}
+	
+	protected AccountProfile getAccoutProfile(HttpServletRequest request) {
+		AccountProfile result = null;
+		String token = getAuthToken(request);
+		if(Utils.isNotEmpty(token)) {
+			try {
+				result = profileConnector.findAccountProfile(token);
+			} catch (Exception e) {
+				if (logger.isWarnEnabled()) {
+					logger.warn(String.format("getAccoutProfile[%s]: %s", token, e.getMessage()));
+				}
+			} 
+		}
+		return result;
+	}
+	
+	protected String getEmail(AccountProfile accountProfile) {
+		String email = null;
+		if(accountProfile == null) {
+			return null;
+		}
+		if(Utils.isNotEmpty(
+				accountProfile.getAttribute("adc", "pat_attribute_email"))) {
+			email = accountProfile.getAttribute("adc", "pat_attribute_email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("google", "email"))) {
+			email = accountProfile.getAttribute("google", "email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("facebook", "email"))) {
+			email = accountProfile.getAttribute("facebook", "email");
+		} else if(Utils.isNotEmpty(
+				accountProfile.getAttribute("internal", "email"))) {
+			email = accountProfile.getAttribute("internal", "email");
+		}
+		return email;
+	}
+
+
 }

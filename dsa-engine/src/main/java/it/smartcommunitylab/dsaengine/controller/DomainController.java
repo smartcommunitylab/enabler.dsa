@@ -1,5 +1,15 @@
 package it.smartcommunitylab.dsaengine.controller;
 
+import it.smartcommunitylab.dsaengine.common.Const;
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
+import it.smartcommunitylab.dsaengine.exception.StorageException;
+import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.model.ExternalUser;
+import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,19 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import it.smartcommunitylab.dsaengine.common.Const;
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
-import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
-import it.smartcommunitylab.dsaengine.exception.StorageException;
-import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.model.ExternalUser;
-import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
 public class DomainController extends AuthController {
@@ -39,11 +38,30 @@ public class DomainController extends AuthController {
 	@Autowired
 	private ElasticManger elasticManager;
 
-	@RequestMapping(value = "/api/domain/{domain}/conf/user", method = RequestMethod.GET)
-	public @ResponseBody List<DataSetConf> getDataSetConfByUser (
+	@RequestMapping(value = "/api/domain/{domain}/{dataset}/conf/user", method = RequestMethod.GET)
+	public @ResponseBody DataSetConf getUserDataSetConfByDomain (
 			@PathVariable String domain,
-			@RequestParam(required=false) String email,
+			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
+		DataSetConf result = null;
+		String email = getEmail(getAccoutProfile(request));
+		if(Utils.isNotEmpty(email)) {
+			DataSetConf conf = dataManager.getDataSetConf(domain, dataset);
+			if(checkUserEmail(email, conf)) {
+				result = conf;
+			}
+		}
+		if(logger.isInfoEnabled()) {
+			logger.info(String.format("getUserDataSetConfByDomain: %s ", result));
+		}
+		return result;
+	}
+	
+	@RequestMapping(value = "/api/domain/{domain}/conf/user", method = RequestMethod.GET)
+	public @ResponseBody List<DataSetConf> getUserDataSetConfs (
+			@PathVariable String domain,
+			HttpServletRequest request) throws Exception {
+		String email = getEmail(getAccoutProfile(request));
 		String token = getAuthToken(request);
 		List<DataSetConf> result = dataManager.getDataSetConf(domain, token, email);
 		List<String> userRoles = getUserRoles(token);
@@ -54,7 +72,7 @@ public class DomainController extends AuthController {
 			}
 		}
 		if(logger.isInfoEnabled()) {
-			logger.info(String.format("getDataSetConfByUser: %s ", result));
+			logger.info(String.format("getUserDataSetConfs: %s ", result));
 		}
 		return result;
 	}
@@ -163,7 +181,18 @@ public class DomainController extends AuthController {
 			logger.info(String.format("setDataSetConfUsers: %s", result.toString()));
 		}
 		return result;
-	}		
+	}
+	
+	private boolean checkUserEmail(String email, DataSetConf conf) {
+		boolean result = false;
+		for(ExternalUser user : conf.getUsers()) {
+			if(email.equals(user.getEmail())) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
 	
 	@ExceptionHandler({EntityNotFoundException.class, StorageException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)

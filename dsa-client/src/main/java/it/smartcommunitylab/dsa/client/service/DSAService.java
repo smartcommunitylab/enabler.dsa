@@ -57,11 +57,11 @@ public class DSAService {
 		return conf;
 	}
 	
-	public List<DataSetConf> getUserDataSetConf(String domain, String email, 
-			String token) throws ServiceException {
+	public List<DataSetConf> getUserDataSetConfs(String domain, String token) 
+			throws ServiceException {
 		try {
 			final HttpResponse resp;
-	    String url = dsaURL + "api/domain/" + domain + "/conf/user?email=" + URLEncoder.encode(email, "UTF-8");
+	    String url = dsaURL + "api/domain/" + domain + "/conf/user"; 
 	    final HttpGet post = new HttpGet(url);
 	    post.setHeader("Accept", "application/json");
 	    post.setHeader("Content-Type", "application/json");
@@ -69,7 +69,8 @@ public class DSAService {
 	    resp = getHttpClient().execute(post);
 	    if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 	    	final String responseJson = EntityUtils.toString(resp.getEntity());
-	    	List<DataSetConf> data = mapper.readValue(responseJson, new TypeReference<List<DataSetConf>>(){});
+	    	List<DataSetConf> data = mapper.readValue(responseJson, 
+	    			new TypeReference<List<DataSetConf>>(){});
 	    	return data;
 	    } else {
 	    	throw new ServiceException("Error in service invocation:" 
@@ -80,11 +81,11 @@ public class DSAService {
 		}		
 	}
 	
-	public DataSetConf getDataSetConf(String domain, String dataset, 
-			String token) throws ServiceException {
+	public DataSetConf getUserDataSetConf(String domain, String dataset, 
+			String token)	throws ServiceException {
 		try {
 			final HttpResponse resp;
-	    String url = dsaURL + "api/domain/" + domain + "/" + dataset + "/conf";
+	    String url = dsaURL + "api/domain/" + domain + "/" + dataset + "/conf/user"; 
 	    final HttpGet post = new HttpGet(url);
 	    post.setHeader("Accept", "application/json");
 	    post.setHeader("Content-Type", "application/json");
@@ -93,6 +94,30 @@ public class DSAService {
 	    if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 	    	final String responseJson = EntityUtils.toString(resp.getEntity());
 	    	DataSetConf data = mapper.readValue(responseJson, DataSetConf.class);
+	    	return data;
+	    } else {
+	    	throw new ServiceException("Error in service invocation:" 
+	    			+ resp.getStatusLine());
+	    }
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}		
+	}
+	
+	public List<DataSetConf> getDataSetConf(String domain, String token) 
+			throws ServiceException {
+		try {
+			final HttpResponse resp;
+	    String url = dsaURL + "api/domain/" + domain + "/conf";
+	    final HttpGet post = new HttpGet(url);
+	    post.setHeader("Accept", "application/json");
+	    post.setHeader("Content-Type", "application/json");
+	    post.setHeader("Authorization", "Bearer " + token);
+	    resp = getHttpClient().execute(post);
+	    if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+	    	final String responseJson = EntityUtils.toString(resp.getEntity());
+	    	List<DataSetConf> data = mapper.readValue(responseJson, 
+	    			new TypeReference<List<DataSetConf>>(){});
 	    	return data;
 	    } else {
 	    	throw new ServiceException("Error in service invocation:" 
