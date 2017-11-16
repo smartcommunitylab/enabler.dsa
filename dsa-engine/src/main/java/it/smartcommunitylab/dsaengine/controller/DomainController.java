@@ -85,10 +85,6 @@ public class DomainController extends AuthController {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		List<DataSetConf> result = dataManager.getDataSetConf(domain);
-		DataSetConf dataSetConf = dataManager.getDataSetConf(domain, Const.DOMAIN_DATASET);
-		if(dataSetConf != null) {
-			result.add(dataSetConf);
-		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getDataSetConf: %s ", result));
 		}
