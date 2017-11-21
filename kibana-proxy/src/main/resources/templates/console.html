@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1"></meta>
+<title>CONSOLE</title>
+</head>
+<body>
+	CONSOLE
+	<p th:text="${user}"></p>
+<!-- 	<ul>
+		<li th:each="dsc : ${dscs}">
+			<p th:text="${dsc.key}"></p>
+			<ul>
+				<li th:each="user : ${dsc.value}"><p th:text="${user}"></p></li>
+			</ul>
+		</li>
+	</ul> -->
+	
+<!-- 	<form action="#"  th:action="@{/console}" th:object="${dscs}" method="post">
+	
+	<ul>
+		<li th:each="dsc : ${dscs}">
+			<p th:text="${dsc.key}"></p>
+			<select multiple="true">
+				<option th:each="user : ${dsc.value}" th:value="${user}" th:text="${user}"></option>
+			</select>
+		</li>
+	</ul>	
+
+	<p><input type="submit" value="Submit" /></p>
+	</form> -->
+	
+<!-- <script th:inline="javascript">
+var message = [[${dscs}]];
+alert(JSON.stringify(message));
+</script>	 -->
+
+<script th:inline="javascript">
+const http = new XMLHttpRequest();
+http.open("GET", '/domain/info/' + [[${domain}]]);
+http.send();
+http.onload = () => alert(JSON.stringify(http.responseText));
+</script>
+
+<!-- <script th:inline="javascript">
+const http = new XMLHttpRequest();
+http.open("POST", '/adduser/' + [[${domain}]] + '/VELA');
+http.setRequestHeader('Content-Type', 'application/json');
+const content = '[{"email" : "test"}]'; 
+console.log(content);
+http.send(content);
+http.onload = () => alert(JSON.stringify(http.responseText));
+</script> -->
+
+<!-- <p><a th:href="${logout} + '?target=' + ${login}">Logout</a></p> -->
+<p th:text="${message}"></p>
+<p th:text="${'Error: ' + error}"></p>
+<p><a th:href="'../consolelogout?login=' + ${login}">Logout</a></p>
+
+</body>
+</html>
