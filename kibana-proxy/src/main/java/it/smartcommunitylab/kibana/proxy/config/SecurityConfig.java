@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/kibana/**").authenticated().and().exceptionHandling()
+		http.authorizeRequests().antMatchers("/kibana/**","/console/**").authenticated().and().exceptionHandling()
 		.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")).accessDeniedPage("/accesserror")
 				.and().logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll().and().csrf().disable().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);		
 	}
@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			@SuppressWarnings("unchecked")
 			@Override
 			public Object extractPrincipal(Map<String, Object> map) {
+				System.err.println(map);
 				return map.get("token");
 			}
 		});
