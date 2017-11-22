@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -29,33 +30,37 @@ public class RoleController extends AuthController {
 	@Autowired
 	private RepositoryManager dataManager;
 	
-	@RequestMapping(value = "/api/role/{domain}/{role}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{domain}", method = RequestMethod.POST)
 	public @ResponseBody void addDomainRole (
 			@PathVariable String domain,
-			@PathVariable String role,
+			@RequestParam String email,
+			@RequestParam String role,
 			HttpServletRequest request) throws Exception {
 	}
 	
-	@RequestMapping(value = "/api/role/{domain}/{dataset}/{role}", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/role/{domain}/{dataset}", method = RequestMethod.POST)
 	public @ResponseBody void addDatasetRole (
 			@PathVariable String domain,
 			@PathVariable String dataset,
-			@PathVariable String role,
+			@RequestParam String email,
+			@RequestParam String role,
 			HttpServletRequest request) throws Exception {
 	}
 	
-	@RequestMapping(value = "/api/role/{domain}/{role}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/role/{domain}", method = RequestMethod.DELETE)
 	public @ResponseBody void deleteDomainRole (
 			@PathVariable String domain,
-			@PathVariable String role,
+			@RequestParam String email,
+			@RequestParam String role,
 			HttpServletRequest request) throws Exception {
 	}
 
-	@RequestMapping(value = "/api/role/{domain}/{dataset}/{role}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/role/{domain}/{dataset}", method = RequestMethod.DELETE)
 	public @ResponseBody void deleteDatasetRole (
 			@PathVariable String domain,
 			@PathVariable String dataset,
-			@PathVariable String role,
+			@RequestParam String email,
+			@RequestParam String role,
 			HttpServletRequest request) throws Exception {
 	}
 
