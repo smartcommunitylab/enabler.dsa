@@ -10,7 +10,6 @@ public class DataSetConf extends BaseObject {
 	private String dataset;
 	private String indexFormat;
 	private String archivePolicy;
-	private List<ExternalUser> users = new ArrayList<ExternalUser>();
 	private List<String> clients = new ArrayList<String>();
 	private Map<String, Object> dataMapping;
 	private Date lastCheck;
@@ -41,12 +40,6 @@ public class DataSetConf extends BaseObject {
 	}
 	public void setArchivePolicy(String archivePolicy) {
 		this.archivePolicy = archivePolicy;
-	}
-	public List<ExternalUser> getUsers() {
-		return users;
-	}
-	public void setUsers(List<ExternalUser> users) {
-		this.users = users;
 	}
 	public List<String> getClients() {
 		return clients;

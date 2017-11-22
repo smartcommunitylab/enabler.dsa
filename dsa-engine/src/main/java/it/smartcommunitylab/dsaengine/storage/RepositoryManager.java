@@ -52,18 +52,6 @@ public class RepositoryManager {
 		return confDb;
 	}
 	
-	public DataSetConf setDataSetConfUsers(String domain, String dataset, List<ExternalUser> users) throws StorageException, EntityNotFoundException {
-		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
-		if(confDb == null) {
-			throw new EntityNotFoundException("entity not found");
-		}
-		Date now = new Date();
-		confDb.setLastUpdate(now);
-		confDb.setUsers(users);
-		dataSetConfRepository.save(confDb);
-		return confDb;
-	}		
-	
 	public DataSetConf removeDataSetConf(String domain, String dataset) throws StorageException, EntityNotFoundException {
 		DataSetConf confDb = dataSetConfRepository.findByDataset(domain, dataset);
 		if(confDb == null) {

@@ -162,26 +162,10 @@ public class DomainController extends AuthController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/api/domain/{domain}/{dataset}/users", method = RequestMethod.PUT)
-	public @ResponseBody DataSetConf setDataSetConfUsers (
-			@PathVariable String domain,
-			@PathVariable String dataset,
-			@RequestBody List<ExternalUser> users,
-			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-
-		DataSetConf result = dataManager.setDataSetConfUsers(domain, dataset, users);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("setDataSetConfUsers: %s", result.toString()));
-		}
-		return result;
-	}
-	
 	private boolean checkUserEmail(String email, DataSetConf conf) {
 		boolean result = false;
-		for(ExternalUser user : conf.getUsers()) {
+		List<ExternalUser> users = dataManager.findByDomain(conf.getDomain(), conf.getDataset());
+		for(ExternalUser user : users) {
 			if(email.equals(user.getEmail())) {
 				result = true;
 				break;
