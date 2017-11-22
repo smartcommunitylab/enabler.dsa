@@ -18,6 +18,9 @@ public class RepositoryManager {
 	@Autowired
 	private DataSetConfRepository dataSetConfRepository;
 	
+	@Autowired
+	private ExternalUserRepository externalUserRepository;
+	
 	public DataSetConf addDataSetConf(DataSetConf conf) throws StorageException {
 		DataSetConf dataSetConfDb = dataSetConfRepository.findByDataset(conf.getDomain(), conf.getDataset());
 		if(dataSetConfDb != null) {
@@ -100,6 +103,18 @@ public class RepositoryManager {
 		confDb.setLastUpdate(now);
 		confDb.setLastCheck(lastCheck);
 		dataSetConfRepository.save(confDb);
+	}
+	
+	public ExternalUser findByEmail(String email) {
+		return externalUserRepository.findByEmail(email);
+	}
+	
+	public List<ExternalUser> findByDomain(String domain) {
+		return externalUserRepository.findByDomain(domain);
+	}
+	
+	public List<ExternalUser> findByDomain(String domain, String dataset) {
+		return externalUserRepository.findByDataset(domain, dataset);
 	}
 
 }
