@@ -3,7 +3,7 @@ package it.smartcommunitylab.dsaengine.model;
 public class DataSetRole {
 	private String domain;
 	private String dataset;
-	private String role;
+	private UserRole role;
 	
 	public String getDomain() {
 		return domain;
@@ -17,10 +17,10 @@ public class DataSetRole {
 	public void setDataset(String dataset) {
 		this.dataset = dataset;
 	}
-	public String getRole() {
+	public UserRole getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 

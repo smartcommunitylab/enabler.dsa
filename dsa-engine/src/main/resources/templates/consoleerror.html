@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1"></meta>
+<title>CONSOLE ERROR</title>
+</head>
+<body>
+	<p th:text="${user}"></p>
+	<p th:text="${message}"></p>
+	<p th:if="${error != null}" th:text="${'Error: ' + error}"></p>
+	<p>
+		<a th:href="${login}">Logout</a>
+	</p>
+</body>
+</html>

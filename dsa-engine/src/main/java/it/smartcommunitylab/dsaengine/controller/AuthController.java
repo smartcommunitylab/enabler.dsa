@@ -1,15 +1,5 @@
 package it.smartcommunitylab.dsaengine.controller;
 
-import it.smartcommunitylab.aac.AACException;
-import it.smartcommunitylab.aac.AACProfileService;
-import it.smartcommunitylab.aac.AACRoleService;
-import it.smartcommunitylab.aac.AACService;
-import it.smartcommunitylab.aac.model.AccountProfile;
-import it.smartcommunitylab.aac.model.Role;
-import it.smartcommunitylab.aac.model.TokenData;
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,15 +12,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import it.smartcommunitylab.aac.AACException;
+import it.smartcommunitylab.aac.AACProfileService;
+import it.smartcommunitylab.aac.AACRoleService;
+import it.smartcommunitylab.aac.AACService;
+import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.Role;
+import it.smartcommunitylab.aac.model.TokenData;
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+
 public class AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
 
 	@Autowired
-	@Value("${aac.clientId}")	
+	@Value("${security.oauth2.client.clientId}")	
 	private String clientId;
 
 	@Autowired
-	@Value("${aac.clientSecret}")	
+	@Value("${security.oauth2.client.clientSecret}")	
 	private String clientSecret;
 	
 	@Autowired

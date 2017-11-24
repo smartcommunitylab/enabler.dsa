@@ -2,7 +2,7 @@ package it.smartcommunitylab.dsaengine.model;
 
 public class DomainRole {
 	private String domain;
-	private String role;
+	private UserRole role;
 	
 	public String getDomain() {
 		return domain;
@@ -10,10 +10,10 @@ public class DomainRole {
 	public void setDomain(String domain) {
 		this.domain = domain;
 	}
-	public String getRole() {
+	public UserRole getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
 

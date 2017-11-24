@@ -16,9 +16,6 @@
 
 package it.smartcommunitylab.dsaengine.config;
 
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
-import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
-
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,13 +30,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.mongodb.MongoException;
+
+import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import com.mongodb.MongoException;
 
 @Configuration
 @EnableAsync
@@ -90,8 +89,9 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-	    registry.addViewController("/").setViewName("redirect:/index.html");
+	    registry.addViewController("/").setViewName("index");
 	}
+	
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
