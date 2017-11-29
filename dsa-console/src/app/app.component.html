@@ -1,0 +1,100 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<!--
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav class="example-sidenav">
+    Jolly good!
+  </mat-sidenav>
+
+  <div class="example-sidenav-content">
+    <button type="button" mat-button (click)="sidenav.open()">
+      Open sidenav
+    </button>
+  </div>
+
+</mat-sidenav-container>
+-->
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="sidenav.open()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <span> DSA Console</span>
+    <span class="example-fill-remaining-space"></span>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon >account_circle</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>mood</mat-icon>
+        <span>User Name</span>
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="language">
+        <mat-icon>translate</mat-icon>
+        <span>Language</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+    <mat-menu #language="matMenu">
+      <button mat-menu-item>
+        <mat-icon>g_translate</mat-icon>
+        <span>Italian</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>g_translate</mat-icon>
+        <span>Inglese</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav class="example-sidenav">
+    <button mat-menu-item (click)="showDatasets()">
+      <mat-icon>storage</mat-icon>
+      <span>DataSets</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>person</mat-icon>
+      <span>Managers</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>face</mat-icon>
+      <span>Users</span>
+    </button>
+  </mat-sidenav>
+  <div *ngIf="showTableDataset" class="table-container mat-elevation-z8" >
+    <mat-table #table [dataSource]="dataSource" matSort>
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      </ng-container>
+  
+      <!-- Weight Column -->
+      <ng-container matColumnDef="weight">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Weight </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.weight}} </mat-cell>
+      </ng-container>
+  
+      <!-- Color Column -->
+      <ng-container matColumnDef="symbol">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Symbol </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.symbol}} </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+</mat-sidenav-container>
