@@ -5,5 +5,6 @@ import {MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, 
 @NgModule({
   imports: [MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatIconModule, MatMenuModule, MatTableModule],
   exports: [MatButtonModule, MatCheckboxModule, MatSidenavModule, MatToolbarModule, MatIconModule, MatMenuModule, MatTableModule],
+  declarations: []
 })
-export class CustomMaterialModule {}
+export class CustomMaterialModule { }

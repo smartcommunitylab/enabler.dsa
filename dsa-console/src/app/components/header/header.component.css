@@ -1,0 +1,13 @@
+.example-fill-remaining-space {
+    flex: 1 1 auto;
+}
+
+.example-container {
+    width:100%;
+    height: 100px;
+}
+  
+
+.example-sidenav {
+    padding: 5px;
+}
