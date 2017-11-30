@@ -7,12 +7,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { CustomMaterialModule } from './custom-material.modul';
 import { HeaderComponent } from './components/header/header.component';
 import { BodyComponent } from './components/body/body.component';
+import { DatasetsComponent } from './components/datasets/datasets.component';
+import { ManagersComponent } from './components/managers/managers.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    BodyComponent
+    BodyComponent,
+    DatasetsComponent,
+    ManagersComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

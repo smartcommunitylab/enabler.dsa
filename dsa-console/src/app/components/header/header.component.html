@@ -4,7 +4,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     
-    <span> DSA Console</span>
+    <span routerLink="/body"> DSA Console</span>
     <span class="example-fill-remaining-space"></span>
     <button mat-icon-button [matMenuTriggerFor]="userMenu">
       <mat-icon >account_circle</mat-icon>
@@ -39,17 +39,20 @@
 
 <mat-sidenav-container class="example-container">
   <mat-sidenav #sidenav class="example-sidenav">
-    <button mat-menu-item (click)="showDatasets()">
+    <button mat-menu-item  routerLink="/datasets" (click)="sidenav.close()">
       <mat-icon>storage</mat-icon>
       <span>DataSets</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item routerLink="/managers" (click)="sidenav.close()">
       <mat-icon>person</mat-icon>
       <span>Managers</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item routerLink="/users" (click)="sidenav.close()">
       <mat-icon>face</mat-icon>
       <span>Users</span>
     </button>
   </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>
