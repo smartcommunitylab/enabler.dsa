@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import io.swagger.annotations.ApiImplicitParam;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.exception.BadRequestException;
@@ -59,7 +58,7 @@ public class ManagementController {
 	// Dataset CRUD //
 	//////////////////
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets/{dataset}", method = RequestMethod.GET)
 	public @ResponseBody DataSetConf geteDataSetConf (
 			@PathVariable String domain,
@@ -84,7 +83,7 @@ public class ManagementController {
 		return result;
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets", method = RequestMethod.GET)
 	public @ResponseBody List<DataSetConf> geteDataSetConfs (
 			@PathVariable String domain,
@@ -108,7 +107,7 @@ public class ManagementController {
 		return result;
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets", method = RequestMethod.POST)
 	public @ResponseBody DataSetConf addDataSetConf (
 			@PathVariable String domain,
@@ -165,7 +164,7 @@ public class ManagementController {
 		return result;
 	}
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets/{datasetId}", method = RequestMethod.PUT)
 	public @ResponseBody DataSetConf updateDataSetConf (
 			@PathVariable String domain,
@@ -193,7 +192,7 @@ public class ManagementController {
 		return result;
 	}
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets/{datasetId}", method = RequestMethod.DELETE)
 	public @ResponseBody DataSetConf deleteDataSetConf (
 			@PathVariable String domain,
@@ -227,7 +226,7 @@ public class ManagementController {
 	// Domain CRUD //
 	/////////////////
 
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.GET)
 	public @ResponseBody DomainConf getDomainConfs(@PathVariable String domain, HttpServletRequest request) throws Exception {
 		if (!authManager.checkRole(DSA_PROVIDER_ROLE_PREFIX + domain.toLowerCase(), request)) {
@@ -246,7 +245,7 @@ public class ManagementController {
 		return result;
 	}	
 
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.POST)
 	public @ResponseBody DomainConf addDomainConf(@PathVariable String domain, @RequestBody BaseDomainConf baseConf, HttpServletRequest request) throws Exception {
 		if (!authManager.checkRole(DSA_PROVIDER_ROLE_PREFIX + domain.toLowerCase(), request)) {
@@ -278,7 +277,7 @@ public class ManagementController {
 		return result;
 	}
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.PUT)
 	public @ResponseBody DomainConf updateDomainConf (
 			@PathVariable String domain,
@@ -298,7 +297,7 @@ public class ManagementController {
 	}
 	
 	// TODO delete by id?
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.DELETE)
 	public @ResponseBody DomainConf deleteDomainConf (
 			@PathVariable String domain,
@@ -320,7 +319,7 @@ public class ManagementController {
 	// Manager CRUD //
 	//////////////////		
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/managers", method = RequestMethod.GET)
 	public @ResponseBody List<Manager> getManagers (
 			@PathVariable String domain,
@@ -340,7 +339,7 @@ public class ManagementController {
 		return dom.getManagers();
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/managers/{managerId}", method = RequestMethod.GET)
 	public @ResponseBody Manager getManager (
 			@PathVariable String domain,
@@ -366,7 +365,7 @@ public class ManagementController {
 		return man.get();
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/managers", method = RequestMethod.POST)
 	public @ResponseBody Manager addManager (
 			@PathVariable String domain,
@@ -405,7 +404,7 @@ public class ManagementController {
 		return manager;
 	}
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/managers/{managerId}", method = RequestMethod.DELETE)
 	public @ResponseBody DomainConf deleteManager (
 			@PathVariable String domain,
@@ -439,7 +438,7 @@ public class ManagementController {
 	// User CRUD //
 	///////////////		
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/users", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsers (
 			@PathVariable String domain,
@@ -459,7 +458,7 @@ public class ManagementController {
 		return dom.getUsers();
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/users/{userId}", method = RequestMethod.GET)
 	public @ResponseBody User getUser (
 			@PathVariable String domain,
@@ -485,7 +484,7 @@ public class ManagementController {
 		return usr.get();
 	}	
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/users", method = RequestMethod.POST)
 	public @ResponseBody User addUser (
 			@PathVariable String domain,
@@ -523,7 +522,7 @@ public class ManagementController {
 		return user;
 	}
 	
-	@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/users/{userId}", method = RequestMethod.DELETE)
 	public @ResponseBody DomainConf deleteUser (
 			@PathVariable String domain,
