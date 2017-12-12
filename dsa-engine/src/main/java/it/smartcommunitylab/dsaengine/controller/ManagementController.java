@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import io.swagger.annotations.ApiImplicitParam;
 import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.exception.BadRequestException;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
@@ -47,7 +47,7 @@ public class ManagementController {
 	private RepositoryManager dataManager;
 	
 	@Autowired
-	private ElasticManger elasticManager;
+	private ElasticManager elasticManager;
 	
 	@Autowired
 	private ACLManager aclManager;

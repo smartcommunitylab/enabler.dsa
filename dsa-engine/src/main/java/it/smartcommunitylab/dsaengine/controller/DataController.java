@@ -1,7 +1,7 @@
 package it.smartcommunitylab.dsaengine.controller;
 
 import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
@@ -33,7 +33,7 @@ public class DataController extends AuthController {
 	private RepositoryManager dataManager;
 	
 	@Autowired
-	private ElasticManger elasticManager;
+	private ElasticManager elasticManager;
 
 	@RequestMapping(value = "/api/data/{domain}/{dataset}", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> searchDataByDataset(

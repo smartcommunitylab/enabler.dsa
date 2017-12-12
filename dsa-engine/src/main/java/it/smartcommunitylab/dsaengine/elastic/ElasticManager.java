@@ -20,7 +20,7 @@ import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
 import it.smartcommunitylab.dsaengine.utils.HTTPUtils;
 
-public class ElasticManger {
+public class ElasticManager {
 	@Autowired
 	@Value("${elastic.endpoint}")
 	private String endpoint;
@@ -41,7 +41,7 @@ public class ElasticManger {
 	
 	private ObjectMapper fullMapper;
 	
-	public ElasticManger() {
+	public ElasticManager() {
 		fullMapper = new ObjectMapper();
 		fullMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		fullMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);

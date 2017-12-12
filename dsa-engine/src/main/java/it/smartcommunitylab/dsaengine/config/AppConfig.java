@@ -32,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.mongodb.MongoException;
 
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -83,8 +83,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	ElasticManger getElasticManager() {
-		return new ElasticManger();
+	ElasticManager getElasticManager() {
+		return new ElasticManager();
 	}
 	
 	@Override

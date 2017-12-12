@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import it.smartcommunitylab.dsaengine.common.Const;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
@@ -24,7 +24,7 @@ public class CheckIndex {
 	private RepositoryManager dataManager;
 	
 	@Autowired
-	private ElasticManger elasticManager;
+	private ElasticManager elasticManager;
 
 	@Scheduled(cron = "0 0 1 * * *") // second, minute, hour, day, month, weekday
 	//@Scheduled(cron = "0 */1 * * * *") // second, minute, hour, day, month, weekday
