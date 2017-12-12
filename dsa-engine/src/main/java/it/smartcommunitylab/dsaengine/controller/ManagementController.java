@@ -27,13 +27,13 @@ import it.smartcommunitylab.dsaengine.exception.BadRequestException;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.BaseDataSetConf;
 import it.smartcommunitylab.dsaengine.model.BaseDomainConf;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
 import it.smartcommunitylab.dsaengine.model.Manager;
 import it.smartcommunitylab.dsaengine.model.User;
-import it.smartcommunitylab.dsaengine.storage.ACLManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 import it.smartcommunitylab.dsaengine.utils.AuthManager;
 
@@ -50,7 +50,7 @@ public class ManagementController {
 	private ElasticManager elasticManager;
 	
 	@Autowired
-	private ACLManager aclManager;
+	private RolesUtils aclManager;
 	
 	@Autowired
 	private AuthManager authManager;

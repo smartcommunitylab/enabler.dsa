@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
+import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.storage.ACLManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
@@ -45,7 +45,7 @@ public class ConsoleController {
 //	private ExternalUserRepository userRepository;
 
 	@Autowired
-	private ACLManager aclManager;	
+	private RolesUtils aclManager;	
 	
 //	private AACRoleService roleService;
 	private AACProfileService profileService;

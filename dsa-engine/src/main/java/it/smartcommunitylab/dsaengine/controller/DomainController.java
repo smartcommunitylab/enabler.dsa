@@ -23,8 +23,8 @@ import it.smartcommunitylab.dsaengine.exception.BadRequestException;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.storage.ACLManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
@@ -40,7 +40,7 @@ public class DomainController extends AuthController {
 	private ElasticManager elasticManager;
 	
 	@Autowired
-	private ACLManager aclManager;
+	private RolesUtils aclManager;
 	
 //	@Autowired
 //	private AuthManager authManager;
