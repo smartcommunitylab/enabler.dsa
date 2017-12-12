@@ -141,6 +141,10 @@ public class AuthController {
 		return token;
 	}
 	
+	public String getEmail(HttpServletRequest request) {
+		return getEmail(getAccoutProfile(request));
+	}	
+	
 	protected AccountProfile getAccoutProfile(HttpServletRequest request) {
 		AccountProfile result = null;
 		String token = getAuthToken(request);
