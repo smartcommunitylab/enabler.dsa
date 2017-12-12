@@ -1,9 +1,7 @@
 package it.smartcommunitylab.dsaengine.kibana.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
@@ -26,24 +24,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
 
 import it.smartcommunitylab.aac.AACProfileService;
-import it.smartcommunitylab.aac.AACRoleService;
 import it.smartcommunitylab.aac.model.AccountProfile;
-import it.smartcommunitylab.aac.model.Role;
-import it.smartcommunitylab.aac.model.Role.ROLE_SCOPE;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.model.ExternalUser;
-import it.smartcommunitylab.dsaengine.storage.ExternalUserRepository;
+import it.smartcommunitylab.dsaengine.storage.ACLManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
-@RequestMapping("/")
 public class KibanaController {
 
 	@Autowired
@@ -68,15 +60,18 @@ public class KibanaController {
 	@Autowired
 	private RepositoryManager dataManager;
 
+//	@Autowired
+//	private ExternalUserRepository userRepository;
+	
 	@Autowired
-	private ExternalUserRepository userRepository;
+	private ACLManager aclManager;
 
-	private AACRoleService roleService;
+//	private AACRoleService roleService;
 	private AACProfileService profileService;
 
 	@PostConstruct
 	public void init() {
-		roleService = new AACRoleService(aacUrl);
+//		roleService = new AACRoleService(aacUrl);
 		profileService = new AACProfileService(aacUrl);
 	}
 
@@ -107,17 +102,21 @@ public class KibanaController {
 			throw new UnauthorizedUserException("User email is null");
 		}
 
-		Set<Role> roles = roleService.getRoles(token);
-
-		if (!checkRoles(roles, domain)) {
-			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\"");
-		}
-		if (!isAllowed(domain, dataset, email)) {
+//		Set<Role> roles = roleService.getRoles(token);
+//
+//		if (!checkRoles(roles, domain)) {
+//			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\"");
+//		}
+//		if (!isAllowed(domain, dataset, email)) {
+//			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset \"" + dataset + "\"");
+//		}
+		
+		if (!aclManager.isDatasetUser(domain, dataset, email)) {
 			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset \"" + dataset + "\"");
 		}
 
 		Map<String, String> user = retrieveUser(domain, dataset, email);
-
+		
 		HttpHeaders httpHeaders = kibanaLogin(user);
 		URI uri = new URI(kibanaUrl);
 		httpHeaders.setLocation(uri);
@@ -125,7 +124,7 @@ public class KibanaController {
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}
 
-	private boolean checkRoles(Set<Role> roles, String domain) {
+/*	private boolean checkRoles(Set<Role> roles, String domain) {
 		final String elastic = "dsa_" + domain;
 		return roles.stream().filter(x -> ROLE_SCOPE.application.equals(x.getScope()) && elastic.equals(x.getRole())).findFirst().isPresent();
 	}
@@ -134,7 +133,7 @@ public class KibanaController {
 		List<ExternalUser> users = userRepository.findByDataset(domain, dataset);
 
 		return users.stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
-	}
+	}*/
 
 	private Map<String, String> retrieveUser(String domain, String dataset, String email) throws Exception {
 		DataSetConf dsConf = dataManager.getDataSetConf(domain, dataset);
