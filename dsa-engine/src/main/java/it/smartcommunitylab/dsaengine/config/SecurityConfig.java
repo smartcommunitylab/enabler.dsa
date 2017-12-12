@@ -10,36 +10,52 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceS
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import it.smartcommunitylab.dsaengine.security.CustomAuthenticationProvider;
+import it.smartcommunitylab.dsaengine.security.CustomResourceAuthenticationProvider;
+import it.smartcommunitylab.dsaengine.security.CustomTokenExtractor;
 
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Client
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+public class SecurityConfig {
 
-//	@Autowired
-//	private AuthenticationProvider customAuthenticationProvider;
+	@Autowired
+	private CustomAuthenticationProvider customAuthenticationProvider;
+
+	@Autowired
+	private CustomResourceAuthenticationProvider customResourceAuthenticationProvider;	
 	
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;	
 
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.authenticationProvider(customAuthenticationProvider);
-//	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+		.authenticationProvider(customResourceAuthenticationProvider)
+		.authenticationProvider(customAuthenticationProvider);
+	}
 	
 	@Bean
 	  @ConfigurationProperties("security.oauth2.client")
@@ -53,33 +69,54 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	      return new ResourceServerProperties();
 	  }		
 
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http
-//			.headers()
-//			.frameOptions().disable();
-//		http
-//      .csrf()
-//			.disable()
-//			.authorizeRequests()
-//			.antMatchers("/console/**", "/upload/**")
-//			.authenticated()
-//			.anyRequest()
-//			.permitAll();
-//		http.formLogin().loginPage("/login").permitAll()
-//		.and().logout().permitAll();
-//	}
+	    @Bean(name="oauthAuthenticationEntryPoint")
+	    public OAuth2AuthenticationEntryPoint getOAuth2AuthenticationEntryPoint() {
+	    	return new OAuth2AuthenticationEntryPoint();
+	    }
+	    
+	    @Bean(name="oAuth2AccessDeniedHandler")
+	    public OAuth2AccessDeniedHandler getOAuth2AccessDeniedHandler() {
+	    	return new OAuth2AccessDeniedHandler();
+	    }  	  
+	  
+	
+	@Configuration
+	@Order(1)
+	public static class OAuthSecurityConfig1 extends WebSecurityConfigurerAdapter {
+
+		@Bean(name = "resourceFilter")
+		public OAuth2AuthenticationProcessingFilter getResourceFilter() throws Exception {
+			OAuth2AuthenticationProcessingFilter rf = new OAuth2AuthenticationProcessingFilter();
+			rf.setAuthenticationManager(authenticationManager());
+			rf.setTokenExtractor(new CustomTokenExtractor());
+			rf.setStateless(false);
+			return rf;
+		}
+
+		@Override
+		public void configure(HttpSecurity http) throws Exception {
+			http.csrf().disable();
+			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+			http.antMatcher("/management/**").authorizeRequests().antMatchers("/management/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+					RequestHeaderAuthenticationFilter.class);
+		}
+	} 
+	  
+	@Configuration
+	@Order(2)
+	public class WebSecurity extends WebSecurityConfigurerAdapter {
 	  
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.headers().frameOptions().disable();
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/kibana/**", "/console/**").authenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-				.accessDeniedPage("/accesserror").and().logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll().and().csrf().disable()
-				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+		http.authorizeRequests().antMatchers("/console/**","/kibana/**").fullyAuthenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+		.accessDeniedPage("/accesserror").and().logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll().and().csrf().disable()
+		.addFilterBefore(aacFilter(), BasicAuthenticationFilter.class);
 	}	  
 	
-	private Filter ssoFilter() {
+	private Filter aacFilter() {
 		OAuth2ClientAuthenticationProcessingFilter aacFilter = new OAuth2ClientAuthenticationProcessingFilter("/login");
 		OAuth2RestTemplate aacTemplate = new OAuth2RestTemplate(aac(), oauth2ClientContext);
 		aacFilter.setRestTemplate(aacTemplate);
@@ -105,5 +142,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		handler.setTargetUrlParameter("target");
 		return handler;
 	}	
+	}
+	
+
+	
 	
 }
