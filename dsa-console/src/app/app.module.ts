@@ -11,13 +11,17 @@ import { AuthGuard, AppRoutingModule } from './app-routing.module';
 
 import { LoginComponent }      from './components/login/login.component';
 import { HeaderComponent, ErrorDialogComponent } from './components/header/header.component';
-import { DatasetsComponent } from './components/datasets/datasets.component';
+import { DatasetsComponent, CreateDataSetsDialog } from './components/datasets/datasets.component';
 import { ManagersComponent } from './components/managers/managers.component';
 import { UsersComponent } from './components/users/users.component';
+//import { CreateDataSetsDialog } from './components/datasets/datasets.component';
 
 import { Config } from './services/config.service';
 import { LoginService } from './services/login.service';
 import { DataService, requestOptionsProvider } from './services/data.service';
+import { DatasetsService } from './services/datasets.service';
+import { ManagersService } from './services/managers.service';
+import { UsersService } from './services/users.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +31,8 @@ import { DataService, requestOptionsProvider } from './services/data.service';
     ErrorDialogComponent,
     DatasetsComponent,
     ManagersComponent,
-    UsersComponent
+    UsersComponent,
+    CreateDataSetsDialog
   ],
   entryComponents: [
     ErrorDialogComponent
@@ -43,7 +48,10 @@ import { DataService, requestOptionsProvider } from './services/data.service';
     Config,
     DataService,
     LoginService,
-    AuthGuard],
+    AuthGuard,
+    DatasetsService,
+    ManagersService,
+    UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

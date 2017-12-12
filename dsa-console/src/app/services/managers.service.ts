@@ -1,11 +1,25 @@
 import { Injectable } from '@angular/core';
+import {Http, RequestOptions, BaseRequestOptions, Headers}  from '@angular/http';
+import { Config } from './config.service';
+
+import { Manager } from '../models/profile';
 
 @Injectable()
 export class ManagersService {
 
-  constructor() { }
+  constructor(private http: Http, private config: Config) {}
   getData():Element[] {
     return ELEMENT_DATA;
+  }
+
+  /**
+   * Return DataSets
+   */
+  getDataSets(domain:string): Promise<Manager[]> {
+    console.log("come in getDataSets",domain);
+    return this.http.get(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/managers`)
+    .map(response => response.json() as Manager[])
+    .toPromise();
   }
 }
 export interface Element {

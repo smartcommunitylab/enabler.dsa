@@ -32,7 +32,7 @@ export class DataService  {
    * Return user profile
    */
   getUserProfile(): Promise<UserProfile> {
-    return this.http.get(`${ this.config.get('amUrl') }/t/sco.core/dsamgmt/0.0.1/profile`)
+    return this.http.get(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/profile`)
     .map(response => response.json() as UserProfile)
     .toPromise();
   }

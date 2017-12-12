@@ -23,10 +23,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @param route
    * @param state
    */
+  
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     console.log('AuthGuard#canActivate called');
     return this.login.checkLoginStatus().then(valid => {
       if (!valid) {
+        console.log("come here for not valid");
         this.router.navigate(['/login']);
       }
       return valid;

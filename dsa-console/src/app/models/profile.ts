@@ -9,3 +9,16 @@ export class DomainProfile {
     role: string;
     dataset?: string;
 }
+
+export class DataSet {
+    id: string;
+    configuration: Configuration;
+}
+export class Configuration{
+    config:string[];
+}
+
+export class Manager {
+    id: string;
+    email: string;
+}

@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from '@angular/core';
-
-@Injectable()
-export class LoginService {
-
-  constructor() { }
-
-=======
 import { Injectable }                   from '@angular/core';
 import {Http, RequestOptions, Headers}  from '@angular/http';
 import { Config }                       from './config.service';
@@ -24,6 +15,7 @@ export class LoginService  {
   }
 
   login(): void {
+    //https://am-dev.smartcommunitylab.it/aac/eauth/authorize/google?client_id=203d85ec-009c-4c1b-bc34-f9bed347f22d&redirect_uri=http://localhost:4200/&response_type=token&scope=profile.basicprofile.me,user.roles.me
     window.location = `${ this.config.get('aacUrl') }/eauth/authorize/google?client_id=${ this.config.get('aacClientId') }&redirect_uri=${ this.config.get('redirectUrl') }&response_type=token&scope=${ this.config.get('scope') }`;
   }
 
@@ -54,6 +46,7 @@ export class LoginService  {
    */
   checkLoginStatus(): Promise<boolean> {
     if (!sessionStorage.access_token) {
+      
       if (this.captureOauthToken()) {
         window.location.hash = '/';
         window.location.reload();
@@ -122,6 +115,7 @@ export class LoginService  {
         return true;
       }
     }
+    console.log("token", this.getToken());
     return false;
   }
   /**
@@ -130,5 +124,4 @@ export class LoginService  {
   getToken(): string {
     return sessionStorage.getItem('access_token');
   }
->>>>>>> e081abef02326bb362233c8283b6aee8c72bf034
 }
