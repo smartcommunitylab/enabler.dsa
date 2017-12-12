@@ -1,10 +1,5 @@
 package it.smartcommunitylab.dsaengine.scheduled;
 
-import it.smartcommunitylab.dsaengine.common.Const;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
-
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import it.smartcommunitylab.dsaengine.common.Const;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Component
 public class CheckIndex {
@@ -60,11 +60,11 @@ public class CheckIndex {
 	}
 	
 	private Date getIndexDate(String indexName, DataSetConf conf) throws ParseException {
-		if(conf.getIndexFormat().equals(Const.IDX_MONTHLY)) {
+		if(conf.getConfigurationProperties().getIndexFormat().equals(Const.IDX_MONTHLY)) {
 			String indexDate = indexName.substring(indexName.length() 
 					- elasticManager.indexDateMonthly.length());
 			return elasticManager.sdfMonthly.parse(indexDate);
-		} else if(conf.getIndexFormat().equals(Const.IDX_WEEKLY)) {
+		} else if(conf.getConfigurationProperties().getIndexFormat().equals(Const.IDX_WEEKLY)) {
 			String indexDate = indexName.substring(indexName.length() 
 					- elasticManager.indexDateWeekly.length());
 			return elasticManager.sdfWeekly.parse(indexDate);
@@ -75,11 +75,11 @@ public class CheckIndex {
 	private Date getArchiveDate(Date indexDate, DataSetConf conf) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(indexDate);
-		int offset = Integer.valueOf(conf.getArchivePolicy().
-				substring(0, conf.getArchivePolicy().length() - 1));
-		if(conf.getArchivePolicy().endsWith("M")) {
+		int offset = Integer.valueOf(conf.getConfigurationProperties().getArchivePolicy().
+				substring(0, conf.getConfigurationProperties().getArchivePolicy().length() - 1));
+		if(conf.getConfigurationProperties().getArchivePolicy().endsWith("M")) {
 			cal.add(Calendar.MONTH, offset);
-		} else if(conf.getArchivePolicy().endsWith("D")) {
+		} else if(conf.getConfigurationProperties().getArchivePolicy().endsWith("D")) {
 			cal.add(Calendar.DATE, offset);
 		}
 		return cal.getTime();
