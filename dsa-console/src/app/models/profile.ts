@@ -22,3 +22,9 @@ export class Manager {
     id: string;
     email: string;
 }
+
+export class User {
+    id: string;
+    email: string;
+    dataset: string;
+}

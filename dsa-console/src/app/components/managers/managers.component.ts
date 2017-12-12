@@ -15,7 +15,7 @@ export class ManagersComponent implements OnInit {
   constructor(private managerService: ManagersService) { }
   
   ngOnInit() {
-    this.managerService.getDataSets('test1').then(mng => {
+    this.managerService.getManagers('test1').then(mng => {
       this.managers = mng;
       this.displayedColumns = ['id', 'email','modification'];
       this.dataSource = new MatTableDataSource<Manager>(mng);
