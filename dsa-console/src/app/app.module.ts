@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { HttpModule } from '@angular/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './custom-material.modul';
@@ -14,7 +16,6 @@ import { HeaderComponent, ErrorDialogComponent } from './components/header/heade
 import { DatasetsComponent, CreateDatasetDialogComponent } from './components/datasets/datasets.component';
 import { ManagersComponent } from './components/managers/managers.component';
 import { UsersComponent } from './components/users/users.component';
-//import { CreateDataSetsDialog } from './components/datasets/datasets.component';
 
 import { Config } from './services/config.service';
 import { LoginService } from './services/login.service';
@@ -43,7 +44,9 @@ import { UsersService } from './services/users.service';
     BrowserAnimationsModule,
     AppRoutingModule,
     CustomMaterialModule,
-    HttpModule
+    HttpModule,
+    FormsModule,
+    MatInputModule
   ],
   providers: [requestOptionsProvider,
     Config,

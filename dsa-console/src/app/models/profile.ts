@@ -28,3 +28,7 @@ export class User {
     email: string;
     dataset: string;
 }
+export class BodyData {
+    id: string;
+    configuration?: string;
+}
