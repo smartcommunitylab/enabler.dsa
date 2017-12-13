@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {MatTableDataSource, MatSort, MatDialog, MAT_DIALOG_DATA} from '@angular/material';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {DatasetsService} from '../../services/datasets.service';
 
 import { DataSet, Configuration } from '../../models/profile';
@@ -11,19 +11,16 @@ import { DataSet, Configuration } from '../../models/profile';
 })
 export class DatasetsComponent implements OnInit {
   datasets: DataSet[];
-  configuration:Configuration;
-  displayedColumns:any;
-  dataSource:any;
+  configuration: Configuration;
+  displayedColumns: any;
+  dataSource: any;
 
   constructor(private datasetService: DatasetsService,public dialog: MatDialog) { }
 
   ngOnInit() {
     this.datasetService.getDataSets('test1').then(ds => {
       this.datasets = ds;
-      console.log("getDataSets is:",ds);
-      //setTimeout(() => {      },5000);
       this.displayedColumns = ['id', 'configuration','modification'];
-      //this.dataSource = new MatTableDataSource([{id: "ds1", configuration: {}}, {id: "ds2", configuration: {}}, {id: "ds3", configuration: {}}]);
       this.dataSource = new MatTableDataSource<DataSet>(ds);
     });
   }
@@ -40,26 +37,39 @@ export class DatasetsComponent implements OnInit {
   }
   
 
-  openDialog4CreateDS(){
-    this.dialog.open(CreateDataSetsDialog, {
-      data: {
-        animal: 'panda'
-      }
+  openDialog4CreateDS() {
+    const dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
+      height: '30%',
+      width: '40%',
     });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed',result);
+      //this.animal = result;
+    });
+    /*
+    const dialogRef =this.dialog.open(CreateDataSetsDialog, {
+      width:'350px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });*/
     console.log("come openDialog4CreateDS();");
   }
 }
 
 
 @Component({
-  selector : 'delete-all-component',
-  template : `<h2 mat-dialog-title>Delete all</h2>
-  <mat-dialog-content>Are you sure?</mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>No</button>
-    <button mat-button [mat-dialog-close]="true">Yes</button>
-  </mat-dialog-actions>`,
+  selector : 'create-dataset-dialog',
+  templateUrl : 'create-dataset-dialog.html',
+  styleUrls: ['./datasets.component.css']
 })
-export class CreateDataSetsDialog {
-  constructor() {}
+export class CreateDatasetDialogComponent {
+  //constructor() {}
+  constructor(public dialogRef: MatDialogRef<CreateDatasetDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
+
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
