@@ -5,8 +5,6 @@ import java.util.List;
 
 public class DomainConf extends BaseObject {
 	
-	private String domain;
-	
 	private ConfigurationProperties defaultConfigurationProperties;
 	
 	private String elasticUser;
@@ -14,14 +12,6 @@ public class DomainConf extends BaseObject {
 
 	private List<Manager> managers = new ArrayList<Manager>();
 	private List<User> users = new ArrayList<User>();
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
 
 	public List<Manager> getManagers() {
 		return managers;
