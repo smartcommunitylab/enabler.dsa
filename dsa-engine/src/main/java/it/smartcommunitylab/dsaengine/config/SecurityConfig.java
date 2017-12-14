@@ -98,8 +98,10 @@ public class SecurityConfig {
 			http.csrf().disable();
 			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-			http.antMatcher("/management/**").authorizeRequests().antMatchers("/management/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
-					RequestHeaderAuthenticationFilter.class);
+//			http.antMatcher("/management/**").authorizeRequests().antMatchers("/management/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+//					RequestHeaderAuthenticationFilter.class);
+			http.authorizeRequests().antMatchers("/management/**","/api/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+			RequestHeaderAuthenticationFilter.class);			
 		}
 	} 
 	  
@@ -111,7 +113,7 @@ public class SecurityConfig {
 	public void configure(HttpSecurity http) throws Exception {
 		http.headers().frameOptions().disable();
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/console/**","/kibana/**").fullyAuthenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+		http.authorizeRequests().antMatchers("/console/**","/kibana/**","/kibanalogin").fullyAuthenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
 		.accessDeniedPage("/accesserror").and().logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll().and().csrf().disable()
 		.addFilterBefore(aacFilter(), BasicAuthenticationFilter.class);
 	}	  
