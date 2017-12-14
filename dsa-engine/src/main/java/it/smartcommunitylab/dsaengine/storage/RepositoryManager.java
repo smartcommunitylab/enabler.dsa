@@ -103,7 +103,7 @@ public class RepositoryManager {
 	public List<DataSetConf> getDataSetConf(String domain, String token, String email) {
 		if(Utils.isNotEmpty(email)) {
 			List<DataSetConf> result = dataSetConfRepository.findByDomain(domain);
-			DomainConf dom = domainConfRepository.findByDomain(domain);
+			DomainConf dom = domainConfRepository.findById(domain);
 			Set<String> ds = dom.getUsers().stream().filter(x -> email.equals(x.getEmail())).map(y -> y.getDataset()).collect(Collectors.toSet());
 			result = result.stream().filter(x -> ds.contains(x.getDataset())).collect(Collectors.toList());
 			
@@ -120,6 +120,10 @@ public class RepositoryManager {
 	public DataSetConf getDataSetConf(String domain, String dataset) {
 		return dataSetConfRepository.findByDataset(domain, dataset);
 	}
+	
+	public DataSetConf getDataSetConfById(String domain, String datasetId) {
+		return dataSetConfRepository.findById(domain, datasetId);
+	}	
 	
 	public List<DataSetConf> getAllDataSetConf() {
 		return dataSetConfRepository.findAll();
@@ -150,13 +154,13 @@ public class RepositoryManager {
 	
 	
 	public DomainConf addDomainConf(DomainConf conf) throws StorageException {
-		DomainConf domainConfDb = domainConfRepository.findByDomain(conf.getDomain());
+		DomainConf domainConfDb = domainConfRepository.findById(conf.getId());
 		if(domainConfDb != null) {
 			throw new StorageException("Domain already present");
 		}
 		Date now = new Date();
-		conf.setId(Utils.getUUID());
-		String elasticUser = "dsa_" + conf.getDomain(); 
+//		conf.setId(Utils.getUUID());
+		String elasticUser = "dsa_" + conf.getId();
 		conf.setElasticUser(elasticUser.toLowerCase());
 		conf.setElasticPassword(RandomStringUtils.randomAlphanumeric(12));
 		conf.setCreationDate(now);
@@ -178,7 +182,7 @@ public class RepositoryManager {
 //	}	
 	
 	public DomainConf updateDomainConf(BaseDomainConf baseConf, String domain) throws StorageException, EntityNotFoundException {
-		DomainConf domainConfDb = domainConfRepository.findByDomain(domain);
+		DomainConf domainConfDb = domainConfRepository.findById(domain);
 		if(domainConfDb == null) {
 			throw new EntityNotFoundException("Domain not found");
 		}
@@ -190,7 +194,7 @@ public class RepositoryManager {
 	}		
 	
 	public DomainConf updateDomainConfUsers(DomainConf conf) throws StorageException, EntityNotFoundException {
-		DomainConf domainConfDb = domainConfRepository.findByDomain(conf.getDomain());
+		DomainConf domainConfDb = domainConfRepository.findById(conf.getId());
 		if(domainConfDb == null) {
 			throw new EntityNotFoundException("Domain not found");
 		}
@@ -202,7 +206,7 @@ public class RepositoryManager {
 	}	
 	
 	public DomainConf updateDomainConfManagers(DomainConf conf) throws StorageException, EntityNotFoundException {
-		DomainConf domainConfDb = domainConfRepository.findByDomain(conf.getDomain());
+		DomainConf domainConfDb = domainConfRepository.findById(conf.getId());
 		if(domainConfDb == null) {
 			throw new EntityNotFoundException("Domain not found");
 		}
@@ -214,7 +218,7 @@ public class RepositoryManager {
 	}		
 	
 	public DomainConf removeDomainConf(String domain) throws StorageException, EntityNotFoundException {
-		DomainConf domainConfDb = domainConfRepository.findByDomain(domain);
+		DomainConf domainConfDb = domainConfRepository.findById(domain);
 		if(domainConfDb == null) {
 			throw new EntityNotFoundException("Domain not found");
 		}
@@ -223,7 +227,7 @@ public class RepositoryManager {
 	}	
 	
 	public DomainConf getDomainConf(String domain) {
-		DomainConf result = domainConfRepository.findByDomain(domain);
+		DomainConf result = domainConfRepository.findById(domain);
 		return result;
 	}	
 	

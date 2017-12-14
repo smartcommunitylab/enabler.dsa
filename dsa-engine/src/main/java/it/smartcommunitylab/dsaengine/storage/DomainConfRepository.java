@@ -13,7 +13,7 @@ public interface DomainConfRepository extends MongoRepository<DomainConf, String
 	
 	List<DomainConf> findAll(Sort sort);
 	
-	@Query(value="{domain:?0}")
-	DomainConf findByDomain(String domain);
-
+	@Query(value="{id:?0}")
+	DomainConf findById(String domain);
+	
 }
