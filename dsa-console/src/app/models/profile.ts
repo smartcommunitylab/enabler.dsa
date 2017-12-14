@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 export class UserProfile {
     username: string;
     displayname: string;
@@ -28,6 +30,7 @@ export class User {
     email: string;
     dataset: string;
 }
+@Injectable()
 export class BodyData {
     id: string;
     configuration?: string;

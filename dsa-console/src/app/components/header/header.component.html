@@ -6,7 +6,7 @@
     
     <span *ngIf="currentDomain"> DSA Console </span>
     <span class="fill-remaining-space"></span>
-    <mat-select [(value)]="currentDomain" *ngIf="currentDomain" class="domain-selector">
+    <mat-select [(value)]="currentDomain" *ngIf="currentDomain" class="domain-selector" (change)="changeDomain($event)">
       <mat-option *ngFor="let domain of profile.domains" [value]="domain">{{domain.domain}}</mat-option>
     </mat-select>
     <button mat-icon-button [matMenuTriggerFor]="userMenu">

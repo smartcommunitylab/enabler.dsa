@@ -7,17 +7,22 @@ import { DataSet, Configuration, BodyData } from '../../models/profile';
 @Component({
   selector: 'app-datasets',
   templateUrl: './datasets.component.html',
-  styleUrls: ['./datasets.component.css']
+  styleUrls: ['./datasets.component.css'],
+  providers:[BodyData]
 })
 export class DatasetsComponent implements OnInit {
   datasets: DataSet[];
   configuration: Configuration;
   displayedColumns: any;
   dataSource: any;
-
-  constructor(private datasetService: DatasetsService,public dialog: MatDialog) { }
+  dialogStatus: string="";
+  
+  constructor(private datasetService: DatasetsService, private dialog: MatDialog,private bodydata: BodyData ) {
+    //var bodydata: BodyData;
+  }
 
   ngOnInit() {
+    
     this.datasetService.getDataSets('test1').then(ds => {
       this.datasets = ds;
       this.displayedColumns = ['id', 'configuration','modification'];
@@ -37,32 +42,72 @@ export class DatasetsComponent implements OnInit {
   }
   
   
-  bodydata: BodyData;
-  //config:any;
+  /**
+   * Create New DataSet
+   */
   openDialog4CreateDS() {
-    
+    //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       height: '300px',
       width: '350px',
-      data: {  id: null }
+      data: {  id: this.bodydata.id, dialogStatus:"Create" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
       if(result){
         //this.config = result;
-        this.bodydata=result.toString();
+        this.bodydata.id=result.toString();
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        console.log('post into server:',this.datasetService.setDataset('test1',this.bodydata));
+        this.datasetService.setDataset('test1',this.bodydata);
+        
       }
       
     });
-    /*
-    const dialogRef =this.dialog.open(CreateDataSetsDialog, {
-      width:'350px'
+  }
+
+  /**
+   * Edit A DataSet
+   */
+  openDialog4EditDS(dsId: string){
+    console.log("get dsid:",dsId);
+    let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
+      height: '300px',
+      width: '350px',
+      data: {  id: dsId, dialogStatus:"Edit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });*/
+      console.log('The Edit dialog was closed',result);
+      if(result){
+        //this.config = result;
+        this.bodydata.id=result.toString();
+        console.log('The dialog was closed and this.bodydata:',this.bodydata);
+        this.datasetService.editDataset('test1',this.bodydata.id,this.bodydata);
+        
+      }
+      
+    });
+  }
+
+  /**
+   * Delete A DataSet
+   */
+  openDialog4DeleteDS(dsId: string){
+    let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
+      height: '300px',
+      width: '350px',
+      data: {  id: dsId, dialogStatus:"Delete" }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The Delete dialog was closed',result);
+      if(result){
+        //this.config = result;
+        //this.bodydata.id=result.toString();
+        console.log('The dialog was closed and this.bodydata:',this.bodydata);
+        this.datasetService.deleteDataset('test1',result.toString());
+        
+      }
+      
+    });
   }
 }
 
@@ -74,9 +119,8 @@ export class DatasetsComponent implements OnInit {
 })
 export class CreateDatasetDialogComponent {
   //constructor() {}
-  constructor(public dialogRef: MatDialogRef<CreateDatasetDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { 
-
-  }
+  constructor(public dialogRef: MatDialogRef<CreateDatasetDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  
 
   onNoClick(): void {
     this.dialogRef.close();

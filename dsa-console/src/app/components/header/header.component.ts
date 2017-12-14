@@ -43,6 +43,9 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.login.logout();
   }
+  changeDomain(event:any){
+    console.log("change selected",event.value);
+  }
 
 }
 
