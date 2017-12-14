@@ -98,10 +98,12 @@ public class SecurityConfig {
 			http.csrf().disable();
 			http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//			http.antMatcher("/management/**").authorizeRequests().antMatchers("/management/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
-//					RequestHeaderAuthenticationFilter.class);
-			http.authorizeRequests().antMatchers("/management/**","/api/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
-			RequestHeaderAuthenticationFilter.class);			
+			http.antMatcher("/management/**").authorizeRequests().antMatchers("/management/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+					RequestHeaderAuthenticationFilter.class);
+			http.antMatcher("/api/**").authorizeRequests().antMatchers("/api/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+					RequestHeaderAuthenticationFilter.class);			
+//			http.authorizeRequests().antMatchers("/management/**","/api/**").fullyAuthenticated().and().addFilterBefore(getResourceFilter(),
+//			RequestHeaderAuthenticationFilter.class);			
 		}
 	} 
 	  
