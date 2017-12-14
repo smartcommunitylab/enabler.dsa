@@ -176,7 +176,7 @@ public class ElasticManager {
 	}*/	
 	
 	public void addDomainRole(DomainConf conf) throws Exception {
-		String index = conf.getDomain().toLowerCase() + "-*";		
+		String index = conf.getId().toLowerCase() + "-*";		
 		Map<String, Object> content = new HashMap<String, Object>();
 		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
 		Map<String, Object> roleIndex = new HashMap<String, Object>();
