@@ -59,10 +59,10 @@ public class ManagementController {
 	//////////////////
 	
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
-	@RequestMapping(value = "/management/{domain}/datasets/{dataset}", method = RequestMethod.GET)
-	public @ResponseBody DataSetConf geteDataSetConf (
+	@RequestMapping(value = "/management/{domain}/datasets/{datasetId}", method = RequestMethod.GET)
+	public @ResponseBody DataSetConf getDataSetConf (
 			@PathVariable String domain,
-			@PathVariable String dataset,
+			@PathVariable String datasetId,
 			HttpServletRequest request) throws Exception {
 		String email = authManager.getEmail(request);
 		if(Utils.isNotEmpty(email)) {
@@ -71,7 +71,7 @@ public class ManagementController {
 			}		
 		}		
 
-		DataSetConf result = dataManager.getDataSetConf(domain, dataset);
+		DataSetConf result = dataManager.getDataSetConfById(domain, datasetId);
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("getDataSetConf: %s", result.toString()));
 		}
@@ -85,7 +85,7 @@ public class ManagementController {
 	
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/datasets", method = RequestMethod.GET)
-	public @ResponseBody List<DataSetConf> geteDataSetConfs (
+	public @ResponseBody List<DataSetConf> getDataSetConfs (
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
 		String email = authManager.getEmail(request);
@@ -255,7 +255,7 @@ public class ManagementController {
 		String email = authManager.getEmail(request);
 
 		DomainConf conf = baseConf.toDomainConf();
-		conf.setDomain(domain);
+		conf.setId(domain);
 		
 		Manager owner = new Manager();
 		owner.setId(UUID.randomUUID().toString());
@@ -296,7 +296,6 @@ public class ManagementController {
 		return result;
 	}
 	
-	// TODO delete by id?
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.DELETE)
 	public @ResponseBody DomainConf deleteDomainConf (
