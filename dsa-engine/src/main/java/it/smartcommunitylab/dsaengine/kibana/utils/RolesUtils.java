@@ -13,7 +13,7 @@ public class RolesUtils {
 	private DomainConfRepository domainRepo;
 
 	public boolean isManagerManagementAllowed(String domain, String email) {
-		DomainConf conf = domainRepo.findByDomain(domain);
+		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
 			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail()) && x.isOwner()).findFirst().isPresent();
 		}
@@ -21,7 +21,7 @@ public class RolesUtils {
 	}
 
 	public boolean isDatasetManagementAllowed(String domain, String email) {
-		DomainConf conf = domainRepo.findByDomain(domain);
+		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
 			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
 		}
@@ -29,7 +29,7 @@ public class RolesUtils {
 	}
 
 	public boolean isUserManagementAllowed(String domain, String email) {
-		DomainConf conf = domainRepo.findByDomain(domain);
+		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
 			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
 		}
@@ -38,7 +38,7 @@ public class RolesUtils {
 
 
 	public boolean isDomainManager(String domain,String email) {
-		DomainConf conf = domainRepo.findByDomain(domain);
+		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
 			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
 		}
@@ -46,7 +46,7 @@ public class RolesUtils {
 	}		
 	
 	public boolean isDatasetUser(String domain, String dataset, String email) {
-		DomainConf conf = domainRepo.findByDomain(domain);
+		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
 			return conf.getUsers().stream().filter(x -> email.equals(x.getEmail()) && dataset.equals(x.getDataset())).findFirst().isPresent();
 		}
