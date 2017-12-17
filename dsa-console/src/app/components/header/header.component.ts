@@ -7,16 +7,18 @@ import { DataService } from '../../services/data.service';
 
 import { UserProfile, DomainProfile} from '../../models/profile';
 
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
   profile: UserProfile;
   currentDomain: DomainProfile;
   domains: string[];
+  
 
   constructor(private login: LoginService, private data: DataService, private dialog: MatDialog) {}
 
@@ -34,6 +36,7 @@ export class HeaderComponent implements OnInit {
       console.log('Error reading profile', err);
       this.showError(err);
     });
+    
   }
 
   private showError(err?: any) {
@@ -45,6 +48,8 @@ export class HeaderComponent implements OnInit {
   }
   changeDomain(event:any){
     console.log("change selected",event.value);
+    
+    //sessionStorage.setItem('currentDomain',event.value.domain);
   }
 
 }

@@ -35,3 +35,10 @@ export class BodyData {
     id: string;
     configuration?: string;
 }
+
+@Injectable()
+export class GlobalData {
+    id?: string;
+    configuration?: string;
+    domain?:string;
+}

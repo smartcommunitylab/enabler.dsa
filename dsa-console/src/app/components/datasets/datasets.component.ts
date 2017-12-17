@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {DatasetsService} from '../../services/datasets.service';
 
-import { DataSet, Configuration, BodyData } from '../../models/profile';
+import { DataSet, Configuration, BodyData} from '../../models/profile';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-datasets',
@@ -16,17 +17,21 @@ export class DatasetsComponent implements OnInit {
   displayedColumns: any;
   dataSource: any;
   dialogStatus: string="";
-  
-  constructor(private datasetService: DatasetsService, private dialog: MatDialog,private bodydata: BodyData ) {
+  domain:any;
+  sub:any;
+
+  constructor(private datasetService: DatasetsService, private dialog: MatDialog,private bodydata: BodyData,private route: ActivatedRoute) {
     //var bodydata: BodyData;
   }
 
   ngOnInit() {
-    
-    this.datasetService.getDataSets('test1').then(ds => {
-      this.datasets = ds;
-      this.displayedColumns = ['id', 'configuration','modification'];
-      this.dataSource = new MatTableDataSource<DataSet>(ds);
+    this.sub=this.route.params.subscribe(params=>{
+      this.domain=params['domain'];
+      this.datasetService.getDataSets(params['domain']).then(ds => {
+        this.datasets = ds;
+        this.displayedColumns = ['id', 'configuration','modification'];
+        this.dataSource = new MatTableDataSource<DataSet>(ds);
+      });
     });
   }
   
@@ -59,7 +64,7 @@ export class DatasetsComponent implements OnInit {
         this.bodydata.id=result.toString();
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
         this.datasetService.setDataset('test1',this.bodydata);
-        
+        //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
       }
       
     });
