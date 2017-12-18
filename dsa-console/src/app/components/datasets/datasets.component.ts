@@ -56,15 +56,14 @@ export class DatasetsComponent implements OnInit {
         this.datasetService.setDataset('test1',this.bodydata);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
       }
-      
     });
   }
 
   /**
    * Edit A DataSet
    */
-  openDialog4EditDS(dsId: string){
-    console.log("get dsid:",dsId);
+  openDialog4EditDS(dsId: string) {
+    console.log('get dsid:', dsId);
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       height: '300px',
       width: '350px',
