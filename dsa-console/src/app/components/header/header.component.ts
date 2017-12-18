@@ -6,7 +6,7 @@ import { LoginService } from '../../services/login.service';
 import { DataService } from '../../services/data.service';
 
 import { UserProfile, DomainProfile} from '../../models/profile';
-
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -20,9 +20,12 @@ export class HeaderComponent implements OnInit {
   domains: string[];
   
 
-  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog) {}
+  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog,private route: ActivatedRoute) {
+    console.log("URL:",route.snapshot);
+  }
 
   ngOnInit() {
+    
     this.data.getUserProfile().then(profile => {
       profile.domains = profile.domains.filter(d => d.role === 'DOMAIN_OWNER' || d.role === 'DOMAIN_MANAGER');
       if (!profile.domains) {
@@ -48,7 +51,7 @@ export class HeaderComponent implements OnInit {
   }
   changeDomain(event:any){
     console.log("change selected",event.value);
-    
+    this.currentDomain = event.value.domain;
     //sessionStorage.setItem('currentDomain',event.value.domain);
   }
 

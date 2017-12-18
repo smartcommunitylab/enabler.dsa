@@ -40,17 +40,17 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-sidenav-container class="container">
-  <mat-sidenav #sidenav class="sidenav">
-    <button mat-menu-item  routerLink="/datasets" (click)="sidenav.close()">
+<mat-sidenav-container class="container" >
+  <mat-sidenav #sidenav class="sidenav" >
+    <button mat-menu-item   [routerLink]="['/datasets',currentDomain.domain]" (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>storage</mat-icon>
       <span>DataSets</span>
     </button>
-    <button mat-menu-item routerLink="/managers" (click)="sidenav.close()">
-      <mat-icon>person</mat-icon>
+    <button mat-menu-item [routerLink]="['/managers',currentDomain.domain]" (click)="sidenav.close()" *ngIf="currentDomain">
+        <mat-icon>person</mat-icon>
       <span>Managers</span>
     </button>
-    <button mat-menu-item routerLink="/users" (click)="sidenav.close()">
+    <button mat-menu-item [routerLink]="['/users',currentDomain.domain]" (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>face</mat-icon>
       <span>Users</span>
     </button>

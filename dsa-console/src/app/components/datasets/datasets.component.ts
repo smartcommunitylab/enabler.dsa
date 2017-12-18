@@ -22,6 +22,8 @@ export class DatasetsComponent implements OnInit {
 
   constructor(private datasetService: DatasetsService, private dialog: MatDialog,private bodydata: BodyData,private route: ActivatedRoute) {
     //var bodydata: BodyData;
+    console.log("Router:",route.params.subscribe());
+    console.log("URL(dataset):",route.snapshot.url[0].path);
   }
 
   ngOnInit() {

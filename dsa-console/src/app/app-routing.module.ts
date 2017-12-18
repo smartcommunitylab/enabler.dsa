@@ -51,12 +51,11 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'datasets', component: DatasetsComponent, canActivate: [AuthGuard] },
           { path: 'datasets/:domain', component: DatasetsComponent, canActivate: [AuthGuard] },
-          { path: 'managers', component: ManagersComponent, canActivate: [AuthGuard] },
-          { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+          { path: 'managers/:domain', component: ManagersComponent, canActivate: [AuthGuard] },
+          { path: 'users/:domain', component: UsersComponent, canActivate: [AuthGuard] },
           { path: '', redirectTo: 'datasets/', pathMatch: 'full'},
-          { path: '**', redirectTo: 'datasets/', pathMatch: 'full'}
+          //{ path: '**', redirectTo: 'datasets/', pathMatch: 'full'}
         ]
       }
     ]
