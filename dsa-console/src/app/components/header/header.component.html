@@ -7,7 +7,7 @@
     <span *ngIf="currentDomain"> DSA Console </span>
     <span class="fill-remaining-space"></span>
     <mat-select [(value)]="currentDomain" *ngIf="currentDomain" class="domain-selector" (change)="changeDomain($event)">
-      <mat-option *ngFor="let domain of profile.domains" [routerLink]="['/datasets',domain.domain]" [value]="domain">{{domain.domain}}</mat-option>
+      <mat-option *ngFor="let domain of profile.domains" [routerLink]="['/',domain.domain]" [value]="domain">{{domain.domain}}</mat-option>
     </mat-select>
     <button mat-icon-button [matMenuTriggerFor]="userMenu">
       <mat-icon >account_circle</mat-icon>
@@ -42,15 +42,15 @@
 
 <mat-sidenav-container class="container" >
   <mat-sidenav #sidenav class="sidenav" >
-    <button mat-menu-item   [routerLink]="['/datasets',currentDomain.domain]" (click)="sidenav.close()"  *ngIf="currentDomain">
+    <button mat-menu-item   routerLink="datasets" (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>storage</mat-icon>
       <span>DataSets</span>
     </button>
-    <button mat-menu-item [routerLink]="['/managers',currentDomain.domain]" (click)="sidenav.close()" *ngIf="currentDomain">
+    <button mat-menu-item routerLink="managers"  (click)="sidenav.close()" *ngIf="currentDomain">
         <mat-icon>person</mat-icon>
       <span>Managers</span>
     </button>
-    <button mat-menu-item [routerLink]="['/users',currentDomain.domain]" (click)="sidenav.close()"  *ngIf="currentDomain">
+    <button mat-menu-item routerLink="users"  (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>face</mat-icon>
       <span>Users</span>
     </button>

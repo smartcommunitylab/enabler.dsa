@@ -9,46 +9,34 @@ import {ActivatedRoute} from '@angular/router';
   selector: 'app-datasets',
   templateUrl: './datasets.component.html',
   styleUrls: ['./datasets.component.css'],
-  providers:[BodyData]
+  providers: [BodyData]
 })
 export class DatasetsComponent implements OnInit {
   datasets: DataSet[];
   configuration: Configuration;
   displayedColumns: any;
   dataSource: any;
-  dialogStatus: string="";
-  domain:any;
-  sub:any;
+  dialogStatus = '';
+  domain: string;
 
-  constructor(private datasetService: DatasetsService, private dialog: MatDialog,private bodydata: BodyData,private route: ActivatedRoute) {
-    //var bodydata: BodyData;
-    console.log("Router:",route.params.subscribe());
-    console.log("URL(dataset):",route.snapshot.url[0].path);
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private datasetService: DatasetsService, private dialog: MatDialog, private bodydata: BodyData, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.sub=this.route.params.subscribe(params=>{
-      this.domain=params['domain'];
+    this.route.params.subscribe(params => {
+      this.domain = params['domain'];
       this.datasetService.getDataSets(params['domain']).then(ds => {
         this.datasets = ds;
-        this.displayedColumns = ['id', 'configuration','modification'];
+        this.displayedColumns = ['id', 'configuration', 'modification'];
         this.dataSource = new MatTableDataSource<DataSet>(ds);
       });
     });
   }
-  
-  
-  @ViewChild(MatSort) sort: MatSort;
-  
-  /**
-   * Set the sort after the view init since this component will
-   * be able to query its view for the initialized sort.
-   */
-  ngAfterViewInit() {
-    //this.dataSource.sort = this.sort;
-  }
-  
-  
+
+
+
   /**
    * Create New DataSet
    */

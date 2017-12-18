@@ -23,12 +23,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @param route
    * @param state
    */
-  
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     console.log('AuthGuard#canActivate called');
     return this.login.checkLoginStatus().then(valid => {
       if (!valid) {
-        console.log("come here for not valid");
+        console.log('come here for not valid');
         this.router.navigate(['/login']);
       }
       return valid;
@@ -43,7 +42,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: '',
+    path: ':domain',
     component: HeaderComponent,
     canActivate: [AuthGuard],
     children: [
@@ -51,16 +50,16 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'datasets/:domain', component: DatasetsComponent, canActivate: [AuthGuard] },
-          { path: 'managers/:domain', component: ManagersComponent, canActivate: [AuthGuard] },
-          { path: 'users/:domain', component: UsersComponent, canActivate: [AuthGuard] },
-          { path: '', redirectTo: 'datasets/', pathMatch: 'full'},
-          //{ path: '**', redirectTo: 'datasets/', pathMatch: 'full'}
+          { path: 'datasets', component: DatasetsComponent, canActivate: [AuthGuard] },
+          { path: 'managers', component: ManagersComponent, canActivate: [AuthGuard] },
+          { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+          { path: '', redirectTo: 'datasets', pathMatch: 'full'},
+          // { path: '**', redirectTo: 'datasets/', pathMatch: 'full'}
         ]
       }
     ]
-  }
-
+  },
+  { path: '', component: HeaderComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

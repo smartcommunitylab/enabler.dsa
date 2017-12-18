@@ -6,7 +6,7 @@ import { LoginService } from '../../services/login.service';
 import { DataService } from '../../services/data.service';
 
 import { UserProfile, DomainProfile} from '../../models/profile';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -18,28 +18,40 @@ export class HeaderComponent implements OnInit {
   profile: UserProfile;
   currentDomain: DomainProfile;
   domains: string[];
-  
 
-  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog,private route: ActivatedRoute) {
-    console.log("URL:",route.snapshot);
+  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
+  }
+
+  private processDomainChanged(paramDomain: string) {
+    if (!paramDomain) {
+      this.router.navigate(['/', this.profile.domains[0].domain]);
+    }
+    this.profile.domains.forEach(d => {
+      if (d.domain === paramDomain) {
+        this.currentDomain = d;
+      }
+    });
+    if (this.currentDomain == null) {
+      this.currentDomain = this.profile.domains[0];
+    }
   }
 
   ngOnInit() {
-    
     this.data.getUserProfile().then(profile => {
       profile.domains = profile.domains.filter(d => d.role === 'DOMAIN_OWNER' || d.role === 'DOMAIN_MANAGER');
       if (!profile.domains) {
         this.showError();
       } else {
         this.profile = profile;
-        this.currentDomain = profile.domains[0];
         this.domains = profile.domains.map(d => d.domain);
+        this.route.params.subscribe(params => {
+          this.processDomainChanged(params['domain']);
+        });
       }
     }, err => {
       console.log('Error reading profile', err);
       this.showError(err);
     });
-    
   }
 
   private showError(err?: any) {
@@ -49,10 +61,10 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.login.logout();
   }
-  changeDomain(event:any){
-    console.log("change selected",event.value);
-    this.currentDomain = event.value.domain;
-    //sessionStorage.setItem('currentDomain',event.value.domain);
+  changeDomain(event: any) {
+    console.log('change selected', event.value);
+    // this.currentDomain = event.value.domain;
+    // sessionStorage.setItem('currentDomain',event.value.domain);
   }
 
 }
