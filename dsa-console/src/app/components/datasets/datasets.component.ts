@@ -2,14 +2,15 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {DatasetsService} from '../../services/datasets.service';
 
-import { DataSet, Configuration, BodyData} from '../../models/profile';
+import { DataSet, Configuration, BodyDataDataset} from '../../models/profile';
 import {ActivatedRoute} from '@angular/router';
+//import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-datasets',
   templateUrl: './datasets.component.html',
   styleUrls: ['./datasets.component.css'],
-  providers: [BodyData]
+  providers: [BodyDataDataset]
 })
 export class DatasetsComponent implements OnInit {
   datasets: DataSet[];
@@ -18,10 +19,11 @@ export class DatasetsComponent implements OnInit {
   dataSource: any;
   dialogStatus = '';
   domain: string;
-
+  //heroForm: FormGroup;
+  
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private datasetService: DatasetsService, private dialog: MatDialog, private bodydata: BodyData, private route: ActivatedRoute) {
+  constructor(private datasetService: DatasetsService, private dialog: MatDialog, private bodydata: BodyDataDataset, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -33,6 +35,14 @@ export class DatasetsComponent implements OnInit {
         this.dataSource = new MatTableDataSource<DataSet>(ds);
       });
     });
+    //for from validation
+    /*this.heroForm = new FormGroup({
+      'name': new FormControl(this.bodydata.id, [
+        Validators.required,
+        Validators.minLength(4)
+      ])
+    });
+    */
   }
 
 
@@ -103,6 +113,9 @@ export class DatasetsComponent implements OnInit {
       
     });
   }
+  submitted = false;
+  
+  onSubmit() { this.submitted = true; }
 }
 
 

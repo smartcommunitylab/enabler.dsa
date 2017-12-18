@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Http, RequestOptions, BaseRequestOptions, Headers}  from '@angular/http';
 import { Config } from './config.service';
 import {HttpErrorResponse} from '@angular/common/http';
-import { DataSet, BodyData } from '../models/profile';
+import { DataSet, BodyDataDataset } from '../models/profile';
 
 @Injectable()
 export class DatasetsService {
@@ -21,7 +21,7 @@ export class DatasetsService {
   /**
    * Set DataSets
    */
-  setDataset(domain:string, body:BodyData): any{
+  setDataset(domain:string, body:BodyDataDataset): any{
     return this.http.post(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/datasets/`,body).subscribe(
       data => {
         console.log("Return Data from post(create): " + data);
@@ -39,7 +39,7 @@ export class DatasetsService {
   /**
    * Edit DataSets
    */
-  editDataset(domain:string, dsID:string, body:BodyData){
+  editDataset(domain:string, dsID:string, body:BodyDataDataset){
     return this.http.put(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/datasets/${dsID}`,body).subscribe(
       data => {
         console.log("Return Data from put(edit): " + data);

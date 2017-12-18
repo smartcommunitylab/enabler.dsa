@@ -14,7 +14,7 @@ import { AuthGuard, AppRoutingModule } from './app-routing.module';
 import { LoginComponent }      from './components/login/login.component';
 import { HeaderComponent, ErrorDialogComponent } from './components/header/header.component';
 import { DatasetsComponent, CreateDatasetDialogComponent } from './components/datasets/datasets.component';
-import { ManagersComponent } from './components/managers/managers.component';
+import { ManagersComponent, CreateManagerDialogComponent } from './components/managers/managers.component';
 import { UsersComponent } from './components/users/users.component';
 
 import { Config } from './services/config.service';
@@ -33,11 +33,13 @@ import { UsersService } from './services/users.service';
     DatasetsComponent,
     ManagersComponent,
     UsersComponent,
-    CreateDatasetDialogComponent
+    CreateDatasetDialogComponent,
+    CreateManagerDialogComponent
   ],
   entryComponents: [
     ErrorDialogComponent,
-    CreateDatasetDialogComponent
+    CreateDatasetDialogComponent,
+    CreateManagerDialogComponent
   ],
   imports: [
     BrowserModule,

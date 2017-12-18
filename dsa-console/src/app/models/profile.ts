@@ -31,9 +31,22 @@ export class User {
     dataset: string;
 }
 @Injectable()
-export class BodyData {
+export class BodyDataDataset {
     id: string;
     configuration?: string;
+}
+
+@Injectable()
+export class BodyDataManager {
+    id: string;
+    email?: string;
+}
+
+@Injectable()
+export class BodyDataUser {
+    id: string;
+    email?: string;
+    dataset?:string;
 }
 
 @Injectable()
