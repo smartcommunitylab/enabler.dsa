@@ -27,7 +27,7 @@
     <ng-container matColumnDef="modification">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Modification </mat-header-cell>
       <mat-cell *matCellDef="let datasets2"> 
-          <button mat-icon-button (click)="openDialog4EditManager(datasets2.id)"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button (click)="openDialog4EditManager(datasets2.id, datasets2.email)"><i class="material-icons">mode_edit</i></button>
           <button mat-icon-button (click)="openDialog4DeleteManager(datasets2.id)"><i class="material-icons">delete</i></button>
       </mat-cell>
     </ng-container>

@@ -2,7 +2,7 @@
   <mat-toolbar>
     <span>Users</span>
     <span class="fill-remaining-space"></span>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="openDialog4CreateUser()">
       <i class="material-icons">add_circle_outline</i>
       New User
     </button>
@@ -32,7 +32,10 @@
     <!-- modification Column -->
     <ng-container matColumnDef="modification">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Modification </mat-header-cell>
-      <mat-cell *matCellDef=""> Edit/Delete </mat-cell>
+      <mat-cell *matCellDef="let element"> 
+          <button mat-icon-button (click)="openDialog4EditUser(element.id, element.email, element.dataset)"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button (click)="openDialog4DeleteUser(element.id)"><i class="material-icons">delete</i></button>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

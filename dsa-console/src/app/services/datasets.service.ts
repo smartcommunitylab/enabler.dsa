@@ -19,7 +19,7 @@ export class DatasetsService {
     .toPromise();
   }
   /**
-   * Set DataSets
+   * Set DataSets/ create a new dataset
    */
   setDataset(domain:string, body:BodyDataDataset): any{
     return this.http.post(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/datasets/`,body).subscribe(

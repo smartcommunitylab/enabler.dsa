@@ -16,7 +16,7 @@ export class ManagersComponent implements OnInit {
   dialogStatus = '';
   domain: string;
 
-  constructor(private managerService: ManagersService, private dialog: MatDialog, private bodydata: BodyDataManager,) { }
+  constructor(private managerService: ManagersService, private dialog: MatDialog, private bodydata: BodyDataManager) { }
   
   ngOnInit() {
     this.managerService.getManagers('test1').then(mng => {
@@ -37,13 +37,9 @@ export class ManagersComponent implements OnInit {
       data: {  id: this.bodydata.id, dialogStatus:"Create" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
       if(result){
-        //this.config = result;
         this.bodydata.id=result.toString();
-        console.log('The dialog was closed and this.bodydata:',this.bodydata);
         this.managerService.setManager('test1',this.bodydata);
-        //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
       }
     });
   }
@@ -51,21 +47,17 @@ export class ManagersComponent implements OnInit {
   /**
    * Edit A Manager
    */
-  openDialog4EditManager(dsId: string) {
-    console.log('get dsid:', dsId);
+  openDialog4EditManager(mngId: string, email: string) {
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
       height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"Edit" }
+      data: {  id: mngId, email: email, dialogStatus:"Edit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Edit dialog was closed',result);
       if(result){
-        //this.config = result;
+        console.log('edit dialog was closed and result:',result);
         this.bodydata.id=result.toString();
-        console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        //this.datasetService.editDataset('test1',this.bodydata.id,this.bodydata);
-        
+        this.managerService.editManager('test1',this.bodydata.id,this.bodydata);
       }
       
     });
@@ -81,13 +73,9 @@ export class ManagersComponent implements OnInit {
       data: {  id: dsId, dialogStatus:"Delete" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Delete dialog was closed',result);
       if(result){
-        //this.config = result;
-        //this.bodydata.id=result.toString();
-        console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        //this.datasetService.deleteDataset('test1',result.toString());
-        
+        console.log('delete dialog was closed and result:',result);
+        this.managerService.deleteManager('test1',result.toString());
       }
       
     });

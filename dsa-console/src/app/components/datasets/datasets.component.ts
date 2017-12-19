@@ -113,9 +113,7 @@ export class DatasetsComponent implements OnInit {
       
     });
   }
-  submitted = false;
   
-  onSubmit() { this.submitted = true; }
 }
 
 
@@ -132,4 +130,7 @@ export class CreateDatasetDialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  submitted = false;
+  
+  onSubmit() { this.submitted = true; }
 }

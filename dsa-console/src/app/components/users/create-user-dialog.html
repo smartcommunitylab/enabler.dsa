@@ -13,15 +13,34 @@
 -->
     <form #heroForm="ngForm">
         <div class="form-group">
-            <label for="name">Dataset ID</label>
+            <label for="name">User ID</label>
             <input type="text" class="form-control" id="name"
                     required minlength
                     [(ngModel)]="data.id" name="name"
                     #name="ngModel">
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-             Name is required
+                Name is required
             </div>
-            
+        </div>
+        <div class="form-group" *ngIf="data.email">
+            <label for="email">User Email</label>
+            <input type="text" class="form-control" id="email"
+                    required minlength
+                    [ngModel]="data.email" name="email"
+                    #name="ngModel">
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                Name is required
+            </div>
+        </div>
+        <div class="form-group" *ngIf="data.dataset">
+            <label for="dataset">Dataset</label>
+            <input type="text" class="form-control" id="dataset"
+                    required minlength
+                    [ngModel]="data.dataset" name="dataset"
+                    #name="ngModel">
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                Name is required
+            </div>
         </div>
         <!-- <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button> -->
     </form>
