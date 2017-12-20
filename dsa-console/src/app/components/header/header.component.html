@@ -4,7 +4,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     
-    <span *ngIf="currentDomain"> DSA Console </span>
+    <span *ngIf="currentDomain"> DSA Console {{ 'HOME.TITLE' | translate }}</span>
     <span class="fill-remaining-space"></span>
     <mat-select [(value)]="currentDomain" *ngIf="currentDomain" class="domain-selector" (change)="changeDomain($event)">
       <mat-option *ngFor="let domain of profile.domains" [routerLink]="['/',domain.domain]" [value]="domain">{{domain.domain}}</mat-option>

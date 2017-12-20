@@ -23,6 +23,10 @@ import { DataService, requestOptionsProvider } from './services/data.service';
 import { DatasetsService } from './services/datasets.service';
 import { ManagersService } from './services/managers.service';
 import { UsersService } from './services/users.service';
+// import ngx-translate and the http loader
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -50,7 +54,15 @@ import { UsersService } from './services/users.service';
     CustomMaterialModule,
     HttpModule,
     FormsModule,
-    MatInputModule
+    MatInputModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+        }
+    })
   ],
   providers: [requestOptionsProvider,
     Config,
@@ -63,3 +75,8 @@ import { UsersService } from './services/users.service';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}

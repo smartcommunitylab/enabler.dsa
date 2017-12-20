@@ -7,6 +7,7 @@ import { DataService } from '../../services/data.service';
 
 import { UserProfile, DomainProfile} from '../../models/profile';
 import {ActivatedRoute, Router } from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +20,12 @@ export class HeaderComponent implements OnInit {
   currentDomain: DomainProfile;
   domains: string[];
 
-  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
+  constructor(private login: LoginService, private data: DataService, private dialog: MatDialog, private route: ActivatedRoute, private router: Router, private translate: TranslateService) {
+    translate.addLangs(["en", "it"]);
+    translate.setDefaultLang('en');
+
+    //let browserLang = translate.getBrowserLang();
+    //translate.use(browserLang.match(/en|it/) ? browserLang : 'en');
   }
 
   /**
