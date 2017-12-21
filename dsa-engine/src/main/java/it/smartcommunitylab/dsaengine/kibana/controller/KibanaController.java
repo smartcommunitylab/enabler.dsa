@@ -1,8 +1,10 @@
 package it.smartcommunitylab.dsaengine.kibana.controller;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -24,15 +26,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.model.AccountProfile;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
 import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.model.DomainConf;
+import it.smartcommunitylab.dsaengine.storage.DomainConfRepository;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 
 @Controller
@@ -60,39 +69,61 @@ public class KibanaController {
 	@Autowired
 	private RepositoryManager dataManager;
 
-//	@Autowired
-//	private ExternalUserRepository userRepository;
+	@Autowired
+	private DomainConfRepository domainRepository;	
 	
 	@Autowired
 	private RolesUtils aclManager;
 
-//	private AACRoleService roleService;
 	private AACProfileService profileService;
+	
+	private ObjectMapper mapper = new ObjectMapper();
 
 	@PostConstruct
 	public void init() {
-//		roleService = new AACRoleService(aacUrl);
 		profileService = new AACProfileService(aacUrl);
 	}
 
 	@GetMapping("/kibanalogin")
-	public String kibanalogin(Model model) {
+	public String kibanaLogin(Model model) throws Exception {
+		String token = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		AccountProfile profile = profileService.findAccountProfile(token);
+		String email = utils.extractEmailFromAccountProfile(profile);
+		
+		List<DomainConf> domains = domainRepository.findByUser(email);
+		Multimap<String, String> domainDatasets = ArrayListMultimap.create();
+
+		domains.forEach(x -> domainDatasets.putAll(x.getId(), 
+				x.getUsers().stream().filter(y -> email.equals(y.getEmail())).map(z -> z.getDataset()).collect(Collectors.toList())
+				));
+		
+		model.addAttribute("selectedDataset", new DomainDataSetInput());
+		model.addAttribute("domainsDatasets", domainDatasets.asMap());
+		model.addAttribute("domainsDatasetsJSON", mapper.writeValueAsString(domainDatasets.asMap()));
+		model.addAttribute("login", utils.loginUrl() + "/kibanalogout");
+		
 		return "kibanalogin";
 	}
 	
 	@GetMapping("/kibanalogout")
-	public String consolelogout(HttpServletRequest request, HttpServletResponse response) {
+	public String kibanaLogout(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null) {
-			new SecurityContextLogoutHandler().logout(request, response, auth);
+			SecurityContextLogoutHandler lh = new SecurityContextLogoutHandler();
+			lh.setClearAuthentication(true);
+			lh.setInvalidateHttpSession(true);
+			lh.logout(request, response, auth);
 		}			
 		
-		return "kibanalogin";
+		return "redirect:kibanalogin";
 	}		
 
-	@GetMapping("/kibana")
-	public ResponseEntity<Object> kibana(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam String domain, @RequestParam String dataset, Model model)	
+
+	@PostMapping("/kibana")
+	public ResponseEntity<Object> kibana(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam String postDashParameters, @RequestParam String domain, @RequestParam String dataset, Model model)	
 			throws Exception {
+
 		String token = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		AccountProfile profile = profileService.findAccountProfile(token);
@@ -102,15 +133,6 @@ public class KibanaController {
 			throw new UnauthorizedUserException("User email is null");
 		}
 
-//		Set<Role> roles = roleService.getRoles(token);
-//
-//		if (!checkRoles(roles, domain)) {
-//			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\"");
-//		}
-//		if (!isAllowed(domain, dataset, email)) {
-//			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset \"" + dataset + "\"");
-//		}
-		
 		if (!aclManager.isDatasetUser(domain, dataset, email)) {
 			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset \"" + dataset + "\"");
 		}
@@ -118,22 +140,13 @@ public class KibanaController {
 		Map<String, String> user = retrieveUser(domain, dataset, email);
 		
 		HttpHeaders httpHeaders = kibanaLogin(user);
-		URI uri = new URI(kibanaUrl);
+		httpHeaders.add("dsa-redirect", "true");
+		URI uri = new URI(kibanaUrl + ((postDashParameters == null || postDashParameters.isEmpty()) ? "" : ("#" + postDashParameters)));
+
 		httpHeaders.setLocation(uri);
 
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-	}
-
-/*	private boolean checkRoles(Set<Role> roles, String domain) {
-		final String elastic = "dsa_" + domain;
-		return roles.stream().filter(x -> ROLE_SCOPE.application.equals(x.getScope()) && elastic.equals(x.getRole())).findFirst().isPresent();
-	}
-
-	private boolean isAllowed(String domain, String dataset, String email) throws Exception {
-		List<ExternalUser> users = userRepository.findByDataset(domain, dataset);
-
-		return users.stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
-	}*/
+	}	
 
 	private Map<String, String> retrieveUser(String domain, String dataset, String email) throws Exception {
 		DataSetConf dsConf = dataManager.getDataSetConf(domain, dataset);
@@ -151,7 +164,6 @@ public class KibanaController {
 	private HttpHeaders kibanaLogin(Map<String, String> user) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> res = restTemplate.exchange(kibanaLogin, HttpMethod.POST, new HttpEntity<Object>(user, createHeaders()), String.class);
-//		String data = res.getBody();
 
 		HttpHeaders loginHeaders = res.getHeaders();
 
@@ -176,8 +188,11 @@ public class KibanaController {
 	public String exception(HttpServletRequest request, HttpServletResponse response, final Throwable throwable, final Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null) {
-			new SecurityContextLogoutHandler().logout(request, response, auth);
-		}
+			SecurityContextLogoutHandler lh = new SecurityContextLogoutHandler();
+			lh.setClearAuthentication(true);
+			lh.setInvalidateHttpSession(true);
+			lh.logout(request, response, auth);
+		}	
 
 		String errorMessage = (throwable != null ? throwable.getMessage() : "Unknown error");
 		model.addAttribute("error", errorMessage);
