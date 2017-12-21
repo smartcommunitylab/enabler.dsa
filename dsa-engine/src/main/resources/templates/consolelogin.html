@@ -5,9 +5,20 @@
 <title>CONSOLE LOGIN</title>
 </head>
 <body>
-<form action="console" method="get">
-Domain<input type="text" name="domain"></input>
-<input type="submit" value="Login"></input>
-</form>
+	<form th:action="@{/console}" th:path="${selectedDomain}" method="post">
+		<!-- Domain<input type="text" name="domain"></input> -->
+
+		<select class="form-control" id="domains" name="domains"
+			th:field="*{selectedDomain.domain}">
+			<!-- <option value="">Select Domain</option> -->
+			<option th:each="domain : ${domains}" th:value="${domain}"
+				th:text="${domain}"></option>
+		</select> <input type="submit" value="Login"></input>
+	</form>
+
+	<p>
+		<a th:href="${login}">Logout</a>
+	</p>
+
 </body>
 </html>
