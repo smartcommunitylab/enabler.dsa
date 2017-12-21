@@ -24,8 +24,8 @@ export class HeaderComponent implements OnInit {
     translate.addLangs(["en", "it"]);
     translate.setDefaultLang('en');
 
-    //let browserLang = translate.getBrowserLang();
-    //translate.use(browserLang.match(/en|it/) ? browserLang : 'en');
+    let browserLang = translate.getBrowserLang();
+    translate.use(browserLang.match(/en|it/) ? browserLang : 'en');
   }
 
   /**

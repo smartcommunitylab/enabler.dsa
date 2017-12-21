@@ -4,7 +4,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     
-    <span *ngIf="currentDomain"> DSA Console {{ 'HOME.TITLE' | translate }}</span>
+    <span *ngIf="currentDomain"> DSA {{ 'Home.Title' | translate }}</span>
     <span class="fill-remaining-space"></span>
     <mat-select [(value)]="currentDomain" *ngIf="currentDomain" class="domain-selector" (change)="changeDomain($event)">
       <mat-option *ngFor="let domain of profile.domains" [routerLink]="['/',domain.domain]" [value]="domain">{{domain.domain}}</mat-option>
@@ -16,23 +16,23 @@
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item>
         <mat-icon>mood</mat-icon>
-        <span>User Name</span>
+        <span>{{ 'Menu.UserName' | translate }}</span>
       </button>
       <button mat-menu-item [matMenuTriggerFor]="language">
         <mat-icon>translate</mat-icon>
-        <span>Language</span>
+        <span>{{ 'Menu.Language' | translate }}</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
-        <span>Logout</span>
+        <span>{{ 'Menu.Logout' | translate }}</span>
       </button>
     </mat-menu>
     <mat-menu #language="matMenu">
-      <button mat-menu-item>
+      <button mat-menu-item (click)="translate.use('it')">
         <mat-icon>g_translate</mat-icon>
         <span>IT</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="translate.use('en')">
         <mat-icon>g_translate</mat-icon>
         <span>EN</span>
       </button>
@@ -44,15 +44,15 @@
   <mat-sidenav #sidenav class="sidenav" >
     <button mat-menu-item   routerLink="datasets" (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>storage</mat-icon>
-      <span>DataSets</span>
+      <span>{{ 'Sidenav.Datasets' | translate }}</span>
     </button>
     <button mat-menu-item routerLink="managers"  (click)="sidenav.close()" *ngIf="currentDomain">
         <mat-icon>person</mat-icon>
-      <span>Managers</span>
+      <span>{{ 'Sidenav.Managers' | translate }}</span>
     </button>
     <button mat-menu-item routerLink="users"  (click)="sidenav.close()"  *ngIf="currentDomain">
       <mat-icon>face</mat-icon>
-      <span>Users</span>
+      <span>{{ 'Sidenav.Users' | translate }}</span>
     </button>
   </mat-sidenav>
   <mat-sidenav-content>

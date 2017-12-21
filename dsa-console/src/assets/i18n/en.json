@@ -1,6 +1,18 @@
 {
-    "HOME": {
-      "TITLE": "English",
-      "SELECT": "Change language"
+    "Home": {
+      "Title": "Console"
+    },
+    "Sidenav":{
+        "Datasets":"DataSets",
+        "Managers":"Managers",
+        "Users":"Users"
+    },
+    "Menu":{
+        "UserName":"User Name",
+        "Language":"Language",
+        "Logout":"Logout"
+    },
+    "ButtonText":{
+        "NewDS":"New DS"
     }
 }
