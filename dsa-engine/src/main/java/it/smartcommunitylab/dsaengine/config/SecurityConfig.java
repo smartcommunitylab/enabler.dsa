@@ -115,8 +115,8 @@ public class SecurityConfig {
 	public void configure(HttpSecurity http) throws Exception {
 		http.headers().frameOptions().disable();
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/console/**","/kibana/**","/kibanalogin").fullyAuthenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-		.accessDeniedPage("/accesserror").and().logout().logoutSuccessHandler(logoutSuccessHandler()).permitAll().and().csrf().disable()
+		http.authorizeRequests().antMatchers("/console/**","/kibana/**","/kibanalogin","/consolelogin").fullyAuthenticated().and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/prelogin"))
+		.accessDeniedPage("/accesserror").and().csrf().disable()		
 		.addFilterBefore(aacFilter(), BasicAuthenticationFilter.class);
 	}	  
 	
