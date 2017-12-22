@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>{{data.dialogStatus}} DataSet</h2>
+<h2 mat-dialog-title>{{ ('DialogText.Datasets.'+data.dialogStatus) | translate }} </h2>
 <div mat-dialog-content>
-    <p>Please give the information of the dataset.</p>
+    <p>{{ 'DialogText.Datasets.Info' | translate }}</p>
 <!--   
     <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
         <div class="form-group">
@@ -13,20 +13,21 @@
 -->
     <form #heroForm="ngForm">
         <div class="form-group">
-            <label for="name">Dataset ID</label>
+            <label for="name">{{ 'DialogText.Datasets.label1' | translate }}</label>
             <input type="text" class="form-control" id="name"
                     required minlength
                     [(ngModel)]="data.id" name="name"
                     #name="ngModel">
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-             Name is required
+                    {{ 'DialogText.Datasets.alert1' | translate }}
             </div>
-            
         </div>
         <!-- <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button> -->
     </form>
 </div>
+<br/>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="data.id" tabindex="2" [disabled]="!heroForm.form.valid">Ok</button>
-    <button mat-button (click)="onNoClick()" tabindex="-1">No, Thanks</button>
+    <button mat-button [mat-dialog-close]="data.id" tabindex="1" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <span class="fill-remaining-space"></span>
+    <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
 </div>

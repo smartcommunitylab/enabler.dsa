@@ -13,7 +13,61 @@
         "Language":"Linguaggio",
         "Logout":"Esci"
     },
+    "TableText":{
+        "Datasets":{
+            "C1":"ID",
+            "C2":"Configurazione",
+            "C3":"Modifica"
+        },
+        "Managers":{
+            "C1":"ID",
+            "C2":"E-mail",
+            "C3":"Modifica"
+        },
+        "Users":{
+            "C1":"ID",
+            "C2":"E-mail",
+            "C3":"Dataset",
+            "C4":"Modifica"
+        }
+    },
+    "DialogText":{
+        "Datasets":{
+            "TitleCreate":"Crea un DataSet",
+            "TitleEdit":"Modifica del Dataset ",
+            "TitleDelete":"Elimina il Dataset",
+            "Info":"Si prega di fornire le informazioni del Dataset.",
+            "label1":"Dataset ID:",
+            "alert1":"È richiesto un ID Dataset."
+        },
+        "Managers":{
+            "TitleCreate":"Crea un Manager",
+            "TitleEdit":"Modifica del Manager ",
+            "TitleDelete":"Elimina il Manager",
+            "Info":"Si prega di fornire le informazioni del Manager.",
+            "label1":"Manager ID:",
+            "label2":"Manager E-mail:",
+            "alert1":"È richiesto un ID Manager.",
+            "alert2":"L'email è richiesta"
+        },
+        "Users":{
+            "TitleCreate":"Crea un Utente",
+            "TitleEdit":"Modifica del Utente ",
+            "TitleDelete":"Elimina l'utente",
+            "Info":"Si prega di fornire le informazioni del Utente.",
+            "label1":"Utente ID:",
+            "label2":"Utente E-mail:",
+            "label3":"Dataset:",
+            "alert1":"È richiesto un ID utente.",
+            "alert2":"L'email è richiesta",
+            "alert3":"è richiesto l'ID Dataset."
+        }
+    },
     "ButtonText":{
-        "NewDS":"Nuovo DS"
+        "NewDS":"Nuovo DS",
+        "NewManager":"Nuovo Manager",
+        "NewUser":"Nuovo Utente",
+        "DBOK":"OK",
+        "DBNotOK":"No, Grazie"
     }
 }

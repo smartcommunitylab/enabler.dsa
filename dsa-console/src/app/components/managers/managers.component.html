@@ -1,10 +1,10 @@
 <div>
   <mat-toolbar>
-    <span>Managers</span>
+    <span>{{ 'Sidenav.Managers' | translate }}</span>
     <span class="fill-remaining-space"></span>
     <button mat-raised-button color="primary" (click)="openDialog4CreateManager()">
       <i class="material-icons">add_circle_outline</i>
-      New Manager
+      {{ 'ButtonText.NewManager' | translate }}
     </button>
   </mat-toolbar>  
 </div>
@@ -13,19 +13,19 @@
 
     <!-- Position Column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> ID. </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Managers.C1' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Managers.C2' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
     </ng-container>
 
     <!-- modification Column -->
     <ng-container matColumnDef="modification">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Modification </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Managers.C3' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let datasets2"> 
           <button mat-icon-button (click)="openDialog4EditManager(datasets2.id, datasets2.email)"><i class="material-icons">mode_edit</i></button>
           <button mat-icon-button (click)="openDialog4DeleteManager(datasets2.id)"><i class="material-icons">delete</i></button>

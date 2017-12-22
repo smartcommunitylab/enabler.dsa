@@ -53,9 +53,9 @@ export class DatasetsComponent implements OnInit {
   openDialog4CreateDS() {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: this.bodydata.id, dialogStatus:"Create" }
+      data: {  id: this.bodydata.id, dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
@@ -75,9 +75,9 @@ export class DatasetsComponent implements OnInit {
   openDialog4EditDS(dsId: string) {
     console.log('get dsid:', dsId);
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"Edit" }
+      data: {  id: dsId, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Edit dialog was closed',result);
@@ -97,9 +97,9 @@ export class DatasetsComponent implements OnInit {
    */
   openDialog4DeleteDS(dsId: string){
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"Delete" }
+      data: {  id: dsId, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);

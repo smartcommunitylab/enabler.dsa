@@ -32,9 +32,9 @@ export class ManagersComponent implements OnInit {
   openDialog4CreateManager() {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: this.bodydata.id, dialogStatus:"Create" }
+      data: {  id: this.bodydata.id, dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
@@ -49,9 +49,9 @@ export class ManagersComponent implements OnInit {
    */
   openDialog4EditManager(mngId: string, email: string) {
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: mngId, email: email, dialogStatus:"Edit" }
+      data: {  id: mngId, email: email, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
@@ -68,9 +68,9 @@ export class ManagersComponent implements OnInit {
    */
   openDialog4DeleteManager(dsId: string){
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"Delete" }
+      data: {  id: dsId, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){

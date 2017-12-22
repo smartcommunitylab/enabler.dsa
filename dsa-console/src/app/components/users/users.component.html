@@ -1,10 +1,10 @@
 <div>
   <mat-toolbar>
-    <span>Users</span>
+    <span>{{ 'Sidenav.Users' | translate }}</span>
     <span class="fill-remaining-space"></span>
     <button mat-raised-button color="primary" (click)="openDialog4CreateUser()">
       <i class="material-icons">add_circle_outline</i>
-      New User
+      {{ 'ButtonText.NewUser' | translate }}
     </button>
   </mat-toolbar>  
 </div>
@@ -13,25 +13,25 @@
 
     <!-- Position Column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> ID. </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C1' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C2' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="dataset">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Dataset </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C3' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.dataset}} </mat-cell>
     </ng-container>
 
     <!-- modification Column -->
     <ng-container matColumnDef="modification">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Modification </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C4' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> 
           <button mat-icon-button (click)="openDialog4EditUser(element.id, element.email, element.dataset)"><i class="material-icons">mode_edit</i></button>
           <button mat-icon-button (click)="openDialog4DeleteUser(element.id)"><i class="material-icons">delete</i></button>

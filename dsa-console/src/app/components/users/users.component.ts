@@ -32,9 +32,9 @@ export class UsersComponent implements OnInit {
   openDialog4CreateUser() {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: this.bodyData.id, dialogStatus:"Create" }
+      data: {  id: this.bodyData.id, dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
@@ -54,9 +54,9 @@ export class UsersComponent implements OnInit {
   openDialog4EditUser(userId: string, email:string, ds:string) {
     console.log('get dsid:', userId);
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: userId, email: email, dataset: ds, dialogStatus: "Edit" }
+      data: {  id: userId, email: email, dataset: ds, dialogStatus: "TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Edit dialog was closed',result);
@@ -74,9 +74,9 @@ export class UsersComponent implements OnInit {
    */
   openDialog4DeleteUser(dsId: string){
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
-      height: '300px',
+      //height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"Delete" }
+      data: {  id: dsId, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);
