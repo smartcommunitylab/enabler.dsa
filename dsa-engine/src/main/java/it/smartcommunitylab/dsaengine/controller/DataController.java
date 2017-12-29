@@ -1,13 +1,5 @@
 package it.smartcommunitylab.dsaengine.controller;
 
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
-import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
-import it.smartcommunitylab.dsaengine.exception.StorageException;
-import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
-
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
+import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
+import it.smartcommunitylab.dsaengine.exception.StorageException;
+import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
+
 @Controller
 public class DataController extends AuthController {
 	private static final transient Logger logger = LoggerFactory.getLogger(DataController.class);
@@ -33,14 +33,14 @@ public class DataController extends AuthController {
 	private RepositoryManager dataManager;
 	
 	@Autowired
-	private ElasticManger elasticManager;
+	private ElasticManager elasticManager;
 
 	@RequestMapping(value = "/api/data/{domain}/{dataset}", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> searchDataByDataset(
 			@PathVariable String domain,
 			@PathVariable String dataset,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
+		if(!checkRole("DSA_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(logger.isInfoEnabled()) {
@@ -53,7 +53,7 @@ public class DataController extends AuthController {
 	public @ResponseBody Map<String, Object> searchDataByDomain(
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
+		if(!checkRole("DSA_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		if(logger.isInfoEnabled()) {
@@ -69,10 +69,13 @@ public class DataController extends AuthController {
 			@PathVariable String type,
 			@RequestBody Map<String, Object> content,
 			HttpServletRequest request) throws Exception {
-		if(!checkRole("dsa_" + domain.toLowerCase(), request)) {
+		if(!checkRole("DSA_" + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 		DataSetConf conf = dataManager.getDataSetConf(domain, dataset);
+		if (conf == null) {
+			throw new EntityNotFoundException("Dataset not found");
+		}
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("indexData: %s %s", domain, dataset));
 		}

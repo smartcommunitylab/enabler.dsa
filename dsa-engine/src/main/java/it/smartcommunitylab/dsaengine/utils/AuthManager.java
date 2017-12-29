@@ -1,4 +1,4 @@
-package it.smartcommunitylab.dsaengine.controller;
+package it.smartcommunitylab.dsaengine.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import it.smartcommunitylab.aac.AACException;
 import it.smartcommunitylab.aac.AACProfileService;
@@ -22,8 +23,9 @@ import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
 
-public class AuthController {
-	private static final transient Logger logger = LoggerFactory.getLogger(AuthController.class);
+@Component
+public class AuthManager {
+	private static final transient Logger logger = LoggerFactory.getLogger(AuthManager.class);
 
 	@Autowired
 	@Value("${security.oauth2.client.clientId}")	
@@ -56,7 +58,7 @@ public class AuthController {
 		aacService = new AACService(aacURL, clientId, clientSecret);
 	}
 	
-	protected String refreshToken() throws UnauthorizedException {
+	public String refreshToken() throws UnauthorizedException {
 		if((tokenData == null) || isTokenExpired()) {
       try {
       	tokenData = aacService.generateClientToken(null);
@@ -67,7 +69,7 @@ public class AuthController {
 		return tokenData.getAccess_token();
 	}
 	
-	protected boolean isTokenExpired() {
+	public boolean isTokenExpired() {
 		boolean result = false;
 		if(tokenData == null) {
 			return true;
@@ -81,7 +83,7 @@ public class AuthController {
 		return result;
 	}
 
-	protected List<String> getRoles(String clientToken) 
+	public List<String> getRoles(String clientToken) 
 			throws UnauthorizedException, SecurityException, AACException {
 		if(isTokenExpired()) {
 			refreshToken();
@@ -94,7 +96,7 @@ public class AuthController {
 		return result;
 	}
 	
-	protected List<String> getUserRoles(String userToken) 
+	public List<String> getUserRoles(String userToken) 
 			throws UnauthorizedException, SecurityException, AACException {
 		if(isTokenExpired()) {
 			refreshToken();
@@ -107,7 +109,7 @@ public class AuthController {
 		return result;
 	}
 	
-	protected boolean checkRole(String role, HttpServletRequest request) 
+	public boolean checkRole(String role, HttpServletRequest request) 
 			throws SecurityException, UnauthorizedException, AACException {
 		boolean result = false;
 		String clientToken = getAuthToken(request);
@@ -120,7 +122,7 @@ public class AuthController {
 		return result;
 	}
 	
-	protected boolean checkUserRole(String role, HttpServletRequest request) 
+	public boolean checkUserRole(String role, HttpServletRequest request) 
 			throws SecurityException, UnauthorizedException, AACException {
 		boolean result = false;
 		String userToken = getAuthToken(request);
@@ -133,7 +135,7 @@ public class AuthController {
 		return result;
 	}
 	
-	protected String getAuthToken(HttpServletRequest request) {
+	public String getAuthToken(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
 		if(Utils.isNotEmpty(token)) {
 			token = token.replace("Bearer ", "");
@@ -143,9 +145,9 @@ public class AuthController {
 	
 	public String getEmail(HttpServletRequest request) {
 		return getEmail(getAccoutProfile(request));
-	}	
+	}
 	
-	protected AccountProfile getAccoutProfile(HttpServletRequest request) {
+	private AccountProfile getAccoutProfile(HttpServletRequest request) {
 		AccountProfile result = null;
 		String token = getAuthToken(request);
 		if(Utils.isNotEmpty(token)) {
@@ -160,7 +162,7 @@ public class AuthController {
 		return result;
 	}
 	
-	protected String getEmail(AccountProfile accountProfile) {
+	private String getEmail(AccountProfile accountProfile) {
 		String email = null;
 		if(accountProfile == null) {
 			return null;

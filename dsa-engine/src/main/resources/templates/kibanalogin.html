@@ -4,11 +4,29 @@
 <meta charset="ISO-8859-1"></meta>
 <title>KIBANA LOGIN</title>
 </head>
-<body>
-	<form action="kibana" method="get">
-		<input type="text" name="domain">Domain</input>
-		<input type="text" name="dataset"> Dataset</input>
-		<input type="submit" value="Login"></input>
+<body th:onLoad="'init(' + ${domainsDatasetsJSON} + ')'">
+	<form th:action="@{/kibana}" th:path="${selectedDataset}" method="post" id="form">
+	
+		<select class="form-control" id="domains" name="domains" th:field="*{selectedDataset.domain}" th:onchange="'populateDS(' + ${domainsDatasetsJSON} + ')'">
+			<!-- <option value="">Select Domain</option> -->
+			<option th:each="entry : ${domainsDatasets.entrySet()}" th:value="${entry.key}"
+				th:text="${entry.key}"></option>
+		</select>	
+	
+		<select class="form-control" id="datasets" name="datasets" th:field="*{selectedDataset.dataset}">
+		</select>	
+		
+		<input class="form-control" type="hidden" id="postDashParameters" name="postDashParameters" th:field="*{selectedDataset.postDashParameters}"></input>
+		
+		<input type="submit" value="Login"></input>	
 	</form>
+	
+	
+	<p>
+		<a th:href="${login}">Logout</a>
+	</p>	
+	
+	
+	<script src="js/kibana.js"></script>
 </body>
 </html>

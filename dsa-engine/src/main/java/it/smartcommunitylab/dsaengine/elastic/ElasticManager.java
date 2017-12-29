@@ -1,10 +1,5 @@
 package it.smartcommunitylab.dsaengine.elastic;
 
-import it.smartcommunitylab.dsaengine.common.Const;
-import it.smartcommunitylab.dsaengine.common.Utils;
-import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.utils.HTTPUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +14,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class ElasticManger {
+import it.smartcommunitylab.dsaengine.common.Const;
+import it.smartcommunitylab.dsaengine.common.Utils;
+import it.smartcommunitylab.dsaengine.model.DataSetConf;
+import it.smartcommunitylab.dsaengine.model.DomainConf;
+import it.smartcommunitylab.dsaengine.utils.HTTPUtils;
+
+public class ElasticManager {
 	@Autowired
 	@Value("${elastic.endpoint}")
 	private String endpoint;
@@ -40,7 +41,7 @@ public class ElasticManger {
 	
 	private ObjectMapper fullMapper;
 	
-	public ElasticManger() {
+	public ElasticManager() {
 		fullMapper = new ObjectMapper();
 		fullMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		fullMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
@@ -52,9 +53,9 @@ public class ElasticManger {
 	private String getDate(DataSetConf conf) {
 		String result = "";
 		Date now = new Date();
-		if(conf.getIndexFormat().equals(Const.IDX_MONTHLY)) {
+		if(conf.getConfigurationProperties().getIndexFormat().equals(Const.IDX_MONTHLY)) {
 			result = sdfMonthly.format(now);
-		} else if(conf.getIndexFormat().equals(Const.IDX_WEEKLY)) {
+		} else if(conf.getConfigurationProperties().getIndexFormat().equals(Const.IDX_WEEKLY)) {
 			result = sdfWeekly.format(now);
 		}
 		return result;
@@ -89,7 +90,7 @@ public class ElasticManger {
 				+ "-" + conf.getDataset().toLowerCase() + "-*";
 		Map<String, Object> content = new HashMap<String, Object>();
 		content.put("template", indexTemplate);
-		content.put("mappings", conf.getDataMapping());
+		content.put("mappings", conf.getConfigurationProperties().getDataMapping());
 		String address = endpoint + "_template/" + conf.getDomain().toLowerCase() 
 				+ "-" + conf.getDataset().toLowerCase() + "-template";
 		return HTTPUtils.send(address, "PUT", null, content, adminUser, adminPassword);
@@ -148,7 +149,7 @@ public class ElasticManger {
 		return HTTPUtils.send(address, "DELETE", null, null, adminUser, adminPassword);
 	}
 
-	public void addDomainRole(DataSetConf conf) throws Exception {
+/*	public void addDomainRole(DataSetConf conf) throws Exception {
 		String index = conf.getDomain().toLowerCase() + "-*";		
 		Map<String, Object> content = new HashMap<String, Object>();
 		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
@@ -164,7 +165,7 @@ public class ElasticManger {
 		String address = endpoint + "_xpack/security/role/" + conf.getElasticUser();
 		HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
 	}
-
+	
 	public void addDomainUser(DataSetConf conf) throws Exception {
 		Map<String, Object> content = new HashMap<String, Object>();
 		content.put("password", conf.getElasticPassword());
@@ -172,6 +173,34 @@ public class ElasticManger {
 		content.put("enabled", Boolean.TRUE);
 		String address = endpoint + "_xpack/security/user/" + conf.getElasticUser();
 		HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
-	}
+	}*/	
+	
+	public void addDomainRole(DomainConf conf) throws Exception {
+		String index = conf.getId().toLowerCase() + "-*";		
+		Map<String, Object> content = new HashMap<String, Object>();
+		List<Map<String, Object>> indices = new ArrayList<Map<String,Object>>();
+		Map<String, Object> roleIndex = new HashMap<String, Object>();
+		roleIndex.put("names", new String[] {index});
+		roleIndex.put("privileges", new String[] {"read", "write", "view_index_metadata"});
+		indices.add(roleIndex);
+		Map<String, Object> roleKibana = new HashMap<String, Object>();
+		roleKibana.put("names", new String[] {".kibana*"});
+		roleKibana.put("privileges", new String[] {"read", "view_index_metadata"});
+		indices.add(roleKibana);
+		content.put("indices", indices);
+		String address = endpoint + "_xpack/security/role/" + conf.getElasticUser();
+		HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
+	}	
+	
+
+	public void addDomainUser(DomainConf conf) throws Exception {
+		Map<String, Object> content = new HashMap<String, Object>();
+		content.put("password", conf.getElasticPassword());
+		content.put("roles", new String[] {conf.getElasticUser()});
+		content.put("enabled", Boolean.TRUE);
+		String address = endpoint + "_xpack/security/user/" + conf.getElasticUser();
+		HTTPUtils.send(address, "POST", null, content, adminUser, adminPassword);
+	}	
+	
 
 }

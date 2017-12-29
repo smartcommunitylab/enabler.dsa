@@ -3,19 +3,20 @@ package it.smartcommunitylab.dsaengine.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class DataSetConf extends BaseObject {
 	private String domain;
 	private String dataset;
-	private String indexFormat;
-	private String archivePolicy;
-	private List<String> clients = new ArrayList<String>();
-	private Map<String, Object> dataMapping;
+	
+	private ConfigurationProperties configurationProperties;
+	
 	private Date lastCheck;
 	private String elasticUser;
 	private String elasticPassword;
-	private Boolean elasticDomainUser = Boolean.FALSE;
+	
+	private List<User> users = new ArrayList<User>();
+	
+//	private Boolean elasticDomainUser = Boolean.FALSE;
 	
 	public String getDomain() {
 		return domain;
@@ -29,35 +30,14 @@ public class DataSetConf extends BaseObject {
 	public void setDataset(String dataset) {
 		this.dataset = dataset;
 	}
-	public String getIndexFormat() {
-		return indexFormat;
-	}
-	public void setIndexFormat(String indexFormat) {
-		this.indexFormat = indexFormat;
-	}
-	public String getArchivePolicy() {
-		return archivePolicy;
-	}
-	public void setArchivePolicy(String archivePolicy) {
-		this.archivePolicy = archivePolicy;
-	}
-	public List<String> getClients() {
-		return clients;
-	}
-	public void setClients(List<String> clients) {
-		this.clients = clients;
-	}
-	public Map<String, Object> getDataMapping() {
-		return dataMapping;
-	}
-	public void setDataMapping(Map<String, Object> dataMapping) {
-		this.dataMapping = dataMapping;
-	}
 	
-	@Override
-	public String toString() {
-		return domain + "/" + dataset + "/" + getId();
+	public ConfigurationProperties getConfigurationProperties() {
+		return configurationProperties;
 	}
+	public void setConfigurationProperties(ConfigurationProperties configurationProperties) {
+		this.configurationProperties = configurationProperties;
+	}
+
 	public Date getLastCheck() {
 		return lastCheck;
 	}
@@ -76,10 +56,23 @@ public class DataSetConf extends BaseObject {
 	public void setElasticPassword(String elasticPassword) {
 		this.elasticPassword = elasticPassword;
 	}
-	public Boolean getElasticDomainUser() {
-		return elasticDomainUser;
+//	public Boolean getElasticDomainUser() {
+//		return elasticDomainUser;
+//	}
+//	public void setElasticDomainUser(Boolean elasticDomainUser) {
+//		this.elasticDomainUser = elasticDomainUser;
+//	}
+	
+	public List<User> getUsers() {
+		return users;
 	}
-	public void setElasticDomainUser(Boolean elasticDomainUser) {
-		this.elasticDomainUser = elasticDomainUser;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
+	
+	@Override
+	public String toString() {
+		return domain + "/" + dataset + "/" + getId();
+	}	
+	
 }

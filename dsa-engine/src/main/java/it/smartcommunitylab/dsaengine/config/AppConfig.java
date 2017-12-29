@@ -32,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.mongodb.MongoException;
 
-import it.smartcommunitylab.dsaengine.elastic.ElasticManger;
+import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -83,8 +83,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	ElasticManger getElasticManager() {
-		return new ElasticManger();
+	ElasticManager getElasticManager() {
+		return new ElasticManager();
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	
 	@SuppressWarnings("deprecation")
 	@Bean
-  public Docket swaggerSpringMvcPlugin() {
+  public Docket swaggerSpringMvcPluginAPI() {
 		ApiInfo apiInfo = new ApiInfo(swaggerTitle, swaggerDesc, swaggerVersion, swaggerTosUrl, swaggerContact, 
 				swaggerLicense, swaggerLicenseUrl);
      return new Docket(DocumentationType.SWAGGER_2)
@@ -112,6 +112,20 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         .apiInfo(apiInfo)
         .produces(getContentTypes());
   }
+	
+	@SuppressWarnings("deprecation")
+	@Bean
+  public Docket swaggerSpringMvcPluginManagement() {
+		ApiInfo apiInfo = new ApiInfo(swaggerTitle, swaggerDesc, swaggerVersion, swaggerTosUrl, swaggerContact, 
+				swaggerLicense, swaggerLicenseUrl);
+     return new Docket(DocumentationType.SWAGGER_2)
+     	.groupName("management")
+     	.select()
+     		.paths(PathSelectors.regex("/management/.*"))
+     		.build()
+        .apiInfo(apiInfo)
+        .produces(getContentTypes());
+  }	
 	
 	private Set<String> getContentTypes() {
 		Set<String> result = new HashSet<String>();
