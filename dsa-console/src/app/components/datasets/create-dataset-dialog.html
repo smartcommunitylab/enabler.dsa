@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ ('DialogText.Datasets.'+data.dialogStatus) | translate }} </h2>
 <div mat-dialog-content>
-    <p>{{ 'DialogText.Datasets.Info' | translate }}</p>
+    <span>{{ 'DialogText.Datasets.Info' | translate }}</span>
 <!--   
     <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
         <div class="form-group">
@@ -14,8 +14,9 @@
     <form #heroForm="ngForm">
         <div class="form-group">
             <label for="name">{{ 'DialogText.Datasets.label1' | translate }}</label>
+            
             <input type="text" class="form-control" id="name"
-                    required minlength
+                    required minlength tabindex="1"
                     [(ngModel)]="data.id" name="name"
                     #name="ngModel">
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger">

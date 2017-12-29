@@ -28,8 +28,8 @@
     <ng-container matColumnDef="modification">
       <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C3' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let datasets2"> 
-          <button mat-icon-button (click)="openDialog4EditDS(datasets2.id)"><i class="material-icons">mode_edit</i></button>
-          <button mat-icon-button (click)="openDialog4DeleteDS(datasets2.id)"><i class="material-icons">delete</i></button>
+          <button mat-icon-button (click)="openDialog4EditDS(datasets2.id)"  matTooltip="{{ 'DialogText.Datasets.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button (click)="openDialog4DeleteDS(datasets2.id)" matTooltip="{{ 'DialogText.Datasets.TitleDelete' | translate }}"><i class="material-icons">delete</i></button>
           
       </mat-cell>
     </ng-container>
