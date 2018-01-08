@@ -3,6 +3,7 @@ package it.smartcommunitylab.dsaengine.kibana.controller;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,8 @@ public class KibanaController {
 		domains.forEach(x -> domainDatasets.putAll(x.getId(), 
 				x.getUsers().stream().filter(y -> email.equals(y.getEmail())).map(z -> z.getDataset()).collect(Collectors.toList())
 				));
+		Set<String> doms = domainDatasets.keySet();
+		doms.forEach(x -> domainDatasets.put(x, "*"));
 		
 		model.addAttribute("selectedDataset", new DomainDataSetInput());
 		model.addAttribute("domainsDatasets", domainDatasets.asMap());
@@ -133,11 +136,23 @@ public class KibanaController {
 			throw new UnauthorizedUserException("User email is null");
 		}
 
-		if (!aclManager.isDatasetUser(domain, dataset, email)) {
+		boolean domainUser = "*".equals(dataset); 
+		
+		if (domainUser) {
+			if (!aclManager.isDomainManager(domain, email)) {
+				throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset *");	
+			}
+		} else if (!aclManager.isDatasetUser(domain, dataset, email)) {
 			throw new UnauthorizedUserException("User \"" + email + "\" is not allowed for domain \"" + domain + "\", dataset \"" + dataset + "\"");
 		}
 
-		Map<String, String> user = retrieveUser(domain, dataset, email);
+		Map<String, String> user = null;
+		
+		if (domainUser) {
+			user = retrieveDomainUser(domain, email);
+		} else {
+			user = retrieveDatasetUser(domain, dataset, email);
+		}
 		
 		HttpHeaders httpHeaders = kibanaLogin(user);
 		httpHeaders.add("dsa-redirect", "true");
@@ -148,7 +163,7 @@ public class KibanaController {
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}	
 
-	private Map<String, String> retrieveUser(String domain, String dataset, String email) throws Exception {
+	private Map<String, String> retrieveDatasetUser(String domain, String dataset, String email) throws Exception {
 		DataSetConf dsConf = dataManager.getDataSetConf(domain, dataset);
 
 		String user = dsConf.getElasticUser();
@@ -160,6 +175,19 @@ public class KibanaController {
 
 		return userMap;
 	}
+	
+	private Map<String, String> retrieveDomainUser(String domain, String email) throws Exception {
+		DomainConf dConf = dataManager.getDomainConf(domain);
+
+		String user = dConf.getElasticUser();
+		String password = dConf.getElasticPassword();
+
+		Map<String, String> userMap = new TreeMap<String, String>();
+		userMap.put("username", user);
+		userMap.put("password", password);
+
+		return userMap;
+	}	
 
 	private HttpHeaders kibanaLogin(Map<String, String> user) {
 		RestTemplate restTemplate = new RestTemplate();
