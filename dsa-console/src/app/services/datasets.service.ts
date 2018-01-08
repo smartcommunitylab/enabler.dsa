@@ -14,9 +14,16 @@ export class DatasetsService {
    */
   getDataSets(domain:string): Promise<DataSet[]> {
     //console.log("come in getDataSets",domain);
+    /*
     return this.http.get(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/datasets`)
     .map(response => response.json() as DataSet[])
     .toPromise();
+    
+    */
+    return this.http.get(`${ this.config.get('locUrl') }management/${domain}/datasets`)
+    .map(response => response.json() as DataSet[])
+    .toPromise();
+    
   }
   /**
    * Set DataSets/ create a new dataset

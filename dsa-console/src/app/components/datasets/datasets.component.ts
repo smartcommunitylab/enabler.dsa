@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {DatasetsService} from '../../services/datasets.service';
 
 import { DataSet, Configuration, BodyDataDataset} from '../../models/profile';
@@ -54,7 +55,7 @@ export class DatasetsComponent implements OnInit {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
-      width: '350px',
+      width: '300px',
       data: {  id: this.bodydata.id, dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -76,7 +77,7 @@ export class DatasetsComponent implements OnInit {
     console.log('get dsid:', dsId);
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
-      width: '350px',
+      width: '300px',
       data: {  id: dsId, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -98,7 +99,7 @@ export class DatasetsComponent implements OnInit {
   openDialog4DeleteDS(dsId: string){
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
-      width: '350px',
+      width: '300px',
       data: {  id: dsId, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -120,7 +121,7 @@ export class DatasetsComponent implements OnInit {
 @Component({
   selector : 'create-dataset-dialog',
   templateUrl : 'create-dataset-dialog.html',
-  styleUrls: ['./datasets.component.css']
+  //styleUrls: ['./datasets.component.css']
 })
 export class CreateDatasetDialogComponent {
   //constructor() {}

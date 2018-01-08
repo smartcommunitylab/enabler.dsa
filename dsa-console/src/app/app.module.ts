@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+//import { MAT_LABEL_GLOBAL_OPTIONS} from '@angular/material/mat-form-field';
 import {MatInputModule} from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -54,6 +56,8 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
     CustomMaterialModule,
     HttpModule,
     FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
     TranslateModule.forRoot({
@@ -71,7 +75,9 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
     AuthGuard,
     DatasetsService,
     ManagersService,
-    UsersService],
+    UsersService,
+    //{provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}}
+  ],  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

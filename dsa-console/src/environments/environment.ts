@@ -5,9 +5,10 @@
 
 export const environment = {
   production: false,
-  amUrl: 'https://api-dev.smartcommunitylab.it/',
-  aacUrl: 'https://am-dev.smartcommunitylab.it/aac/',
-  aacClientId: '203d85ec-009c-4c1b-bc34-f9bed347f22d',
+  amUrl: 'https://api-test.smartcommunitylab.it/',
+  aacUrl: 'https://am-test.smartcommunitylab.it/aac/',
+  aacClientId: 'bf53cec4-e2a3-4033-a029-d128eee81951',
   redirectUrl: 'http://localhost:4200/',
-  scope: 'profile.basicprofile.me,user.roles.me'
+  scope: 'profile.basicprofile.me,user.roles.me',
+  locUrl: 'http://localhost:6030/dsa-engine/',
 };
