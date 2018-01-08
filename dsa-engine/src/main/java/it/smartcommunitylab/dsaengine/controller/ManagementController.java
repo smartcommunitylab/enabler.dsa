@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.google.common.collect.Lists;
+
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.exception.BadRequestException;
@@ -32,7 +38,10 @@ import it.smartcommunitylab.dsaengine.model.BaseDomainConf;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
 import it.smartcommunitylab.dsaengine.model.Manager;
+import it.smartcommunitylab.dsaengine.model.Profile;
+import it.smartcommunitylab.dsaengine.model.ProfileDomainData;
 import it.smartcommunitylab.dsaengine.model.User;
+import it.smartcommunitylab.dsaengine.storage.DomainConfRepository;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
 import it.smartcommunitylab.dsaengine.utils.AuthManager;
 
@@ -53,6 +62,19 @@ public class ManagementController {
 	
 	@Autowired
 	private AuthManager authManager;
+	
+	@Autowired
+	private DomainConfRepository domainRepository;	
+	
+	@Value("${aac.serverUrl}")
+	private String aacURL;	
+	
+	private BasicProfileService profileService;
+
+	@PostConstruct
+	private void init() {
+		profileService = new BasicProfileService(aacURL);
+	}	
 	
 	//////////////////
 	// Dataset CRUD //
@@ -549,218 +571,61 @@ public class ManagementController {
 		return result;
 	}	
 	
-	
-	
-//	@RequestMapping(value = "/management/user/{domain}", method = RequestMethod.POST)
-//	public @ResponseBody User addUser (
-//			@PathVariable String domain,
-//			@RequestBody User user,
-//			HttpServletRequest request) throws Exception {
-//
-//		String email = getEmail(getAccoutProfile(request));
-//		if(Utils.isNotEmpty(email)) {
-//			if (!aclManager.userAllowed(domain, email)) {
-//				throw new UnauthorizedException("Unauthorized Exception: role not valid");
-//			}		
-//		}
-//
-//		if (user.getEmail() == null) {
-//			throw new BadRequestException("Missing email");
-//		}	
-//		if (user.getRole() == null) {
-//			throw new BadRequestException("Missing role");
-//		}			
-//		
-//		if (user.getDataset() != null && !UserRole.DATASET_USER.equals(user.getRole())) {
-//			throw new UnauthorizedException("Bad role for dataset user");
-//		}
-//		if (user.getDataset() == null && UserRole.DATASET_USER.equals(user.getRole())) {
-//			throw new UnauthorizedException("Bad role for domain user");
-//		}		
-//		user.setId(UUID.randomUUID().toString());
-//		
-//		
-//		DomainConf dConf = dataManager.getDomainConf(domain);
-//		if (dConf == null) {
-//			throw new EntityNotFoundException("Domain not found");
-//		}
-//		
-//		if (dConf.getUsers().contains(user)) {
-//			throw new UnauthorizedException("User with same role already exist");
-//		}
-//		
-//		dConf.getUsers().add(user);
-//		dataManager.updateDomainConfUsers(dConf);
-//		
-//		if(logger.isInfoEnabled()) {
-//			logger.info(String.format("addUser: %s", user.toString()));
-//		}		
-//		
-//		return user;
-//	}
-//	
-//	@RequestMapping(value = "/management/user/{domain}", method = RequestMethod.DELETE)
-//	public @ResponseBody DomainConf deleteUser (
-//			@PathVariable String domain,
-//			HttpServletRequest request) throws Exception {
-//		
-//		String email = getEmail(getAccoutProfile(request));
-//		if(Utils.isNotEmpty(email)) {
-//			if (!aclManager.userAllowed(domain, email)) {
-//				throw new UnauthorizedException("Unauthorized Exception: role not valid");
-//			}		
-//		}		
-//		
-//		DomainConf result = dataManager.removeDomainConf(domain);
-//		if(logger.isInfoEnabled()) {
-//			logger.info(String.format("deleteUser: %s", result.toString()));
-//		}
-//		return result;
-//	}		
-//	
-	
-//	@RequestMapping(value = "/management/user/{domain}/{dataset}", method = RequestMethod.PUT)
-//	public @ResponseBody User updateDatasetUser (
-//			@PathVariable String domain,
-//			@PathVariable String dataset,			
-//			@RequestBody User user,
-//			HttpServletRequest request) throws Exception {
-//
-//		
-//		String email = getEmail(getAccoutProfile(request));
-//		if(Utils.isNotEmpty(email)) {
-//			if (!aclManager.userAllowed(domain, email)) {
-//				throw new UnauthorizedException("Unauthorized Exception: role not valid");
-//			}		
-//		}
-//		
-//		if (user.getEmail() == null) {
-//			throw new UnauthorizedException("Missing email");
-//		}			
-//		if (user.getRole() != null && !UserRole.DATASET_USER.equals(user.getRole())) {
-//			throw new UnauthorizedException("Bad role for dataset user");
-//		}
-//		user.setRole(UserRole.DATASET_USER);
-//		
-//		DataSetConf dsConf = dataManager.getDataSetConf(domain, dataset);
-//		if (dsConf == null) {
-//			throw new EntityNotFoundException("Dataset not found");
-//		}
-//		
-//		if (dsConf.getUsers().contains(user)) {
-//			throw new UnauthorizedException("User already exist");
-//		}
-//		
-//		List<User> users = dsConf.getUsers();
-//		
-//		Optional<User> found = users.stream().filter(x -> x.getEmail().equals(user.getEmail())).findFirst();
-//		if (!found.isPresent()) {
-//			throw new EntityNotFoundException("User not found");
-//		}
-//		found.get().setRole(user.getRole());
-//		
-//		dataManager.updateDataSetConfUsers(dsConf);
-//		
-//		return found.get();
-//	}	
-//	
-//	
-//		@RequestMapping(value = "/management/user/{domain}", method = RequestMethod.POST)
-//		public @ResponseBody User addDomainUser (
-//				@PathVariable String domain,
-//				@RequestBody User user,
-//				HttpServletRequest request) throws Exception {
-//
-//			String email = getEmail(getAccoutProfile(request));
-//			if(Utils.isNotEmpty(email)) {
-//				if (!aclManager.userAllowed(domain, email)) {
-//					throw new UnauthorizedException("Unauthorized Exception: role not valid");
-//				}		
-//			}
-//			
-//			if (user.getEmail() == null) {
-//				throw new UnauthorizedException("Missing email");
-//			}				
-//			if (user.getRole() == null || UserRole.DATASET_USER.equals(user.getRole())) {
-//				throw new UnauthorizedException("Bad role for domain user");
-//			}
-//			user.setId(UUID.randomUUID().toString());
-//			
-//			DomainConf dConf = dataManager.getDomainConf(domain);
-//			if (dConf == null) {
-//				throw new EntityNotFoundException("Domain not found");
-//			}
-//			
-//			if (dConf.getUsers().contains(user)) {
-//				throw new UnauthorizedException("User already exist");
-//			}
-//			
-//			dConf.getUsers().add(user);
-//			dataManager.updateDomainConfUsers(dConf);
-//			
-//			return user;
-//		}	
-//		
-//		@RequestMapping(value = "/management/user/{domain}", method = RequestMethod.PUT)
-//		public @ResponseBody User updateDomainUser (
-//				@PathVariable String domain,
-//
-//				@RequestBody User user,
-//				HttpServletRequest request) throws Exception {
-//
-//			String email = getEmail(getAccoutProfile(request));
-//			if(Utils.isNotEmpty(email)) {
-//				if (!aclManager.userAllowed(domain, email)) {
-//					throw new UnauthorizedException("Unauthorized Exception: role not valid");
-//				}		
-//			}
-//			
-//			if (user.getEmail() == null) {
-//				throw new UnauthorizedException("Missing email");
-//			}			
-//			if (user.getRole() == null || UserRole.DATASET_USER.equals(user.getRole())) {
-//				throw new UnauthorizedException("Bad role for domain user");
-//			}
-//			
-//			DomainConf dConf = dataManager.getDomainConf(domain);
-//			if (dConf == null) {
-//				throw new EntityNotFoundException("Domain not found");
-//			}
-//			
-//			if (dConf.getUsers().contains(user)) {
-//				throw new UnauthorizedException("User already exist");
-//			}
-//			
-//			List<User> users = dConf.getUsers();
-//			
-//			Optional<User> found = users.stream().filter(x -> x.getEmail().equals(user.getEmail())).findFirst();
-//			if (!found.isPresent()) {
-//				throw new EntityNotFoundException("User not found");
-//			}
-//			found.get().setRole(user.getRole());
-//			
-//			dataManager.updateDomainConfUsers(dConf);
-//			
-//			return found.get();
-//		}		
-	
-	
 	//////////////
 	// End CRUD //
 	//////////////	
 	
-/*	private boolean checkUserEmail(String email, DataSetConf conf) {
-		boolean result = false;
-		List<ExternalUser> users = dataManager.findByDomain(conf.getDomain(), conf.getDataset());
-		for(ExternalUser user : users) {
-			if(email.equals(user.getEmail())) {
-				result = true;
-				break;
+	
+	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+	@RequestMapping(value = "/management/profile", method = RequestMethod.GET)
+	public @ResponseBody Profile getProfile(HttpServletRequest request) throws Exception {
+		String email = authManager.getEmail(request);
+		
+		String token = authManager.getAuthToken(request);
+		
+		BasicProfile basicProfile;
+		try {
+			basicProfile = profileService.getBasicProfile(token);
+		} catch (Exception e) {
+			throw new UnauthorizedException("Invalid token: " + token);
+		}
+		
+		Profile profile = new Profile();
+		profile.setUsername(email);
+		profile.setDisplayname(basicProfile.getName());		
+		
+		List<ProfileDomainData> doms = Lists.newArrayList();
+		
+		List<DomainConf> domains = domainRepository.findByManager(email);
+		for (DomainConf dConf : domains) {
+			for (Manager manager: dConf.getManagers()) {
+				if (!email.equals(manager.getEmail())) {
+					continue;
+				}
+				ProfileDomainData pde = new ProfileDomainData();
+				pde.setDomain(dConf.getId());
+				pde.setRole(manager.isOwner() ? "DOMAIN_OWNER" : "DOMAIN_MANAGER");
+				doms.add(pde);
+			}
+			for (User user: dConf.getUsers()) {
+				if (!email.equals(user.getEmail())) {
+					continue;
+				}
+				ProfileDomainData pde = new ProfileDomainData();
+				pde.setDomain(dConf.getId());
+				pde.setRole("DATASET_USER");
+				pde.setDataset(user.getDataset());
+				doms.add(pde);				
 			}
 		}
-		return result;
-	}
-*/	
+		
+		profile.setDomains(doms);
+		
+		return profile;
+	}	
+	
+	
+
 	@ExceptionHandler({EntityNotFoundException.class, StorageException.class, BadRequestException.class})
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST)
 	@ResponseBody
