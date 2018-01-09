@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DomainConf extends BaseObject {
 	
-	private ConfigurationProperties defaultConfigurationProperties;
+//	private ConfigurationProperties defaultConfigurationProperties;
 	
 	private String elasticUser;
 	private String elasticPassword;	
@@ -29,13 +29,13 @@ public class DomainConf extends BaseObject {
 		this.users = users;
 	}
 
-	public ConfigurationProperties getDefaultConfigurationProperties() {
-		return defaultConfigurationProperties;
-	}
-
-	public void setDefaultConfigurationProperties(ConfigurationProperties defaultConfigurationProperties) {
-		this.defaultConfigurationProperties = defaultConfigurationProperties;
-	}
+//	public ConfigurationProperties getDefaultConfigurationProperties() {
+//		return defaultConfigurationProperties;
+//	}
+//
+//	public void setDefaultConfigurationProperties(ConfigurationProperties defaultConfigurationProperties) {
+//		this.defaultConfigurationProperties = defaultConfigurationProperties;
+//	}
 
 	public String getElasticUser() {
 		return elasticUser;
