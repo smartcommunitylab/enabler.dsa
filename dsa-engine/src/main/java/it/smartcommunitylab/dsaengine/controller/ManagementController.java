@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.common.collect.Lists;
 
-import eu.trentorise.smartcampus.profileservice.BasicProfileService;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import it.smartcommunitylab.aac.AACProfileService;
+import it.smartcommunitylab.aac.model.BasicProfile;
 import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.elastic.ElasticManager;
 import it.smartcommunitylab.dsaengine.exception.BadRequestException;
@@ -34,7 +34,6 @@ import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.exception.UnauthorizedException;
 import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.BaseDataSetConf;
-import it.smartcommunitylab.dsaengine.model.BaseDomainConf;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
 import it.smartcommunitylab.dsaengine.model.Manager;
@@ -66,14 +65,17 @@ public class ManagementController {
 	@Autowired
 	private DomainConfRepository domainRepository;	
 	
+	@Autowired
+	private RepositoryManager repositoryManager;	
+	
 	@Value("${aac.serverUrl}")
 	private String aacURL;	
 	
-	private BasicProfileService profileService;
+	private AACProfileService profileService;
 
 	@PostConstruct
 	private void init() {
-		profileService = new BasicProfileService(aacURL);
+		profileService = new AACProfileService(aacURL);
 	}	
 	
 	//////////////////
@@ -156,9 +158,9 @@ public class ManagementController {
 			throw new StorageException("Domain does not exist");
 		}
 		
-		if (conf.getConfigurationProperties() == null) {
-			conf.setConfigurationProperties(parentDomain.getDefaultConfigurationProperties());
-		}
+//		if (conf.getConfigurationProperties() == null) {
+//			conf.setConfigurationProperties(parentDomain.getDefaultConfigurationProperties());
+//		}
 		
 		DataSetConf result = dataManager.addDataSetConf(conf);
 
@@ -166,18 +168,6 @@ public class ManagementController {
 		elasticManager.addRole(result);
 		elasticManager.addUser(result);
 		
-//		DataSetConf dataSetConf = dataManager.getDataSetConf(domain, Const.DOMAIN_DATASET);
-//		if(dataSetConf == null) {
-//			dataSetConf = new DataSetConf();
-//			dataSetConf.setDomain(domain);
-//			dataSetConf.setDataset(Const.DOMAIN_DATASET);
-//			dataSetConf.setElasticDomainUser(true);
-//			dataManager.addDataSetConf(dataSetConf);
-
-
-//		}		
-		
-
 		if(logger.isInfoEnabled()) {
 			logger.info(String.format("addDataSetConf: %s", result.toString()));
 		}
@@ -269,14 +259,14 @@ public class ManagementController {
 
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.POST)
-	public @ResponseBody DomainConf addDomainConf(@PathVariable String domain, @RequestBody BaseDomainConf baseConf, HttpServletRequest request) throws Exception {
+	public @ResponseBody DomainConf addDomainConf(@PathVariable String domain, HttpServletRequest request) throws Exception {
 		if (!authManager.checkRole(DSA_PROVIDER_ROLE_PREFIX + domain.toLowerCase(), request)) {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 
 		String email = authManager.getEmail(request);
 
-		DomainConf conf = baseConf.toDomainConf();
+		DomainConf conf = new DomainConf();
 		conf.setId(domain);
 		
 		Manager owner = new Manager();
@@ -299,24 +289,24 @@ public class ManagementController {
 		return result;
 	}
 	
-	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
-	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.PUT)
-	public @ResponseBody DomainConf updateDomainConf (
-			@PathVariable String domain,
-			@RequestBody BaseDomainConf baseConf,
-			HttpServletRequest request) throws Exception {
-		if (!authManager.checkRole(DSA_PROVIDER_ROLE_PREFIX + domain.toLowerCase(), request)) {
-			throw new UnauthorizedException("Unauthorized Exception: role not valid");
-		}
-		
-		DomainConf result = dataManager.updateDomainConf(baseConf, domain);
-		if(logger.isInfoEnabled()) {
-			logger.info(String.format("updateDomainConf: %s", result.toString()));
-		}
-		
-		result.setElasticPassword(null);		
-		return result;
-	}
+//	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
+//	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.PUT)
+//	public @ResponseBody DomainConf updateDomainConf (
+//			@PathVariable String domain,
+//			@RequestBody BaseDomainConf baseConf,
+//			HttpServletRequest request) throws Exception {
+//		if (!authManager.checkRole(DSA_PROVIDER_ROLE_PREFIX + domain.toLowerCase(), request)) {
+//			throw new UnauthorizedException("Unauthorized Exception: role not valid");
+//		}
+//		
+//		DomainConf result = dataManager.updateDomainConf(baseConf, domain);
+//		if(logger.isInfoEnabled()) {
+//			logger.info(String.format("updateDomainConf: %s", result.toString()));
+//		}
+//		
+//		result.setElasticPassword(null);		
+//		return result;
+//	}
 	
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/{domain}/domains", method = RequestMethod.DELETE)
@@ -583,16 +573,31 @@ public class ManagementController {
 		
 		String token = authManager.getAuthToken(request);
 		
+		List<String> domainNames = authManager.getRoleWithPrefix(ManagementController.DSA_PROVIDER_ROLE_PREFIX, token);
+		for (String domainName: domainNames) {
+			DomainConf dConf = repositoryManager.addDomainConf(domainName.replace(ManagementController.DSA_PROVIDER_ROLE_PREFIX, ""));
+			
+			if (dConf != null) {
+			Manager owner = new Manager();
+			owner.setId(UUID.randomUUID().toString());
+			owner.setEmail(email);
+			owner.setOwner(true);
+			dConf.getManagers().add(owner);
+			
+			repositoryManager.updateDomainConfManagers(dConf);
+			}
+		}		
+		
 		BasicProfile basicProfile;
 		try {
-			basicProfile = profileService.getBasicProfile(token);
+			basicProfile = profileService.findProfile(token);
 		} catch (Exception e) {
 			throw new UnauthorizedException("Invalid token: " + token);
 		}
 		
 		Profile profile = new Profile();
 		profile.setUsername(email);
-		profile.setDisplayname(basicProfile.getName());		
+		profile.setDisplayname(basicProfile.getUsername());		
 		
 		List<ProfileDomainData> doms = Lists.newArrayList();
 		
