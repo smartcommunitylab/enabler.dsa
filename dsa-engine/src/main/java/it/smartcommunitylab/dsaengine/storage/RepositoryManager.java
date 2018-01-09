@@ -13,7 +13,6 @@ import it.smartcommunitylab.dsaengine.common.Utils;
 import it.smartcommunitylab.dsaengine.exception.EntityNotFoundException;
 import it.smartcommunitylab.dsaengine.exception.StorageException;
 import it.smartcommunitylab.dsaengine.model.BaseDataSetConf;
-import it.smartcommunitylab.dsaengine.model.BaseDomainConf;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
 
@@ -152,6 +151,25 @@ public class RepositoryManager {
 		return externalUserRepository.findByDataset(domain, dataset);
 	}*/
 	
+	public DomainConf addDomainConf(String id) {
+		DomainConf domainConfDb = domainConfRepository.findById(id);
+		if(domainConfDb != null) {
+			return null;
+		}
+		
+		DomainConf conf = new DomainConf();
+		conf.setId(id);
+		
+		Date now = new Date();
+		String elasticUser = "dsa_" + conf.getId();
+		conf.setElasticUser(elasticUser.toLowerCase());
+		conf.setElasticPassword(RandomStringUtils.randomAlphanumeric(12));
+		conf.setCreationDate(now);
+		conf.setLastUpdate(now);
+		domainConfRepository.save(conf);
+		return conf;
+	
+	}
 	
 	public DomainConf addDomainConf(DomainConf conf) throws StorageException {
 		DomainConf domainConfDb = domainConfRepository.findById(conf.getId());
@@ -159,7 +177,6 @@ public class RepositoryManager {
 			throw new StorageException("Domain already present");
 		}
 		Date now = new Date();
-//		conf.setId(Utils.getUUID());
 		String elasticUser = "dsa_" + conf.getId();
 		conf.setElasticUser(elasticUser.toLowerCase());
 		conf.setElasticPassword(RandomStringUtils.randomAlphanumeric(12));
@@ -181,17 +198,17 @@ public class RepositoryManager {
 //		return domainConfDb;
 //	}	
 	
-	public DomainConf updateDomainConf(BaseDomainConf baseConf, String domain) throws StorageException, EntityNotFoundException {
-		DomainConf domainConfDb = domainConfRepository.findById(domain);
-		if(domainConfDb == null) {
-			throw new EntityNotFoundException("Domain not found");
-		}
-		Date now = new Date();
-		domainConfDb.setLastUpdate(now);
-		domainConfDb.setDefaultConfigurationProperties(baseConf.getDefaultConfigurationProperties());
-		domainConfRepository.save(domainConfDb);
-		return domainConfDb;
-	}		
+//	public DomainConf updateDomainConf(BaseDomainConf baseConf, String domain) throws StorageException, EntityNotFoundException {
+//		DomainConf domainConfDb = domainConfRepository.findById(domain);
+//		if(domainConfDb == null) {
+//			throw new EntityNotFoundException("Domain not found");
+//		}
+//		Date now = new Date();
+//		domainConfDb.setLastUpdate(now);
+//		domainConfDb.setDefaultConfigurationProperties(baseConf.getDefaultConfigurationProperties());
+//		domainConfRepository.save(domainConfDb);
+//		return domainConfDb;
+//	}		
 	
 	public DomainConf updateDomainConfUsers(DomainConf conf) throws StorageException, EntityNotFoundException {
 		DomainConf domainConfDb = domainConfRepository.findById(conf.getId());
