@@ -1,6 +1,7 @@
 package it.smartcommunitylab.dsaengine.kibana.controller;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -25,12 +26,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.dsaengine.controller.ManagementController;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
 import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
 import it.smartcommunitylab.dsaengine.model.DomainConf;
+import it.smartcommunitylab.dsaengine.model.Manager;
 import it.smartcommunitylab.dsaengine.storage.DomainConfRepository;
 import it.smartcommunitylab.dsaengine.storage.RepositoryManager;
+import it.smartcommunitylab.dsaengine.utils.AuthManager;
 
 @Controller
 public class ConsoleController {
@@ -49,7 +53,13 @@ public class ConsoleController {
 	private DomainConfRepository domainRepository;
 
 	@Autowired
+	private RepositoryManager repositoryManager;	
+	
+	@Autowired
 	private RolesUtils aclManager;	
+	
+	@Autowired
+	private AuthManager authManager;
 	
 	private AACProfileService profileService;
 
@@ -64,6 +74,22 @@ public class ConsoleController {
 
 		AccountProfile profile = profileService.findAccountProfile(token);
 		String email = utils.extractEmailFromAccountProfile(profile);
+		
+		List<String> domainNames = authManager.getRoleWithPrefix(ManagementController.DSA_PROVIDER_ROLE_PREFIX, token);
+
+		for (String domainName: domainNames) {
+			DomainConf dConf = repositoryManager.addDomainConf(domainName.replace(ManagementController.DSA_PROVIDER_ROLE_PREFIX, ""));
+			
+			if (dConf != null) {
+			Manager owner = new Manager();
+			owner.setId(UUID.randomUUID().toString());
+			owner.setEmail(email);
+			owner.setOwner(true);
+			dConf.getManagers().add(owner);
+			
+			repositoryManager.updateDomainConfManagers(dConf);
+			}
+		}
 		
 		List<DomainConf> domains = domainRepository.findByManager(email);
 		List<String> domainIds = domains.stream().map(x -> x.getId()).collect(Collectors.toList());
