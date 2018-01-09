@@ -3,6 +3,7 @@ package it.smartcommunitylab.dsaengine.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -121,6 +122,14 @@ public class AuthManager {
 		}
 		return result;
 	}
+	
+	public List<String> getRoleWithPrefix(String prefix, String token) 
+			throws SecurityException, UnauthorizedException, AACException {
+		Set<Role> roles = roleService.getRoles(token);
+		List<String> result = roles.stream().filter(x -> x.getRole().startsWith(prefix)).map(y -> y.getRole()).collect(Collectors.toList());
+
+		return result;
+	}	
 	
 	public boolean checkUserRole(String role, HttpServletRequest request) 
 			throws SecurityException, UnauthorizedException, AACException {
