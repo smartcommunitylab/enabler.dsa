@@ -29,10 +29,8 @@ import com.google.common.collect.Lists;
 
 import it.smartcommunitylab.dsaengine.controller.ManagementController;
 import it.smartcommunitylab.dsaengine.model.BaseDataSetConf;
-import it.smartcommunitylab.dsaengine.model.BaseDomainConf;
 import it.smartcommunitylab.dsaengine.model.ConfigurationProperties;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
-import it.smartcommunitylab.dsaengine.model.DomainConf;
 import it.smartcommunitylab.dsaengine.model.Manager;
 import it.smartcommunitylab.dsaengine.model.User;
 import it.smartcommunitylab.dsaengine.utils.AuthManager;
@@ -76,18 +74,22 @@ public class ManagementTest {
 		// Domain
 		
 		String domainEndpoint = ROOT + DOMAIN + "/domains";
-		BaseDomainConf bdc = new BaseDomainConf();
+		String datasetEndpoint = ROOT + DOMAIN + "/datasets";
+		String datasetId = null;
+		
+//		BaseDomainConf bdc = new BaseDomainConf();
 		ConfigurationProperties props = new ConfigurationProperties();
 		props.setArchivePolicy("ap");
 		props.setClients(Collections.EMPTY_LIST);
 		props.setDataMapping(Collections.EMPTY_MAP);
 		props.setIndexFormat("if");
-		bdc.setDefaultConfigurationProperties(props);
+//		bdc.setDefaultConfigurationProperties(props);
 		
 		RequestBuilder builder = null;
 		String result = null;
 		
-		builder = MockMvcRequestBuilders.post(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+		try {
+		builder = MockMvcRequestBuilders.post(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", ""); // .content(mapper.writeValueAsString(bdc));
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
 		System.err.println("CREATE DOMAIN");
 		System.err.println(result);
@@ -95,15 +97,15 @@ public class ManagementTest {
 		System.err.println("CREATE DOMAIN DUP");
 		System.err.println(result);
 		
-		props.setIndexFormat("if2");
-		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
-		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
-		System.err.println("UPDATE DOMAIN");
-		System.err.println(result);		
-		DomainConf domain2 = mapper.readValue(result, DomainConf.class);
-		Assert.assertEquals("if2", domain2.getDefaultConfigurationProperties().getIndexFormat());
+//		props.setIndexFormat("if2");
+//		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+//		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
+//		System.err.println("UPDATE DOMAIN");
+//		System.err.println(result);		
+//		DomainConf domain2 = mapper.readValue(result, DomainConf.class);
+//		Assert.assertEquals("if2", domain2.getDefaultConfigurationProperties().getIndexFormat());
 
-		builder = MockMvcRequestBuilders.get(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+		builder = MockMvcRequestBuilders.get(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "");
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
 		System.err.println("GET DOMAIN");
 		System.err.println(result);		
@@ -132,13 +134,13 @@ public class ManagementTest {
 		System.err.println("GET MANAGER");
 		System.err.println(result);			
 		
-		props.setIndexFormat("if3");
-		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
-		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
-		System.err.println("UPDATE DOMAIN");
-		System.err.println(result);		
-		domain2 = mapper.readValue(result, DomainConf.class);
-		Assert.assertEquals(2, domain2.getManagers().size());		
+//		props.setIndexFormat("if3");
+//		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+//		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
+//		System.err.println("UPDATE DOMAIN");
+//		System.err.println(result);		
+//		domain2 = mapper.readValue(result, DomainConf.class);
+//		Assert.assertEquals(2, domain2.getManagers().size());		
 		
 		builder = MockMvcRequestBuilders.delete(managerEndpoint + "/" + manager2.getId()).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(manager));
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
@@ -176,13 +178,13 @@ public class ManagementTest {
 		System.err.println("GET USER");
 		System.err.println(result);		
 		
-		props.setIndexFormat("if4");
-		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
-		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
-		System.err.println("UPDATE DOMAIN");
-		System.err.println(result);		
-		domain2 = mapper.readValue(result, DomainConf.class);
-		Assert.assertEquals(1, domain2.getUsers().size());		
+//		props.setIndexFormat("if4");
+//		builder = MockMvcRequestBuilders.put(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+//		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
+//		System.err.println("UPDATE DOMAIN");
+//		System.err.println(result);		
+//		domain2 = mapper.readValue(result, DomainConf.class);
+//		Assert.assertEquals(1, domain2.getUsers().size());		
 		
 		builder = MockMvcRequestBuilders.delete(userEndpoint + "/" + user2.getId()).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(user));
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
@@ -197,8 +199,8 @@ public class ManagementTest {
 		
 		// Dataset
 		
-		String datasetEndpoint = ROOT + DOMAIN + "/datasets";
 		BaseDataSetConf bdsc = new BaseDataSetConf();
+		bdsc.setConfigurationProperties(props);
 		bdsc.setDataset(DATASET);
 		
 		builder = MockMvcRequestBuilders.post(datasetEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdsc));
@@ -207,6 +209,7 @@ public class ManagementTest {
 		System.err.println(result);	
 		
 		DataSetConf dsc = mapper.readValue(result, DataSetConf.class);
+		datasetId = dsc.getId();
 		
 		bdsc.setConfigurationProperties(props);
 		props.setIndexFormat("if5");
@@ -216,25 +219,28 @@ public class ManagementTest {
 		System.err.println(result);	
 		dsc =  mapper.readValue(result, DataSetConf.class);
 		Assert.assertEquals("if5", dsc.getConfigurationProperties().getIndexFormat());
-		
+		} finally {
 		// Cleanup
 		
-		builder = MockMvcRequestBuilders.delete(datasetEndpoint + "/" + dsc.getId()).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
-		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
-		System.err.println("DELETE DATASET");
-		System.err.println(result);
-		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(400)).andReturn().getResponse().getContentAsString();
-		System.err.println("DELETE DATASET DUP");
-		System.err.println(result);			
+		if (datasetId != null) {
+			builder = MockMvcRequestBuilders.delete(datasetEndpoint + "/" + datasetId).contentType(MediaType.APPLICATION_JSON).header("Authorization", "");
+			result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
+			System.err.println("DELETE DATASET");
+			System.err.println(result);
+			result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(400)).andReturn().getResponse().getContentAsString();
+			System.err.println("DELETE DATASET DUP");
+			System.err.println(result);
+		}
 		
 		
-		builder = MockMvcRequestBuilders.delete(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(bdc));
+		builder = MockMvcRequestBuilders.delete(domainEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "");
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
 		System.err.println("DELETE DOMAIN");
 		System.err.println(result);
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(400)).andReturn().getResponse().getContentAsString();
 		System.err.println("DELETE DOMAIN DUP");
 		System.err.println(result);		
+		}
 	}
 	
 }
