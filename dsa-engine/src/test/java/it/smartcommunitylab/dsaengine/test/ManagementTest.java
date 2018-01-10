@@ -67,7 +67,7 @@ public class ManagementTest {
 	@Test
 	public void test() throws Exception {
 		when(authManager.getAuthToken(anyObject())).thenReturn(" ");
-		when(authManager.getEmail(anyObject())).thenReturn("admin");
+		when(authManager.getUsername(anyObject())).thenReturn("admin");
 		when(authManager.checkRole(anyString(), anyObject())).thenCallRealMethod();
 		when(authManager.getRoles(anyString())).thenReturn(Lists.newArrayList(ManagementController.DSA_PROVIDER_ROLE_PREFIX + DOMAIN));
 		
@@ -114,7 +114,7 @@ public class ManagementTest {
 		
 		String managerEndpoint = ROOT + DOMAIN + "/managers";
 		Manager manager = new Manager();
-		manager.setEmail(MANAGER);
+		manager.setUsername(MANAGER);
 		
 		builder = MockMvcRequestBuilders.post(managerEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(manager));
 		result = mocker.perform(builder).andExpect(MockMvcResultMatchers.status().is(200)).andReturn().getResponse().getContentAsString();
@@ -157,7 +157,7 @@ public class ManagementTest {
 		
 		String userEndpoint = ROOT + DOMAIN + "/users";
 		User user = new User();
-		user.setEmail(USER);
+		user.setUsername(USER);
 		user.setDataset(DATASET);		
 		
 		builder = MockMvcRequestBuilders.post(userEndpoint).contentType(MediaType.APPLICATION_JSON).header("Authorization", "").content(mapper.writeValueAsString(user));

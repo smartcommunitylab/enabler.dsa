@@ -1,0 +1,72 @@
+{
+    "Home": {
+      "Title": "Console"
+    },
+    "Sidenav":{
+        "Datasets":"DataSets",
+        "Managers":"Managers",
+        "Users":"Users"
+    },
+    "Menu":{
+        "UserName":"User Name",
+        "Language":"Language",
+        "Logout":"Logout"
+    },
+    "TableText":{
+        "Datasets":{
+            "C1":"ID",
+            "C2":"Configuration",
+            "C3":"Modification"
+        },
+        "Managers":{
+            "C1":"ID",
+            "C2":"Email",
+            "C3":"Modification"
+        },
+        "Users":{
+            "C1":"ID",
+            "C2":"Email",
+            "C3":"Dataset",
+            "C4":"Modification"
+        }
+    },
+    "DialogText":{
+        "Datasets":{
+            "TitleCreate":"Create A DataSet",
+            "TitleEdit":"Modification of the Dataset ",
+            "TitleDelete":"Delete the Dataset",
+            "Info":"Please give the information of the dataset.",
+            "label1":"Dataset ID:",
+            "alert1":"Dataset ID is required."
+        },
+        "Managers":{
+            "TitleCreate":"Create A Manager",
+            "TitleEdit":"Modification of the Manager ",
+            "TitleDelete":"Delete the Manager",
+            "Info":"Please give the information of the Manager.",
+            "label1":"Manager ID:",
+            "label2":"Manager Email:",
+            "alert1":"Manager ID is required.",
+            "alert2":"Email is required."
+        },
+        "Users":{
+            "TitleCreate":"Create A User",
+            "TitleEdit":"Modification of the User ",
+            "TitleDelete":"Delete the User",
+            "Info":"Please give the information of the User.",
+            "label1":"User ID:",
+            "label2":"Email:",
+            "label3":"Dataset:",
+            "alert1":"User ID is required.",
+            "alert2":"Email is required.",
+            "alert3":"Dataset ID is required."
+        }
+    },
+    "ButtonText":{
+        "NewDS":"New DS",
+        "NewManager":"New Manager",
+        "NewUser":"New User",
+        "DBOK":"OK",
+        "DBNotOK":"No, Thanks"
+    }
+}

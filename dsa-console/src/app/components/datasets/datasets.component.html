@@ -1,0 +1,44 @@
+<div>
+  <mat-toolbar>
+    <span>{{ 'Sidenav.Datasets' | translate }}: {{domain}}</span>
+    <span class="fill-remaining-space"></span>
+    <button mat-raised-button color="primary" (click)="openDialog4CreateDS()">
+      <i class="material-icons">add_circle_outline</i>
+      {{ 'ButtonText.NewDS' | translate }}
+    </button>
+  </mat-toolbar>  
+</div>
+
+<div class="table-container mat-elevation-z8" *ngIf="datasets">
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <!-- id Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C1' | translate }} </mat-header-cell>
+      <mat-cell *matCellDef="let datasets2"> {{datasets2.id}} </mat-cell>
+    </ng-container>
+
+    <!-- configuration Column -->
+    <ng-container matColumnDef="configuration">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C2' | translate }} </mat-header-cell>
+      <mat-cell *matCellDef="let datasets"> {{datasets.configuration}} </mat-cell>
+    </ng-container>
+
+    <!-- modification Column -->
+    <ng-container matColumnDef="modification">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C3' | translate }} </mat-header-cell>
+      <mat-cell *matCellDef="let datasets2"> 
+          <button mat-icon-button (click)="openDialog4EditDS(datasets2.id)"  matTooltip="{{ 'DialogText.Datasets.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button (click)="openDialog4DeleteDS(datasets2.id)" matTooltip="{{ 'DialogText.Datasets.TitleDelete' | translate }}"><i class="material-icons">delete</i></button>
+          
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>
+
+<!-- Copyright 2017 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

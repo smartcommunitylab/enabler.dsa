@@ -12,43 +12,43 @@ public class RolesUtils {
 	@Autowired
 	private DomainConfRepository domainRepo;
 
-	public boolean isManagerManagementAllowed(String domain, String email) {
+	public boolean isManagerManagementAllowed(String domain, String username) {
 		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
-			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail()) && x.isOwner()).findFirst().isPresent();
+			return conf.getManagers().stream().filter(x -> username.equals(x.getUsername()) && x.isOwner()).findFirst().isPresent();
 		}
 		return false;
 	}
 
-	public boolean isDatasetManagementAllowed(String domain, String email) {
+	public boolean isDatasetManagementAllowed(String domain, String username) {
 		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
-			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
+			return conf.getManagers().stream().filter(x -> username.equals(x.getUsername())).findFirst().isPresent();
 		}
 		return false;
 	}
 
-	public boolean isUserManagementAllowed(String domain, String email) {
+	public boolean isUserManagementAllowed(String domain, String username) {
 		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
-			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
+			return conf.getManagers().stream().filter(x -> username.equals(x.getUsername())).findFirst().isPresent();
 		}
 		return false;
 	}
 
 
-	public boolean isDomainManager(String domain,String email) {
+	public boolean isDomainManager(String domain,String username) {
 		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
-			return conf.getManagers().stream().filter(x -> email.equals(x.getEmail())).findFirst().isPresent();
+			return conf.getManagers().stream().filter(x -> username.equals(x.getUsername())).findFirst().isPresent();
 		}
 		return false;	
 	}		
 	
-	public boolean isDatasetUser(String domain, String dataset, String email) {
+	public boolean isDatasetUser(String domain, String dataset, String username) {
 		DomainConf conf = domainRepo.findById(domain);
 		if (conf != null) {
-			return conf.getUsers().stream().filter(x -> email.equals(x.getEmail()) && dataset.equals(x.getDataset())).findFirst().isPresent();
+			return conf.getUsers().stream().filter(x -> username.equals(x.getUsername()) && dataset.equals(x.getDataset())).findFirst().isPresent();
 		}
 		return false;		
 	}

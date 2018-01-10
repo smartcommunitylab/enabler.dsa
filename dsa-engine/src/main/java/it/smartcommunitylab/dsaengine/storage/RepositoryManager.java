@@ -99,11 +99,11 @@ public class RepositoryManager {
 		return confDb;
 	}	
 	
-	public List<DataSetConf> getDataSetConf(String domain, String token, String email) {
-		if(Utils.isNotEmpty(email)) {
+	public List<DataSetConf> getDataSetConf(String domain, String token, String username) {
+		if(Utils.isNotEmpty(username)) {
 			List<DataSetConf> result = dataSetConfRepository.findByDomain(domain);
 			DomainConf dom = domainConfRepository.findById(domain);
-			Set<String> ds = dom.getUsers().stream().filter(x -> email.equals(x.getEmail())).map(y -> y.getDataset()).collect(Collectors.toSet());
+			Set<String> ds = dom.getUsers().stream().filter(x -> username.equals(x.getUsername())).map(y -> y.getDataset()).collect(Collectors.toSet());
 			result = result.stream().filter(x -> ds.contains(x.getDataset())).collect(Collectors.toList());
 			
 			return result;

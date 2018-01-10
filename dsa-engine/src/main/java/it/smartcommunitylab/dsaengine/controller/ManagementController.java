@@ -88,9 +88,9 @@ public class ManagementController {
 			@PathVariable String domain,
 			@PathVariable String datasetId,
 			HttpServletRequest request) throws Exception {
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isDatasetManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isDatasetManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -112,9 +112,9 @@ public class ManagementController {
 	public @ResponseBody List<DataSetConf> getDataSetConfs (
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isDatasetManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isDatasetManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -138,9 +138,9 @@ public class ManagementController {
 			@RequestBody BaseDataSetConf baseConf,
 			HttpServletRequest request) throws Exception {
 	
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isDatasetManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isDatasetManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}
@@ -187,9 +187,9 @@ public class ManagementController {
 //			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 //		}
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isDatasetManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isDatasetManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -214,9 +214,9 @@ public class ManagementController {
 //			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 //		}
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isDatasetManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isDatasetManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -264,14 +264,12 @@ public class ManagementController {
 			throw new UnauthorizedException("Unauthorized Exception: role not valid");
 		}
 
-		String email = authManager.getEmail(request);
-
 		DomainConf conf = new DomainConf();
 		conf.setId(domain);
 		
 		Manager owner = new Manager();
 		owner.setId(UUID.randomUUID().toString());
-		owner.setEmail(email);
+		owner.setUsername(authManager.getUsername(request));
 		owner.setOwner(true);
 		
 		conf.getManagers().add(owner);
@@ -336,9 +334,9 @@ public class ManagementController {
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -357,9 +355,9 @@ public class ManagementController {
 			@PathVariable String managerId,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -383,15 +381,15 @@ public class ManagementController {
 			@RequestBody Manager manager,
 			HttpServletRequest request) throws Exception {
 
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}
 
-		if (manager.getEmail() == null) {
-			throw new BadRequestException("Missing email");
+		if (manager.getUsername() == null) {
+			throw new BadRequestException("Missing username");
 		}	
 
 		manager.setId(UUID.randomUUID().toString());
@@ -422,9 +420,9 @@ public class ManagementController {
 			@PathVariable String managerId,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -455,9 +453,9 @@ public class ManagementController {
 			@PathVariable String domain,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -476,9 +474,9 @@ public class ManagementController {
 			@PathVariable String userId,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -502,15 +500,15 @@ public class ManagementController {
 			@RequestBody User user,
 			HttpServletRequest request) throws Exception {
 
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}
 
-		if (user.getEmail() == null) {
-			throw new BadRequestException("Missing email");
+		if (user.getUsername() == null) {
+			throw new BadRequestException("Missing username");
 		}	
 		user.setId(UUID.randomUUID().toString());
 		
@@ -540,9 +538,9 @@ public class ManagementController {
 			@PathVariable String userId,
 			HttpServletRequest request) throws Exception {
 		
-		String email = authManager.getEmail(request);
-		if(Utils.isNotEmpty(email)) {
-			if (!aclManager.isUserManagementAllowed(domain, email)) {
+		String username = authManager.getUsername(request);
+		if(Utils.isNotEmpty(username)) {
+			if (!aclManager.isUserManagementAllowed(domain, username)) {
 				throw new UnauthorizedException("Unauthorized Exception: role not valid");
 			}		
 		}		
@@ -569,9 +567,14 @@ public class ManagementController {
 	//@ApiImplicitParam(name = "Authorization", value = "Bearer ", required = true, dataType = "string", paramType = "header")
 	@RequestMapping(value = "/management/profile", method = RequestMethod.GET)
 	public @ResponseBody Profile getProfile(HttpServletRequest request) throws Exception {
-		String email = authManager.getEmail(request);
 		
 		String token = authManager.getAuthToken(request);
+		BasicProfile basicProfile;
+		try {
+			basicProfile = profileService.findProfile(token);
+		} catch (Exception e) {
+			throw new UnauthorizedException("Invalid token: " + token);
+		}
 		
 		List<String> domainNames = authManager.getRoleWithPrefix(ManagementController.DSA_PROVIDER_ROLE_PREFIX, token);
 		for (String domainName: domainNames) {
@@ -580,7 +583,7 @@ public class ManagementController {
 			if (dConf != null) {
 			Manager owner = new Manager();
 			owner.setId(UUID.randomUUID().toString());
-			owner.setEmail(email);
+			owner.setUsername(basicProfile.getUsername());
 			owner.setOwner(true);
 			dConf.getManagers().add(owner);
 			
@@ -588,23 +591,16 @@ public class ManagementController {
 			}
 		}		
 		
-		BasicProfile basicProfile;
-		try {
-			basicProfile = profileService.findProfile(token);
-		} catch (Exception e) {
-			throw new UnauthorizedException("Invalid token: " + token);
-		}
-		
 		Profile profile = new Profile();
-		profile.setUsername(email);
-		profile.setDisplayname(basicProfile.getUsername());		
+		profile.setUsername(basicProfile.getUsername());
+		profile.setDisplayname(basicProfile.getName()+" "+basicProfile.getSurname());		
 		
 		List<ProfileDomainData> doms = Lists.newArrayList();
 		
-		List<DomainConf> domains = domainRepository.findByManager(email);
+		List<DomainConf> domains = domainRepository.findByManager(basicProfile.getUsername());
 		for (DomainConf dConf : domains) {
 			for (Manager manager: dConf.getManagers()) {
-				if (!email.equals(manager.getEmail())) {
+				if (!basicProfile.getUsername().equals(manager.getUsername())) {
 					continue;
 				}
 				ProfileDomainData pde = new ProfileDomainData();
@@ -613,7 +609,7 @@ public class ManagementController {
 				doms.add(pde);
 			}
 			for (User user: dConf.getUsers()) {
-				if (!email.equals(user.getEmail())) {
+				if (!basicProfile.getUsername().equals(user.getUsername())) {
 					continue;
 				}
 				ProfileDomainData pde = new ProfileDomainData();

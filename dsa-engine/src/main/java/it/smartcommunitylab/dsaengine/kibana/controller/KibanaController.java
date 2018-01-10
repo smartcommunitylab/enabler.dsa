@@ -38,6 +38,7 @@ import com.google.common.collect.Multimap;
 
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.BasicProfile;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
 import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
 import it.smartcommunitylab.dsaengine.model.DataSetConf;
@@ -89,14 +90,14 @@ public class KibanaController {
 	public String kibanaLogin(Model model) throws Exception {
 		String token = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		AccountProfile profile = profileService.findAccountProfile(token);
-		String email = utils.extractEmailFromAccountProfile(profile);
+		BasicProfile profile = profileService.findProfile(token);
+		String username = profile.getUsername();
 		
-		List<DomainConf> domains = domainRepository.findByUser(email);
+		List<DomainConf> domains = domainRepository.findByUser(username);
 		Multimap<String, String> domainDatasets = ArrayListMultimap.create();
 
 		domains.forEach(x -> domainDatasets.putAll(x.getId(), 
-				x.getUsers().stream().filter(y -> email.equals(y.getEmail())).map(z -> z.getDataset()).collect(Collectors.toList())
+				x.getUsers().stream().filter(y -> username.equals(y.getUsername())).map(z -> z.getDataset()).collect(Collectors.toList())
 				));
 		Set<String> doms = domainDatasets.keySet();
 		doms.forEach(x -> domainDatasets.put(x, "*"));

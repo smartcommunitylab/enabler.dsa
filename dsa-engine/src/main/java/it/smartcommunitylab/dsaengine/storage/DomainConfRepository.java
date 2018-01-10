@@ -16,10 +16,10 @@ public interface DomainConfRepository extends MongoRepository<DomainConf, String
 	@Query(value="{id:?0}")
 	DomainConf findById(String domain);
 	
-	@Query(value="{managers.email:?0}")
+	@Query(value="{managers.username:?0}")
 	List<DomainConf> findByManager(String email);
 	
-	@Query(value="{users.email:?0}")
+	@Query(value="{users.username:?0}")
 	List<DomainConf> findByUser(String email);	
 	
 }

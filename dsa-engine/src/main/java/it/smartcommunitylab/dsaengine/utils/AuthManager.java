@@ -18,7 +18,7 @@ import it.smartcommunitylab.aac.AACException;
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.AACRoleService;
 import it.smartcommunitylab.aac.AACService;
-import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.BasicProfile;
 import it.smartcommunitylab.aac.model.Role;
 import it.smartcommunitylab.aac.model.TokenData;
 import it.smartcommunitylab.dsaengine.common.Utils;
@@ -152,16 +152,16 @@ public class AuthManager {
 		return token;
 	}
 	
-	public String getEmail(HttpServletRequest request) {
-		return getEmail(getAccoutProfile(request));
+	public String getUsername(HttpServletRequest request) {
+		return  getBasicProfile(request).getUsername();
 	}
 	
-	private AccountProfile getAccoutProfile(HttpServletRequest request) {
-		AccountProfile result = null;
+	private BasicProfile getBasicProfile(HttpServletRequest request) {
+		BasicProfile result = null;
 		String token = getAuthToken(request);
 		if(Utils.isNotEmpty(token)) {
 			try {
-				result = profileConnector.findAccountProfile(token);
+				result = profileConnector.findProfile(token);
 			} catch (Exception e) {
 				if (logger.isWarnEnabled()) {
 					logger.warn(String.format("getAccoutProfile[%s]: %s", token, e.getMessage()));
@@ -170,27 +170,5 @@ public class AuthManager {
 		}
 		return result;
 	}
-	
-	private String getEmail(AccountProfile accountProfile) {
-		String email = null;
-		if(accountProfile == null) {
-			return null;
-		}
-		if(Utils.isNotEmpty(
-				accountProfile.getAttribute("adc", "pat_attribute_email"))) {
-			email = accountProfile.getAttribute("adc", "pat_attribute_email");
-		} else if(Utils.isNotEmpty(
-				accountProfile.getAttribute("google", "email"))) {
-			email = accountProfile.getAttribute("google", "email");
-		} else if(Utils.isNotEmpty(
-				accountProfile.getAttribute("facebook", "email"))) {
-			email = accountProfile.getAttribute("facebook", "email");
-		} else if(Utils.isNotEmpty(
-				accountProfile.getAttribute("internal", "email"))) {
-			email = accountProfile.getAttribute("internal", "email");
-		}
-		return email;
-	}
-
 
 }

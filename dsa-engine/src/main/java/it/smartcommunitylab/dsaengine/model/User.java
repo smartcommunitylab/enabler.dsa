@@ -4,7 +4,7 @@ public class User {
 
 	private String id;
 	
-	private String email;
+	private String username;
 //	private UserRole role;
 	private String dataset;
 	
@@ -14,12 +14,7 @@ public class User {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
 //	public UserRole getRole() {
 //		return role;
 //	}
@@ -27,20 +22,30 @@ public class User {
 //		this.role = role;
 //	}
 	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	public String getDataset() {
 		return dataset;
 	}
 	
 	public void setDataset(String dataset) {
 		this.dataset = dataset;
-	}	
-	
+	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", dataset=" + dataset + "]";
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((dataset == null) ? 0 : dataset.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 	@Override
@@ -57,17 +62,17 @@ public class User {
 				return false;
 		} else if (!dataset.equals(other.dataset))
 			return false;
-		if (email == null) {
-			if (other.email != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} else if (!id.equals(other.id))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", dataset=" + dataset + "]";
-	}
+	}	
 	
 }

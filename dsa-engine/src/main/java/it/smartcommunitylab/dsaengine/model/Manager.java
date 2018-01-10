@@ -4,7 +4,7 @@ public class Manager {
 
 	private String id;
 	
-	private String email;	
+	private String username;	
 	
 	private boolean owner;
 
@@ -16,12 +16,12 @@ public class Manager {
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public boolean isOwner() {
@@ -56,7 +56,7 @@ public class Manager {
 	
 	@Override
 	public String toString() {
-		return "Manager [id=" + id + ", email=" + email + ", owner=" + owner + "]";
+		return "Manager [id=" + id + ", username=" + username + ", owner=" + owner + "]";
 	}	
 	
 }

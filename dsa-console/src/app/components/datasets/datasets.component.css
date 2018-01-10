@@ -1,0 +1,25 @@
+/*.table-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+.dialogCDS{
+  display: flex;
+  flex-direction: column;
+}
+.dialogCDS > * {
+  width: 100%;
+}
+*/
+.mat-dialog-container{
+  font-family: Roboto, "Helvetica Neue", sans-serif;  
+}

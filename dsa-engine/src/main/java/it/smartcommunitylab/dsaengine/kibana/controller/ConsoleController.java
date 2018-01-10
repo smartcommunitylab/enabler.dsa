@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import it.smartcommunitylab.aac.AACProfileService;
 import it.smartcommunitylab.aac.model.AccountProfile;
+import it.smartcommunitylab.aac.model.BasicProfile;
 import it.smartcommunitylab.dsaengine.controller.ManagementController;
 import it.smartcommunitylab.dsaengine.kibana.utils.ControllerUtils;
 import it.smartcommunitylab.dsaengine.kibana.utils.RolesUtils;
@@ -72,8 +73,8 @@ public class ConsoleController {
 	public String consolelogin(Model model) throws Exception {	
 		String token = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		AccountProfile profile = profileService.findAccountProfile(token);
-		String email = utils.extractEmailFromAccountProfile(profile);
+		BasicProfile profile = profileService.findProfile(token);
+		String username = profile.getUsername();
 		
 		List<String> domainNames = authManager.getRoleWithPrefix(ManagementController.DSA_PROVIDER_ROLE_PREFIX, token);
 
@@ -83,7 +84,7 @@ public class ConsoleController {
 			if (dConf != null) {
 			Manager owner = new Manager();
 			owner.setId(UUID.randomUUID().toString());
-			owner.setEmail(email);
+			owner.setUsername(username);
 			owner.setOwner(true);
 			dConf.getManagers().add(owner);
 			
@@ -91,7 +92,7 @@ public class ConsoleController {
 			}
 		}
 		
-		List<DomainConf> domains = domainRepository.findByManager(email);
+		List<DomainConf> domains = domainRepository.findByManager(username);
 		List<String> domainIds = domains.stream().map(x -> x.getId()).collect(Collectors.toList());
 		
 		model.addAttribute("selectedDomain", new DomainDataSetInput());

@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ ('DialogText.Datasets.'+data.dialogStatus) | translate }} </h2>
+<mat-dialog-content>
+    <!--<p>{{ 'DialogText.Datasets.Info' | translate }}</p>-->
+    <!-- <mat-label>{{ 'DialogText.Datasets.Info' | translate }}</mat-label> -->
+    <mat-form-field>
+        <p>{{ 'DialogText.Datasets.Info' | translate }}</p>
+        <input matInput [(ngModel)]="data.id"   [formControl]="email" required>
+        <!-- <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error> -->
+    </mat-form-field>
+    <!--
+    <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
+        <input id="id" name="id" required matInput tabindex="1" [(ngModel)]="data.id" placeholder="ID">
+        <div [hidden]="id.valid || id.pristine" class="alert alert-danger">
+            Name is required
+        </div>        
+    </mat-form-field>
+    -->
+    <!--
+    <form #heroForm="ngForm">
+        <div class="form-group">
+            <label for="name">{{ 'DialogText.Datasets.label1' | translate }}</label>
+            
+            <input type="text" class="form-control" id="name"
+                    required minlength tabindex="1"
+                    [(ngModel)]="data.id" name="name"
+                    #name="ngModel">
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                    {{ 'DialogText.Datasets.alert1' | translate }}
+            </div>
+        </div>
+    -->
+        <!-- <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button> -->
+    <!--   
+    </form>
+    -->
+</mat-dialog-content>
+
+<div mat-dialog-actions>
+    <!--<button mat-button (click)="onNoClick()">No Thanks</button>-->
+    <!--
+    <button mat-button [mat-dialog-close]="data.id" tabindex="1" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <span class="fill-remaining-space"></span>
+    <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
+    -->
+    <button mat-button [mat-dialog-close]="data.id" tabindex="1" >{{ 'ButtonText.DBOK' | translate }}</button>
+    <span class="fill-remaining-space"></span>
+    <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
+</div>
