@@ -55,15 +55,17 @@ export class DatasetsComponent implements OnInit {
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: this.bodydata.id, dialogStatus:"TitleCreate" }
+      data: {  id:'', dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
       if(result){
         //this.config = result;
-        this.bodydata.id=result.toString();
+        this.bodydata.domain=this.domain;
+        this.bodydata.dataset=result.toString();
+        this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        this.datasetService.setDataset('test1',this.bodydata);
+        this.datasetService.setDataset(this.domain,this.bodydata);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
       }
     });
@@ -72,21 +74,22 @@ export class DatasetsComponent implements OnInit {
   /**
    * Edit A DataSet
    */
-  openDialog4EditDS(dsId: string) {
+  openDialog4EditDS(dsId: string, ds: string) {
     console.log('get dsid:', dsId);
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: dsId, dialogStatus:"TitleEdit" }
+      data: {  id: dsId, dataset: ds, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Edit dialog was closed',result);
       if(result){
         //this.config = result;
-        this.bodydata.id=result.toString();
+        this.bodydata.domain=this.domain;
+        this.bodydata.dataset=result.toString();
+        this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        this.datasetService.editDataset('test1',this.bodydata.id,this.bodydata);
-        
+        this.datasetService.editDataset(this.domain,result.toString(),this.bodydata);
       }
       
     });
@@ -95,11 +98,11 @@ export class DatasetsComponent implements OnInit {
   /**
    * Delete A DataSet
    */
-  openDialog4DeleteDS(dsId: string){
+  openDialog4DeleteDS(dsId: string, ds: string){
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: dsId, dialogStatus:"TitleDelete" }
+      data: {  id: dsId, dataset: ds, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);
@@ -107,7 +110,7 @@ export class DatasetsComponent implements OnInit {
         //this.config = result;
         //this.bodydata.id=result.toString();
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        this.datasetService.deleteDataset('test1',result.toString());
+        this.datasetService.deleteDataset(this.domain,result.toString());
         
       }
       

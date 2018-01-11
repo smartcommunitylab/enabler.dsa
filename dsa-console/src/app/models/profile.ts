@@ -32,8 +32,16 @@ export class User {
 }
 @Injectable()
 export class BodyDataDataset {
-    id: string;
-    configuration?: string;
+    //id: string;
+    //configuration?: string;
+    domain : string;
+    dataset : string;
+    configurationProperties : {
+        indexFormat? : string,
+        archivePolicy? : string,
+        clients? : [ string ],
+        dataMapping? : {}
+    }
 }
 
 @Injectable()

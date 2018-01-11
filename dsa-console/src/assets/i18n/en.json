@@ -14,7 +14,7 @@
     },
     "TableText":{
         "Datasets":{
-            "C1":"ID",
+            "C1":"Dataset",
             "C2":"Configuration",
             "C3":"Modification"
         },
