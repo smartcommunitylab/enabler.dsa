@@ -29,6 +29,7 @@ export class DatasetsService {
    * Set DataSets/ create a new dataset
    */
   setDataset(domain:string, body:BodyDataDataset): any{
+    console.log("body: " + body);
     return this.http.post(`${ this.config.get('locUrl') }management/${domain}/datasets/`,body).subscribe(
       data => {
         console.log("Return Data from post(create): " + data);
@@ -46,7 +47,8 @@ export class DatasetsService {
   /**
    * Edit DataSets
    */
-  editDataset(domain:string, dsID:string, body:BodyDataDataset){
+  editDataset(domain:string, dsID:string, body:BodyDataDataset): any{
+    console.log("body in service: " + body);
     return this.http.put(`${ this.config.get('locUrl') }management/${domain}/datasets/${dsID}`,body).subscribe(
       data => {
         console.log("Return Data from put(edit): " + data);

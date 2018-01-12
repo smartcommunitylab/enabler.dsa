@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ManagersService} from '../../services/managers.service';
 import { Manager, BodyDataManager } from '../../models/profile';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-managers',
@@ -16,13 +17,16 @@ export class ManagersComponent implements OnInit {
   dialogStatus = '';
   domain: string;
 
-  constructor(private managerService: ManagersService, private dialog: MatDialog, private bodydata: BodyDataManager) { }
+  constructor(private managerService: ManagersService, private dialog: MatDialog, private bodydata: BodyDataManager, private route: ActivatedRoute) { }
   
   ngOnInit() {
-    this.managerService.getManagers('test1').then(mng => {
-      this.managers = mng;
-      this.displayedColumns = ['id', 'email','modification'];
-      this.dataSource = new MatTableDataSource<Manager>(mng);
+    this.route.params.subscribe(params => {
+      this.domain = params['domain'];
+      this.managerService.getManagers(this.domain).then(mng => {
+        this.managers = mng;
+        this.displayedColumns = ['id', 'email','modification'];
+        this.dataSource = new MatTableDataSource<Manager>(mng);
+      });
     });
   }
   
@@ -34,12 +38,15 @@ export class ManagersComponent implements OnInit {
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
       //height: '300px',
       width: '350px',
-      data: {  id: this.bodydata.id, dialogStatus:"TitleCreate" }
+      data: {  username:" ", dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.bodydata.id=result.toString();
-        this.managerService.setManager('test1',this.bodydata);
+        this.bodydata.username=result.username;
+        this.bodydata.owner=true;
+        this.managerService.setManager(this.domain,this.bodydata);
+        //for reload the table
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
     });
   }
@@ -57,7 +64,7 @@ export class ManagersComponent implements OnInit {
       if(result){
         console.log('edit dialog was closed and result:',result);
         this.bodydata.id=result.toString();
-        this.managerService.editManager('test1',this.bodydata.id,this.bodydata);
+        this.managerService.editManager(this.domain,this.bodydata.id,this.bodydata);
       }
       
     });
@@ -75,7 +82,7 @@ export class ManagersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result){
         console.log('delete dialog was closed and result:',result);
-        this.managerService.deleteManager('test1',result.toString());
+        this.managerService.deleteManager(this.domain,result.id);
       }
       
     });

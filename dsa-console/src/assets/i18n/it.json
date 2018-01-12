@@ -22,7 +22,8 @@
         "Managers":{
             "C1":"ID",
             "C2":"E-mail",
-            "C3":"Modifica"
+            "C3":"Modifica",
+            "C4":"Nome Utente"
         },
         "Users":{
             "C1":"ID",
@@ -47,6 +48,7 @@
             "Info":"Si prega di fornire le informazioni del Manager.",
             "label1":"Manager ID:",
             "label2":"Manager E-mail:",
+            "label3":"Nome Utente",
             "alert1":"È richiesto un ID Manager.",
             "alert2":"L'email è richiesta"
         },

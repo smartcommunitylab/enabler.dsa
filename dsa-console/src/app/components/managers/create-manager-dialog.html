@@ -12,11 +12,11 @@
     </mat-form-field>
 -->
     <form #heroForm="ngForm">
-        <div class="form-group">
-            <label for="name">{{ 'DialogText.Managers.label1' | translate }}</label>
+        <div class="form-group" *ngIf="data.username">
+            <label for="name">{{ 'DialogText.Managers.label3' | translate }}</label>
             <input type="text" class="form-control" id="name"
                     required minlength
-                    [(ngModel)]="data.id" name="name"
+                    [(ngModel)]="data.username" name="name"
                     #name="ngModel">
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
                     {{ 'DialogText.Managers.alert1' | translate }}
@@ -37,7 +37,7 @@
 </div>
 <br/>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="data.id" tabindex="2" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="2" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
 </div>

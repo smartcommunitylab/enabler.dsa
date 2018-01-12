@@ -15,7 +15,7 @@ export class ManagersService {
    */
   getManagers(domain:string): Promise<Manager[]> {
     //console.log("come in getDataSets",domain);
-    return this.http.get(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/managers`)
+    return this.http.get(`${ this.config.get('locUrl') }management/${domain}/managers`)
     .map(response => response.json() as Manager[])
     .toPromise();
   }
@@ -24,7 +24,7 @@ export class ManagersService {
    * Set Manager/ create a new manager
    */
   setManager(domain:string, body:BodyDataManager): any{
-    return this.http.post(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/managers/`,body).subscribe(
+    return this.http.post(`${ this.config.get('locUrl') }management/${domain}/managers/`,body).subscribe(
       data => {
         console.log("Return Data from post(create): " + data);
       },
@@ -60,7 +60,7 @@ export class ManagersService {
    * Delete Manager
    */
   deleteManager(domain: string, mngID: string){
-    return this.http.delete(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/managers/${mngID}`).subscribe(
+    return this.http.delete(`${ this.config.get('locUrl') }management/${domain}/managers/${mngID}`).subscribe(
       data => {
         console.log("Return Data from delete(delete): " + data);
       },

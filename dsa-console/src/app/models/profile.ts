@@ -46,8 +46,20 @@ export class BodyDataDataset {
 
 @Injectable()
 export class BodyDataManager {
-    id: string;
+    id?: string;
     email?: string;
+    username:string;
+    owner:boolean;
+    /*
+    domain : string;
+    dataset : string;
+    configurationProperties : {
+        indexFormat? : string,
+        archivePolicy? : string,
+        clients? : [ string ],
+        dataMapping? : {}
+    }
+    */
 }
 
 @Injectable()

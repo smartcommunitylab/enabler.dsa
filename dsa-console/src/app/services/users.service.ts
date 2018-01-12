@@ -14,7 +14,7 @@ export class UsersService {
    */
   getUsers(domain:string): Promise<User[]> {
     //console.log("come in getDataSets",domain);
-    return this.http.get(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/users`)
+    return this.http.get(`${ this.config.get('locUrl') }management/${domain}/users`)
     .map(response => response.json() as User[])
     .toPromise();
   }

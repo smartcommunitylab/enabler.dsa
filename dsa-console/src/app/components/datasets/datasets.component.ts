@@ -58,15 +58,17 @@ export class DatasetsComponent implements OnInit {
       data: {  id:'', dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
+      console.log('The dialog was closed, dataset:',result.ds);
       if(result){
         //this.config = result;
         this.bodydata.domain=this.domain;
-        this.bodydata.dataset=result.toString();
+        this.bodydata.dataset=result.ds.toString();
         this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
         this.datasetService.setDataset(this.domain,this.bodydata);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
+        //for reload the table
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
     });
   }
@@ -82,14 +84,16 @@ export class DatasetsComponent implements OnInit {
       data: {  id: dsId, dataset: ds, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Edit dialog was closed',result);
+      console.log('The Edit dialog was closed, result',result);
       if(result){
         //this.config = result;
         this.bodydata.domain=this.domain;
-        this.bodydata.dataset=result.toString();
+        this.bodydata.dataset=result.ds.toString();
         this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        this.datasetService.editDataset(this.domain,result.toString(),this.bodydata);
+        this.datasetService.editDataset(this.domain,result.id,this.bodydata);
+        //for reload the table
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
       
     });
@@ -110,8 +114,9 @@ export class DatasetsComponent implements OnInit {
         //this.config = result;
         //this.bodydata.id=result.toString();
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
-        this.datasetService.deleteDataset(this.domain,result.toString());
-        
+        this.datasetService.deleteDataset(this.domain,result.id);
+        //for reload the table
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
       
     });

@@ -21,7 +21,8 @@
         "Managers":{
             "C1":"ID",
             "C2":"Email",
-            "C3":"Modification"
+            "C3":"Modification",
+            "C4":"Username"
         },
         "Users":{
             "C1":"ID",
@@ -33,7 +34,7 @@
     "DialogText":{
         "Datasets":{
             "TitleCreate":"Create A DataSet",
-            "TitleEdit":"Modification of the Dataset ",
+            "TitleEdit":"Modification of the Dataset",
             "TitleDelete":"Delete the Dataset",
             "Info":"Please give the information of the dataset.",
             "label1":"Dataset ID:",
@@ -46,6 +47,7 @@
             "Info":"Please give the information of the Manager.",
             "label1":"Manager ID:",
             "label2":"Manager Email:",
+            "label3":"Username",
             "alert1":"Manager ID is required.",
             "alert2":"Email is required."
         },

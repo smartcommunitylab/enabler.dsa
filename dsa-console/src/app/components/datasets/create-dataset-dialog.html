@@ -4,7 +4,7 @@
     <!-- <mat-label>{{ 'DialogText.Datasets.Info' | translate }}</mat-label> -->
     <mat-form-field>
         <p>{{ 'DialogText.Datasets.Info' | translate }}</p>
-        <input matInput [(ngModel)]="data.dataset"   [formControl]="email" required>
+        <input matInput [(ngModel)]="data.dataset"   [formControl]="email" required #ds>
         <!-- <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error> -->
     </mat-form-field>
     <!--
@@ -42,7 +42,7 @@
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
     -->
-    <button mat-button [mat-dialog-close]="data.id" tabindex="1" >{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" >{{ 'ButtonText.DBOK' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
 </div>

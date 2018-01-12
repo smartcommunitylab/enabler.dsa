@@ -19,7 +19,7 @@ export class UsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getUsers('test1').then(user => {
+    this.userService.getUsers('testlabu').then(user => {
       this.users = user;
       this.displayedColumns = ['id', 'email', 'dataset', 'modification'];
       this.dataSource = new MatTableDataSource<User>(user);
