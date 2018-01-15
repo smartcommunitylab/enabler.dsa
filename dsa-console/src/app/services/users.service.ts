@@ -23,7 +23,7 @@ export class UsersService {
    * Set DataSets/ create a new dataset
    */
   setUser(domain:string, body:BodyDataUser): any{
-    return this.http.post(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/users/`,body).subscribe(
+    return this.http.post(`${ this.config.get('locUrl') }management/${domain}/users/`,body).subscribe(
       data => {
         console.log("Return Data from post(create): " + data);
       },
@@ -41,7 +41,7 @@ export class UsersService {
    * Edit User
    */
   editUser(domain:string, userID:string, body:BodyDataUser){
-    return this.http.put(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/users/${userID}`,body).subscribe(
+    return this.http.put(`${ this.config.get('locUrl') }management/${domain}/users/${userID}`,body).subscribe(
       data => {
         console.log("Return Data from put(edit): " + data);
       },

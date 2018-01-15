@@ -1,16 +1,14 @@
 <h2 mat-dialog-title>{{ ('DialogText.Managers.'+data.dialogStatus) | translate }}</h2>
-<div mat-dialog-content>
-    <p>{{ 'DialogText.Managers.Info' | translate }}</p>
-<!--   
-    <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
-        <div class="form-group">
-            <input id="id" name="id" required matInput tabindex="1" [(ngModel)]="data.id" placeholder="ID">
-            <div [hidden]="id.valid || id.pristine" class="alert alert-danger">
-                Name is required
-            </div>        
-        </div>
+<mat-dialog-content>    
+    <mat-label class="mat-h4" *ngIf="!data.mngDelete">{{ 'DialogText.Managers.Info' | translate }}</mat-label>
+    <mat-label class="mat-h4" *ngIf="data.mngDelete">{{ 'DialogText.Managers.Delete' | translate }} {{data.mngDelete}}</mat-label>
+    <br/>
+    <mat-form-field class="dialog-container-form-field" *ngIf="!data.mngDelete">
+        <input matInput [(ngModel)]="data.username" placeholder="Manager"  [formControl]="mngControl" required #mng>
+        <mat-error *ngIf="mngControl.invalid">{{getErrorMessage4mng()}}</mat-error>
     </mat-form-field>
--->
+
+<!--
     <form #heroForm="ngForm">
         <div class="form-group" *ngIf="data.username">
             <label for="name">{{ 'DialogText.Managers.label3' | translate }}</label>
@@ -32,12 +30,13 @@
                     {{ 'DialogText.Managers.alert2' | translate }}
             </div>
         </div>
-        <!-- <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button> -->
     </form>
-</div>
+-->
+</mat-dialog-content>
 <br/>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="2" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="!data.mngDelete" [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="2" [disabled]="mngControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="data.mngDelete" [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
 </div>

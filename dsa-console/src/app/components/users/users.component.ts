@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {FormControl, Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {UsersService} from '../../services/users.service';
 import { User, Configuration, BodyDataUser } from '../../models/profile';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -14,16 +16,20 @@ export class UsersComponent implements OnInit {
   users:User[];
   displayedColumns:any;
   dataSource:any;
-  constructor(private userService: UsersService, private dialog: MatDialog, private bodyData:BodyDataUser) { 
+  domain: string;
 
-  }
+  constructor(private userService: UsersService, private dialog: MatDialog, private bodyData:BodyDataUser, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.userService.getUsers('testlabu').then(user => {
-      this.users = user;
-      this.displayedColumns = ['id', 'email', 'dataset', 'modification'];
-      this.dataSource = new MatTableDataSource<User>(user);
+    this.route.params.subscribe(params => {
+      this.domain = params['domain'];
+      this.userService.getUsers(this.domain).then(user => {
+        this.users = user;
+        this.displayedColumns = ['id', 'email', 'dataset', 'modification'];
+        this.dataSource = new MatTableDataSource<User>(user);
+      });
     });
+    
   }
 
   /**
@@ -33,17 +39,19 @@ export class UsersComponent implements OnInit {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
       //height: '300px',
-      width: '350px',
-      data: {  id: this.bodyData.id, dialogStatus:"TitleCreate" }
+      width: '300px',
+      data: {  id: "",username:"", userEmail:"", dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed',result);
       if(result){
         //this.config = result;
-        this.bodyData.id=result.toString();
+        this.bodyData.username=result;
         //console.log('The dialog was closed and this.bodyData:',this.bodyData);
-        this.userService.setUser('test1',this.bodyData);
+        this.userService.setUser(this.domain,this.bodyData);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
+        //for reload the table
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
     });
   }
@@ -63,7 +71,7 @@ export class UsersComponent implements OnInit {
       if(result){
         this.bodyData.id=result.toString();
         //console.log('The dialog was closed and this.bodyData:',this.bodyData);
-        this.userService.editUser('test1',this.bodyData.id,this.bodyData);
+        this.userService.editUser(this.domain,this.bodyData.id,this.bodyData);
       }
       
     });
@@ -72,11 +80,11 @@ export class UsersComponent implements OnInit {
   /**
    * Delete A User
    */
-  openDialog4DeleteUser(dsId: string){
+  openDialog4DeleteUser(userId: string, username:string){
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
       //height: '300px',
       width: '350px',
-      data: {  id: dsId, dialogStatus:"TitleDelete" }
+      data: {  id: userId, userDelete: username, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);
@@ -110,7 +118,13 @@ export class UsersComponent implements OnInit {
 export class CreateUserDialogComponent {
   //constructor() {}
   constructor(public dialogRef: MatDialogRef<CreateUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  userControl = new FormControl('', [Validators.required]);
   
+  getErrorMessage4user() {
+    return this.userControl.hasError('required') ? 'You must enter a value' :
+        //this.dataset.hasError('email') ? 'Not a valid email' :
+            '';
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

@@ -55,11 +55,11 @@ export class DatasetsComponent implements OnInit {
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id:'', dialogStatus:"TitleCreate" }
+      data: {  id:'',dataset:'', dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed, dataset:',result.ds);
       if(result){
+        console.log('The dialog was closed, dataset:',result.ds);
         //this.config = result;
         this.bodydata.domain=this.domain;
         this.bodydata.dataset=result.ds.toString();
@@ -106,7 +106,7 @@ export class DatasetsComponent implements OnInit {
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: dsId, dataset: ds, dialogStatus:"TitleDelete" }
+      data: {  id: dsId, dataset: ds, dsDelete: ds, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);
@@ -135,11 +135,11 @@ export class DatasetsComponent implements OnInit {
 export class CreateDatasetDialogComponent {
   //constructor() {}
   constructor(public dialogRef: MatDialogRef<CreateDatasetDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
-  email = new FormControl('', [Validators.required, Validators.email]);
+  dsControl = new FormControl('', [Validators.required]);
   
-  getErrorMessage() {
-    return this.email.hasError('required') ? 'You must enter a value' :
-        this.email.hasError('email') ? 'Not a valid email' :
+  getErrorMessage4ds() {
+    return this.dsControl.hasError('required') ? 'You must enter a value' :
+        //this.dataset.hasError('email') ? 'Not a valid email' :
             '';
   }
 

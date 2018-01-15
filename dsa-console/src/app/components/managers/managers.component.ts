@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {FormControl, Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {ManagersService} from '../../services/managers.service';
 import { Manager, BodyDataManager } from '../../models/profile';
 import {ActivatedRoute} from '@angular/router';
@@ -37,8 +38,8 @@ export class ManagersComponent implements OnInit {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
       //height: '300px',
-      width: '350px',
-      data: {  username:" ", dialogStatus:"TitleCreate" }
+      width: '300px',
+      data: {  username:"", mngDelete: "", dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
@@ -57,7 +58,7 @@ export class ManagersComponent implements OnInit {
   openDialog4EditManager(mngId: string, email: string) {
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
       //height: '300px',
-      width: '350px',
+      width: '300px',
       data: {  id: mngId, email: email, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -73,11 +74,11 @@ export class ManagersComponent implements OnInit {
   /**
    * Delete A Manager
    */
-  openDialog4DeleteManager(dsId: string){
+  openDialog4DeleteManager(mngId: string, mngUnsername: string){
     let dialogRef = this.dialog.open(CreateManagerDialogComponent,{
       //height: '300px',
-      width: '350px',
-      data: {  id: dsId, dialogStatus:"TitleDelete" }
+      width: '300px',
+      data: {  id: mngId, username:"", mngDelete: mngUnsername, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){
@@ -102,6 +103,13 @@ export class CreateManagerDialogComponent {
   //constructor() {}
   constructor(public dialogRef: MatDialogRef<CreateManagerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
   
+  mngControl = new FormControl('', [Validators.required]);
+  
+  getErrorMessage4mng() {
+    return this.mngControl.hasError('required') ? 'You must enter a value' :
+        //this.dataset.hasError('email') ? 'Not a valid email' :
+            '';
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

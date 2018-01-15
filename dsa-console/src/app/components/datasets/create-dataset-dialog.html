@@ -1,12 +1,13 @@
 <h2 mat-dialog-title>{{ ('DialogText.Datasets.'+data.dialogStatus) | translate }} </h2>
 <mat-dialog-content>
-    <!--<p>{{ 'DialogText.Datasets.Info' | translate }}</p>-->
-    <!-- <mat-label>{{ 'DialogText.Datasets.Info' | translate }}</mat-label> -->
-    <mat-form-field>
-        <p>{{ 'DialogText.Datasets.Info' | translate }}</p>
-        <input matInput [(ngModel)]="data.dataset"   [formControl]="email" required #ds>
-        <!-- <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error> -->
+    <mat-label class="mat-h4" *ngIf="!data.dsDelete">{{ 'DialogText.Datasets.Info' | translate }}</mat-label>
+    <mat-label class="mat-h4" *ngIf="data.dsDelete">{{ 'DialogText.Datasets.Delete' | translate }} {{data.dataset}}</mat-label>
+    <br/>
+    <mat-form-field class="dialog-container-form-field" *ngIf="!data.dsDelete">
+        <input matInput [(ngModel)]="data.dataset" placeholder="Dataset"  [formControl]="dsControl" required #ds>
+        <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
     </mat-form-field>
+    
     <!--
     <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
         <input id="id" name="id" required matInput tabindex="1" [(ngModel)]="data.id" placeholder="ID">
@@ -36,13 +37,13 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions>
-    <!--<button mat-button (click)="onNoClick()">No Thanks</button>-->
     <!--
     <button mat-button [mat-dialog-close]="data.id" tabindex="1" [disabled]="!heroForm.form.valid">{{ 'ButtonText.DBOK' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
     -->
-    <button mat-button [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" >{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="!data.dsDelete" [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="data.dsDelete" [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
 </div>

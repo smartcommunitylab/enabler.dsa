@@ -64,8 +64,8 @@ export class BodyDataManager {
 
 @Injectable()
 export class BodyDataUser {
-    id: string;
-    email?: string;
+    id?: string;
+    username: string;
     dataset?:string;
 }
 

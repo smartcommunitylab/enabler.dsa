@@ -20,6 +20,11 @@
   width: 100%;
 }
 */
-.mat-dialog-container{
-  font-family: Roboto, "Helvetica Neue", sans-serif;  
+.dialog-container-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-container-form-field > * {
+  width: 100%;
 }

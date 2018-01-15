@@ -38,6 +38,7 @@
             "TitleEdit":"Modifica del Dataset ",
             "TitleDelete":"Elimina il Dataset",
             "Info":"Si prega di fornire le informazioni del Dataset.",
+            "Delete":"Vuoi cancellare il dataset: ",
             "label1":"Dataset ID:",
             "alert1":"È richiesto un ID Dataset."
         },
@@ -46,6 +47,7 @@
             "TitleEdit":"Modifica del Manager ",
             "TitleDelete":"Elimina il Manager",
             "Info":"Si prega di fornire le informazioni del Manager.",
+            "Delete":"Vuoi cancellare il manager: ",
             "label1":"Manager ID:",
             "label2":"Manager E-mail:",
             "label3":"Nome Utente",
@@ -57,6 +59,7 @@
             "TitleEdit":"Modifica del Utente ",
             "TitleDelete":"Elimina l'utente",
             "Info":"Si prega di fornire le informazioni del Utente.",
+            "Delete":"Vuoi cancellare il user: ",
             "label1":"Utente ID:",
             "label2":"Utente E-mail:",
             "label3":"Dataset:",
@@ -70,6 +73,7 @@
         "NewManager":"Nuovo Manager",
         "NewUser":"Nuovo Utente",
         "DBOK":"OK",
+        "DBYes":"Si",
         "DBNotOK":"No, Grazie"
     }
 }

@@ -1,0 +1,8 @@
+.dialog-container-form-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dialog-container-form-field > * {
+    width: 100%;
+  }
