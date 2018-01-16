@@ -59,7 +59,7 @@ export class UsersService {
    * Delete User
    */
   deleteUser(domain: string, userID: string){
-    return this.http.delete(`${ this.config.get('amUrl') }t/sco.core/dsamgmt/0.0.1/${domain}/users/${userID}`).subscribe(
+    return this.http.delete(`${ this.config.get('locUrl') }management/${domain}/users/${userID}`).subscribe(
       data => {
         console.log("Return Data from delete(delete): " + data);
       },

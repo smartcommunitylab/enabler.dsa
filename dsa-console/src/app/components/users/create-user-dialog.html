@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>{{ ('DialogText.Users.'+data.dialogStatus) | translate }}</h2>
 <mat-dialog-content>
     <mat-label class="mat-h4" *ngIf="!data.userDelete">{{ 'DialogText.Users.Info' | translate }}</mat-label>
-    <mat-label class="mat-h4" *ngIf="data.userDelete">{{ 'DialogText.Users.Delete' | translate }} {{data.username}}</mat-label>
+    <mat-label class="mat-h4" *ngIf="data.userDelete">{{ 'DialogText.Users.Delete' | translate }} {{data.userDelete}}</mat-label>
     <br/>
     <mat-form-field class="dialog-container-form-field" *ngIf="!data.userDelete">
-        <input matInput [(ngModel)]="data.username" placeholder="User"  [formControl]="userControl" required #ds>
+        <input matInput [(ngModel)]="data.username" placeholder="Username"  [formControl]="userControl" required #ds>
         <mat-error *ngIf="userControl.invalid">{{getErrorMessage4user()}}</mat-error>
     </mat-form-field>
     <!-- <form #heroForm="ngForm">
@@ -42,8 +42,8 @@
 </mat-dialog-content>
 <br/>
 <div mat-dialog-actions>
-    <button mat-button *ngIf="!data.userDelete" [mat-dialog-close]="data.username" tabindex="1" [disabled]="userControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
-    <button mat-button *ngIf="data.userDelete" [mat-dialog-close]="data.username" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
+    <button mat-button *ngIf="!data.userDelete" [mat-dialog-close]="{id:data.id,username:data.username,ds:data.ds}" tabindex="1" [disabled]="userControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="data.userDelete" [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
     <!-- <button mat-button [mat-dialog-close]="data.username" tabindex="2" >{{ 'ButtonText.DBOK' | translate }}</button> -->
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>

@@ -13,8 +13,8 @@
 
     <!-- Position Column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C1' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C5' | translate }} </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.username}} </mat-cell>
     </ng-container>
 
     <!-- Name Column -->
@@ -33,7 +33,7 @@
     <ng-container matColumnDef="modification">
       <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Users.C4' | translate }} </mat-header-cell>
       <mat-cell *matCellDef="let element"> 
-          <button mat-icon-button (click)="openDialog4EditUser(element.id, element.email, element.dataset)" matTooltip="{{ 'DialogText.Users.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button disabled (click)="openDialog4EditUser(element.id, element.username, element.dataset)" matTooltip="{{ 'DialogText.Users.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
           <button mat-icon-button (click)="openDialog4DeleteUser(element.id,element.username)" matTooltip="{{ 'DialogText.Users.TitleDelete' | translate }}"><i class="material-icons">delete</i></button>
       </mat-cell>
     </ng-container>

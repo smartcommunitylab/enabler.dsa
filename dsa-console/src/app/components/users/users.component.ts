@@ -39,15 +39,15 @@ export class UsersComponent implements OnInit {
     //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
       //height: '300px',
-      width: '300px',
-      data: {  id: "",username:"", userEmail:"", dialogStatus:"TitleCreate" }
+      width: '350px',
+      data: {  id: "",username:"", ds:"trento", dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
+      //console.log('The dialog was closed',result);
       if(result){
         //this.config = result;
-        this.bodyData.username=result;
-        //console.log('The dialog was closed and this.bodyData:',this.bodyData);
+        this.bodyData.username=result.username;
+        this.bodyData.dataset=result.ds;
         this.userService.setUser(this.domain,this.bodyData);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
         //for reload the table
@@ -59,19 +59,21 @@ export class UsersComponent implements OnInit {
   /**
    * Edit A User
    */
-  openDialog4EditUser(userId: string, email:string, ds:string) {
+  openDialog4EditUser(userId: string, username:string, ds:string) {
     console.log('get dsid:', userId);
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
       //height: '300px',
       width: '350px',
-      data: {  id: userId, email: email, dataset: ds, dialogStatus: "TitleEdit" }
+      data: {  id: userId, username: username, dataset: ds, dialogStatus: "TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Edit dialog was closed',result);
+      //console.log('The Edit dialog was closed',result.username);
       if(result){
-        this.bodyData.id=result.toString();
+        this.bodyData.id=result.id;
+        this.bodyData.username=result.username;
         //console.log('The dialog was closed and this.bodyData:',this.bodyData);
         this.userService.editUser(this.domain,this.bodyData.id,this.bodyData);
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
       
     });
@@ -87,12 +89,13 @@ export class UsersComponent implements OnInit {
       data: {  id: userId, userDelete: username, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Delete dialog was closed',result);
+      //console.log('The Delete dialog was closed',result);
       if(result){
         //this.config = result;
         //this.bodyData.id=result.toString();
         //console.log('The dialog was closed and this.bodyData:',this.bodyData);
-        this.userService.deleteUser('test1',result.toString());
+        this.userService.deleteUser(this.domain,result.id);
+        setTimeout(()=>{  this.ngOnInit();},1000);
       }
       
     });

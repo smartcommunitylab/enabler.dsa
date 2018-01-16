@@ -29,7 +29,8 @@
             "C1":"ID",
             "C2":"E-mail",
             "C3":"Dataset",
-            "C4":"Modifica"
+            "C4":"Modifica",
+            "C5":"Nome Utente"
         }
     },
     "DialogText":{
