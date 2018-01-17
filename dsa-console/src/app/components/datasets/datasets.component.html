@@ -18,18 +18,30 @@
       <mat-cell *matCellDef="let datasets"> {{datasets.dataset}} </mat-cell>
     </ng-container>
 
-    <!-- configuration Column -->
-    <ng-container matColumnDef="configuration">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C2' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let datasets"> {{datasets.configuration}} </mat-cell>
+    <!-- inFormat Column -->
+    <ng-container matColumnDef="inFormat">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> indexFormat </mat-header-cell>
+      <mat-cell *matCellDef="let datasets"> {{datasets.configurationProperties.indexFormat}} </mat-cell>
+    </ng-container>
+
+    <!-- archivePolicy Column -->
+    <ng-container matColumnDef="arPolicy">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> archivePolicy </mat-header-cell>
+      <mat-cell *matCellDef="let datasets"> {{datasets.configurationProperties.archivePolicy}} </mat-cell>
+    </ng-container>
+
+    <!-- clients Column -->
+    <ng-container matColumnDef="clients">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> clients </mat-header-cell>
+      <mat-cell *matCellDef="let datasets"> {{datasets.configurationProperties.clients}} </mat-cell>
     </ng-container>
 
     <!-- modification Column -->
     <ng-container matColumnDef="modification">
       <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'TableText.Datasets.C3' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let datasets2"> 
-          <button mat-icon-button (click)="openDialog4EditDS(datasets2.id,datasets2.dataset)"  matTooltip="{{ 'DialogText.Datasets.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
-          <button mat-icon-button (click)="openDialog4DeleteDS(datasets2.id,datasets2.dataset)" matTooltip="{{ 'DialogText.Datasets.TitleDelete' | translate }}"><i class="material-icons">delete</i></button>
+      <mat-cell *matCellDef="let datasets"> 
+          <button mat-icon-button (click)="openDialog4EditDS(datasets.id,datasets.dataset,datasets.configurationProperties)"  matTooltip="{{ 'DialogText.Datasets.TitleEdit' | translate }}"><i class="material-icons">mode_edit</i></button>
+          <button mat-icon-button (click)="openDialog4DeleteDS(datasets.id,datasets.dataset)" matTooltip="{{ 'DialogText.Datasets.TitleDelete' | translate }}"><i class="material-icons">delete</i></button>
       </mat-cell>
     </ng-container>
 

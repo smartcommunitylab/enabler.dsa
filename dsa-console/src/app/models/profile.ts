@@ -14,10 +14,15 @@ export class DomainProfile {
 
 export class DataSet {
     id: string;
-    configuration: Configuration;
+    domain: string;
+    dataset: string;
+    configurationProperties: ConfigurationProperties;
 }
-export class Configuration{
-    config:string[];
+export class ConfigurationProperties{
+    indexFormat?: string;
+    archivePolicy?: string;
+    clients?: string[];
+    dataMapping?: {};
 }
 
 export class Manager {

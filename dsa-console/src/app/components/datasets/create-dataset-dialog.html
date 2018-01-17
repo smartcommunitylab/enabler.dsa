@@ -3,11 +3,31 @@
     <mat-label class="mat-h4" *ngIf="!data.dsDelete">{{ 'DialogText.Datasets.Info' | translate }}</mat-label>
     <mat-label class="mat-h4" *ngIf="data.dsDelete">{{ 'DialogText.Datasets.Delete' | translate }} {{data.dataset}}</mat-label>
     <br/>
-    <mat-form-field class="dialog-container-form-field" *ngIf="!data.dsDelete">
-        <input matInput [(ngModel)]="data.dataset" placeholder="Dataset"  [formControl]="dsControl" required #ds>
-        <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
-    </mat-form-field>
-    
+    <!-- this div for input field only not for delete items  -->
+    <div *ngIf="data.dialogStatus!='TitleDelete'">
+        <!-- this div for input field only for create dataset -->
+        <div *ngIf="data.dialogStatus=='TitleCreate'">
+            <mat-form-field class="dialog-container-form-field" >
+                <input matInput [(ngModel)]="data.dataset" placeholder="Dataset"  [formControl]="dsControl" required #ds>
+                <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
+            </mat-form-field>
+        </div>
+        <!-- this div for input fields for edit dataset -->
+        <div *ngIf="data.dialogStatus=='TitleEdit'">
+            <mat-form-field class="dialog-container-form-field">
+                <input matInput [(ngModel)]="data.configPro.indexFormat" placeholder="Index format"  [formControl]="dsControl" required>
+                <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dialog-container-form-field">
+                <input matInput [(ngModel)]="data.configPro.archivePolicy" placeholder="Archive Policy"  [formControl]="dsControl" required>
+                <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="dialog-container-form-field">
+                <input matInput [(ngModel)]="data.configPro.clients" placeholder="Clients"  [formControl]="dsControl" required>
+                <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
     <!--
     <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
         <input id="id" name="id" required matInput tabindex="1" [(ngModel)]="data.id" placeholder="ID">
@@ -42,7 +62,13 @@
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>
     -->
-    <button mat-button *ngIf="!data.dsDelete" [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <div *ngIf="data.dialogStatus=='TitleCreate'">
+            <button mat-button  [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    </div>
+    <div *ngIf="data.dialogStatus=='TitleEdit'">
+            <button mat-button  [mat-dialog-close]="{id:data.id,ds:data.dataset,inFormat:data.configPro.indexFormat,arPolicy:data.configPro.archivePolicy,clients:data.configPro.clients}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    </div>
+    
     <button mat-button *ngIf="data.dsDelete" [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
     <span class="fill-remaining-space"></span>
     <button mat-button (click)="onNoClick()" tabindex="-1">{{ 'ButtonText.DBNotOK' | translate }}</button>

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {FormControl, Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {UsersService} from '../../services/users.service';
-import { User, Configuration, BodyDataUser } from '../../models/profile';
+import { User, BodyDataUser } from '../../models/profile';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -36,16 +36,13 @@ export class UsersComponent implements OnInit {
    * Create New User
    */
   openDialog4CreateUser() {
-    //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateUserDialogComponent,{
       //height: '300px',
       width: '350px',
       data: {  id: "",username:"", ds:"trento", dialogStatus:"TitleCreate" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed',result);
       if(result){
-        //this.config = result;
         this.bodyData.username=result.username;
         this.bodyData.dataset=result.ds;
         this.userService.setUser(this.domain,this.bodyData);
@@ -67,11 +64,9 @@ export class UsersComponent implements OnInit {
       data: {  id: userId, username: username, dataset: ds, dialogStatus: "TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The Edit dialog was closed',result.username);
       if(result){
         this.bodyData.id=result.id;
         this.bodyData.username=result.username;
-        //console.log('The dialog was closed and this.bodyData:',this.bodyData);
         this.userService.editUser(this.domain,this.bodyData.id,this.bodyData);
         setTimeout(()=>{  this.ngOnInit();},1000);
       }
@@ -89,11 +84,7 @@ export class UsersComponent implements OnInit {
       data: {  id: userId, userDelete: username, dialogStatus:"TitleDelete" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The Delete dialog was closed',result);
       if(result){
-        //this.config = result;
-        //this.bodyData.id=result.toString();
-        //console.log('The dialog was closed and this.bodyData:',this.bodyData);
         this.userService.deleteUser(this.domain,result.id);
         setTimeout(()=>{  this.ngOnInit();},1000);
       }

@@ -3,7 +3,7 @@ import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} f
 import {FormControl, Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {DatasetsService} from '../../services/datasets.service';
 
-import { DataSet, Configuration, BodyDataDataset} from '../../models/profile';
+import { DataSet, BodyDataDataset, ConfigurationProperties} from '../../models/profile';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -14,7 +14,6 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DatasetsComponent implements OnInit {
   datasets: DataSet[];
-  configuration: Configuration;
   displayedColumns: any;
   dataSource: any;
   dialogStatus = '';
@@ -31,7 +30,7 @@ export class DatasetsComponent implements OnInit {
       this.domain = params['domain'];
       this.datasetService.getDataSets(params['domain']).then(ds => {
         this.datasets = ds;
-        this.displayedColumns = ['id', 'configuration', 'modification'];
+        this.displayedColumns = ['id', 'inFormat', 'arPolicy', 'clients', 'modification'];
         this.dataSource = new MatTableDataSource<DataSet>(ds);
       });
     });
@@ -51,7 +50,6 @@ export class DatasetsComponent implements OnInit {
    * Create New DataSet
    */
   openDialog4CreateDS() {
-    //var bodydata: BodyData;
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
@@ -60,7 +58,6 @@ export class DatasetsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result){
         console.log('The dialog was closed, dataset:',result.ds);
-        //this.config = result;
         this.bodydata.domain=this.domain;
         this.bodydata.dataset=result.ds.toString();
         this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
@@ -76,22 +73,22 @@ export class DatasetsComponent implements OnInit {
   /**
    * Edit A DataSet
    */
-  openDialog4EditDS(dsId: string, ds: string) {
-    console.log('get dsid:', dsId);
+  openDialog4EditDS(dsId: string, ds: string, configPro:ConfigurationProperties) {
+    console.log('ConfigurationProperties(in openDialog4EditDS):', configPro);
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: dsId, dataset: ds, dialogStatus:"TitleEdit" }
+      data: {  id: dsId, dataset: ds, configPro: configPro, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The Edit dialog was closed, result',result);
+      //console.log('The Edit dialog was closed, result',result.configPro);
       if(result){
-        //this.config = result;
         this.bodydata.domain=this.domain;
-        this.bodydata.dataset=result.ds.toString();
-        this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
-        console.log('The dialog was closed and this.bodydata:',this.bodydata);
+        this.bodydata.dataset=result.ds;
+        this.bodydata.configurationProperties={indexFormat:result.inFormat, archivePolicy:result.arPolicy, clients:[result.clients],dataMapping:{} };
+        //this.bodydata.configurationProperties=result.configPro;
         this.datasetService.editDataset(this.domain,result.id,this.bodydata);
+        console.log('The dialog was closed and this.bodydata:',this.bodydata);
         //for reload the table
         setTimeout(()=>{  this.ngOnInit();},1000);
       }
@@ -111,9 +108,6 @@ export class DatasetsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Delete dialog was closed',result);
       if(result){
-        //this.config = result;
-        //this.bodydata.id=result.toString();
-        console.log('The dialog was closed and this.bodydata:',this.bodydata);
         this.datasetService.deleteDataset(this.domain,result.id);
         //for reload the table
         setTimeout(()=>{  this.ngOnInit();},1000);
