@@ -15,45 +15,39 @@
         <!-- this div for input fields for edit dataset -->
         <div *ngIf="data.dialogStatus=='TitleEdit'">
             <mat-form-field class="dialog-container-form-field">
+                <mat-select placeholder="Index Format" [(ngModel)]="data.indexSelected" [formControl]="dsEdIndexCon" required>
+                    <mat-option value="none">Index Format</mat-option>
+                    <mat-option value="weekly" >Weekly</mat-option>
+                    <mat-option value="monthly" >Monthly</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            <!-- <mat-form-field class="dialog-container-form-field">
                 <input matInput [(ngModel)]="data.configPro.indexFormat" placeholder="Index format"  [formControl]="dsControl" required>
                 <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
-            </mat-form-field>
-            <mat-form-field class="dialog-container-form-field">
+            </mat-form-field> -->
+            <!-- <mat-form-field class="dialog-container-form-field">
                 <input matInput [(ngModel)]="data.configPro.archivePolicy" placeholder="Archive Policy"  [formControl]="dsControl" required>
                 <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
             <mat-form-field class="dialog-container-form-field">
+                <mat-select placeholder="Archive Policy" [(value)]="data.arcPolicySelected" >
+                    <mat-option value="none">Archive Policy</mat-option>
+                    <mat-option value="M">Index Archive Policy Months</mat-option>
+                    <mat-option value="D">Index Archive Policy Days</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="dialog-container-form-field" [disabled]="data.archivePolicyLimit">
+                <input matInput type="+number" minlength="1" maxlength="2" [(ngModel)]="data.archivePolicyLimit" [formControl]="arcPoliLimitControl" placeholder="Archive Policy Limit (D/M)" required>
+                <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4arcPolLimit()}}</mat-error>
+            </mat-form-field>
+            <!-- <mat-form-field class="dialog-container-form-field">
                 <input matInput [(ngModel)]="data.configPro.clients" placeholder="Clients"  [formControl]="dsControl" required>
                 <mat-error *ngIf="dsControl.invalid">{{getErrorMessage4ds()}}</mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
         </div>
     </div>
-    <!--
-    <mat-form-field (ngSubmit)="onSubmit()" #heroForm="ngForm">
-        <input id="id" name="id" required matInput tabindex="1" [(ngModel)]="data.id" placeholder="ID">
-        <div [hidden]="id.valid || id.pristine" class="alert alert-danger">
-            Name is required
-        </div>        
-    </mat-form-field>
-    -->
-    <!--
-    <form #heroForm="ngForm">
-        <div class="form-group">
-            <label for="name">{{ 'DialogText.Datasets.label1' | translate }}</label>
-            
-            <input type="text" class="form-control" id="name"
-                    required minlength tabindex="1"
-                    [(ngModel)]="data.id" name="name"
-                    #name="ngModel">
-            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-                    {{ 'DialogText.Datasets.alert1' | translate }}
-            </div>
-        </div>
-    -->
-        <!-- <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button> -->
-    <!--   
-    </form>
-    -->
 </mat-dialog-content>
 
 <div mat-dialog-actions>
@@ -66,7 +60,7 @@
             <button mat-button  [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
     </div>
     <div *ngIf="data.dialogStatus=='TitleEdit'">
-            <button mat-button  [mat-dialog-close]="{id:data.id,ds:data.dataset,inFormat:data.configPro.indexFormat,arPolicy:data.configPro.archivePolicy,clients:data.configPro.clients}" tabindex="1" [disabled]="dsControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+            <button mat-button  [mat-dialog-close]="{id:data.id, ds:data.dataset, inFormat:data.indexSelected, arcPolicy:data.arcPolicySelected, arcPolicyLimit:data.archivePolicyLimit}" tabindex="1" [disabled]="arcPoliLimitControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
     </div>
     
     <button mat-button *ngIf="data.dsDelete" [mat-dialog-close]="{id:data.id,ds:data.dataset}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>

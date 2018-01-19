@@ -7,6 +7,14 @@
         <input matInput [(ngModel)]="data.username" placeholder="Username"  [formControl]="userControl" required #ds>
         <mat-error *ngIf="userControl.invalid">{{getErrorMessage4user()}}</mat-error>
     </mat-form-field>
+
+    <mat-form-field class="dialog-container-form-field" *ngIf="!data.userDelete">
+        <mat-select placeholder="Dataset" [(ngModel)]="selectedDS" name="food">
+            <mat-option *ngFor="let ds of data.ds" [value]="ds.dataset">
+            {{ds.dataset}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <!-- <form #heroForm="ngForm">
         <div class="form-group">
             <label for="name">{{ 'DialogText.Users.label1' | translate }}</label>
@@ -42,7 +50,7 @@
 </mat-dialog-content>
 <br/>
 <div mat-dialog-actions>
-    <button mat-button *ngIf="!data.userDelete" [mat-dialog-close]="{id:data.id,username:data.username,ds:data.ds}" tabindex="1" [disabled]="userControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
+    <button mat-button *ngIf="!data.userDelete" [mat-dialog-close]="{id:data.id,username:data.username,ds:selectedDS}" tabindex="1" [disabled]="userControl.invalid">{{ 'ButtonText.DBOK' | translate }}</button>
     <button mat-button *ngIf="data.userDelete" [mat-dialog-close]="{id:data.id,username:data.username}" tabindex="1" >{{ 'ButtonText.DBYes' | translate }}</button>
     <!-- <button mat-button [mat-dialog-close]="data.username" tabindex="2" >{{ 'ButtonText.DBOK' | translate }}</button> -->
     <span class="fill-remaining-space"></span>

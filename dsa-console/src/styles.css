@@ -1,2 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+.mat-select-value-text, .mat-select-arrow {
+    color: black !important;
+    
+}
+.mat-select-content{
+    width: 100%;
+}
+.mat-select-panel{
+    width: 100% !important;
+}
+.mat-select-trigger{
+    width: 100%;
+}
+.mat-select-arrow-wrapper{
+    align-items: right !important;
+}

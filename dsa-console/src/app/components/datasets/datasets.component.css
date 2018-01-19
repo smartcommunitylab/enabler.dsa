@@ -28,3 +28,15 @@
 .dialog-container-form-field > * {
   width: 100%;
 }
+
+/* .mat-select:focus:not(.mat-select-disabled).mat-primary .mat-select-arrow,
+.mat-select:focus:not(.mat-select-disabled).mat-primary .mat-select-trigger {
+  color: red;
+}
+
+.mat-select-arrow,
+.mat-select-disabled .mat-select-value,
+.mat-select-trigger {
+  color:orange;
+
+} */

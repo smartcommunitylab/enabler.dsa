@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {MatTableDataSource, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {FormControl, Validators, FormBuilder, FormGroup} from '@angular/forms';
 import {UsersService} from '../../services/users.service';
-import { User, BodyDataUser } from '../../models/profile';
+import {DatasetsService} from '../../services/datasets.service';
+import { User, DataSet, BodyDataUser } from '../../models/profile';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -17,8 +18,8 @@ export class UsersComponent implements OnInit {
   displayedColumns:any;
   dataSource:any;
   domain: string;
-
-  constructor(private userService: UsersService, private dialog: MatDialog, private bodyData:BodyDataUser, private route: ActivatedRoute) { }
+  datasets: DataSet[];
+  constructor(private userService: UsersService, private dialog: MatDialog, private bodyData:BodyDataUser, private route: ActivatedRoute, private datasetService: DatasetsService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -36,20 +37,23 @@ export class UsersComponent implements OnInit {
    * Create New User
    */
   openDialog4CreateUser() {
-    let dialogRef = this.dialog.open(CreateUserDialogComponent,{
-      //height: '300px',
-      width: '350px',
-      data: {  id: "",username:"", ds:"trento", dialogStatus:"TitleCreate" }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.bodyData.username=result.username;
-        this.bodyData.dataset=result.ds;
-        this.userService.setUser(this.domain,this.bodyData);
-        //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
-        //for reload the table
-        setTimeout(()=>{  this.ngOnInit();},1000);
-      }
+    this.datasetService.getDataSets(this.domain).then(ds => {
+      this.datasets = ds;
+      let dialogRef = this.dialog.open(CreateUserDialogComponent,{
+        //height: '300px',
+        width: '350px',
+        data: {  id: "",username:"", ds:this.datasets, dialogStatus:"TitleCreate" }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          this.bodyData.username=result.username;
+          this.bodyData.dataset=result.ds;
+          this.userService.setUser(this.domain,this.bodyData);
+          //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
+          //for reload the table
+          setTimeout(()=>{  this.ngOnInit();},1000);
+        }
+      });
     });
   }
 
@@ -110,6 +114,7 @@ export class UsersComponent implements OnInit {
   styleUrls: ['./users.component.css']
 })
 export class CreateUserDialogComponent {
+  selectedDS: string;
   //constructor() {}
   constructor(public dialogRef: MatDialogRef<CreateUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
   userControl = new FormControl('', [Validators.required]);

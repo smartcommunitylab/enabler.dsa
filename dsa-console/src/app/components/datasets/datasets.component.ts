@@ -18,6 +18,9 @@ export class DatasetsComponent implements OnInit {
   dataSource: any;
   dialogStatus = '';
   domain: string;
+  arcPoliSelected: string;
+  arcPoli: string;
+  arcPoliLimit: any;
   //heroForm: FormGroup;
   
   @ViewChild(MatSort) sort: MatSort;
@@ -60,7 +63,7 @@ export class DatasetsComponent implements OnInit {
         console.log('The dialog was closed, dataset:',result.ds);
         this.bodydata.domain=this.domain;
         this.bodydata.dataset=result.ds.toString();
-        this.bodydata.configurationProperties={indexFormat:"string",archivePolicy:'string',clients:['string'],dataMapping:{} };
+        this.bodydata.configurationProperties={indexFormat:"none",archivePolicy:"none",clients:['string'],dataMapping:{} };
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
         this.datasetService.setDataset(this.domain,this.bodydata);
         //console.log('globalData in session:',sessionStorage.getItem('currentDomain'));
@@ -75,17 +78,25 @@ export class DatasetsComponent implements OnInit {
    */
   openDialog4EditDS(dsId: string, ds: string, configPro:ConfigurationProperties) {
     console.log('ConfigurationProperties(in openDialog4EditDS):', configPro);
+    if(configPro.archivePolicy == 'none'){
+      this.arcPoli="none";
+      this.arcPoliLimit=0;
+    }else{
+      this.arcPoli=configPro.archivePolicy.substr(-1);
+      this.arcPoliLimit=configPro.archivePolicy.split(this.arcPoli)[0];
+    }
     let dialogRef = this.dialog.open(CreateDatasetDialogComponent,{
       //height: '300px',
       width: '300px',
-      data: {  id: dsId, dataset: ds, configPro: configPro, dialogStatus:"TitleEdit" }
+      data: {  id: dsId, dataset: ds, configPro: configPro, indexSelected:configPro.indexFormat, arcPolicySelected:this.arcPoli, archivePolicyLimit:this.arcPoliLimit, dialogStatus:"TitleEdit" }
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The Edit dialog was closed, result',result.configPro);
       if(result){
+        this.arcPoliSelected=result.arcPolicyLimit+result.arcPolicy;
         this.bodydata.domain=this.domain;
         this.bodydata.dataset=result.ds;
-        this.bodydata.configurationProperties={indexFormat:result.inFormat, archivePolicy:result.arPolicy, clients:[result.clients],dataMapping:{} };
+        this.bodydata.configurationProperties={indexFormat:result.inFormat, archivePolicy:this.arcPoliSelected, clients:['clients'],dataMapping:{} };
         //this.bodydata.configurationProperties=result.configPro;
         this.datasetService.editDataset(this.domain,result.id,this.bodydata);
         console.log('The dialog was closed and this.bodydata:',this.bodydata);
@@ -128,15 +139,22 @@ export class DatasetsComponent implements OnInit {
 })
 export class CreateDatasetDialogComponent {
   //constructor() {}
+  selected="option1";
+
   constructor(public dialogRef: MatDialogRef<CreateDatasetDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
   dsControl = new FormControl('', [Validators.required]);
-  
+  dsEdIndexCon = new FormControl('', [Validators.required]);
+  arcPoliLimitControl = new FormControl('', [Validators.min(0)]);
   getErrorMessage4ds() {
     return this.dsControl.hasError('required') ? 'You must enter a value' :
         //this.dataset.hasError('email') ? 'Not a valid email' :
             '';
   }
-
+  getErrorMessage4arcPolLimit(){
+    return this.arcPoliLimitControl.hasError('required') ? 'You must enter a value!' :
+        this.arcPoliLimitControl.hasError('min') ? 'You must enter positive number!' :
+            '';
+  }
   onNoClick(): void {
     this.dialogRef.close();
   }
